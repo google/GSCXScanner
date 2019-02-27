@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GSCXScannerScreenshotViewController">
+            <connections>
+                <outlet property="blackBackgroundView" destination="mN0-VA-iXO" id="uJh-WW-fas"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mN0-VA-iXO">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="mm4-qt-8RT" appends="YES" id="mbQ-j5-VvM"/>
+                    </connections>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="mN0-VA-iXO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="KCB-Fj-Wj8"/>
+                <constraint firstAttribute="trailing" secondItem="mN0-VA-iXO" secondAttribute="trailing" id="XFE-fY-jws"/>
+                <constraint firstAttribute="bottom" secondItem="mN0-VA-iXO" secondAttribute="bottom" id="wNz-0a-h7T"/>
+            </constraints>
+        </view>
+        <tapGestureRecognizer id="mm4-qt-8RT">
+            <connections>
+                <action selector="tapRecognized:" destination="-1" id="I1A-wg-QYW"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+</document>
