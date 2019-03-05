@@ -23,7 +23,22 @@ One additional step needed will be to provide [`GTXiLib`](https://github.com/goo
 for the scanner framework to link to. If you have added static frameworks to
 your app previously, this process will be very familiar.
 
-### Installation Steps overview
+### Installation Steps overview (Cocoapods)
+
+You can use [`GSCXScanner`](https://cocoapods.org/pods/GSCXScanner) pod to add
+a11y scanner to your app. For example:
+
+```
+target 'FooBarTarget' do
+  use_frameworks!
+
+  # Pods for FooBarTarget
+  # ...
+  pod 'GSCXScanner'
+end
+```
+
+### Installation Steps overview (manual)
 
 1. Download `GSCXScanner`
 2. Download [`GTXiLib`](https://github.com/google/GTXiLib)
