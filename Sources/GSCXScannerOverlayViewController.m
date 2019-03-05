@@ -101,8 +101,6 @@ NSString *const kGSCXPerformScanAccessibilityIdentifier =
 - (void)_presentScreenshotControllerForScanResult:(GSCXScannerResult *)result;
 /**
  *  Presents a table view of all accessibility issues found in a given scan.
- *
- *  @return result The result of a scan.
  */
 - (void)_presentTableControllerForScanResult:(GSCXScannerResult *)result;
 /**
