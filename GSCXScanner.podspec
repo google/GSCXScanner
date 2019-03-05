@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
   s.license      = "Apache License 2.0"
   s.author       = "j-sid"
   s.platform     = :ios
-  s.source       = { :git => "https://github.com/google/GSCXScanner.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/google/GSCXScanner.git", :tag => "1.0.1" }
   s.source_files = "Classes/**/*.{h,m,swift}"
 end
