@@ -11,5 +11,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.source       = { :git => "https://github.com/google/GSCXScanner.git", :tag => "1.0.2" }
   s.source_files = "Sources/**/*.{h,m,swift}"
+  s.resources    = "Sources/**/*.{xib}"
   s.dependency 'GTXiLib'
 end
