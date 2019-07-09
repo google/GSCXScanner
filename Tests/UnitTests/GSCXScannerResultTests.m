@@ -344,6 +344,53 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   XCTAssertEqual(filteredResult.issueCount, 0ul);
 }
 
+- (void)testGSCXIssueCanProvideHTMLDescriptions {
+  NSArray<GSCXScannerIssue *> *issues = @[
+    [GSCXScannerIssue issueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
+                        checkDescriptions:@[ kGSCXScannerResultTestsCheckDescription1 ]
+                      frameInScreenBounds:kGSCXScannerResultTestsFrame1
+                       accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel1],
+    [GSCXScannerIssue issueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ]
+                        checkDescriptions:@[ kGSCXScannerResultTestsCheckDescription2 ]
+                      frameInScreenBounds:kGSCXScannerResultTestsFrame2
+                       accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel2]
+  ];
+
+  NSInteger assertionCount = 0;
+  for (GSCXScannerIssue *issue in issues) {
+    NSString *htmlDescription = [issue htmlDescription];
+    for (NSString *name in issue.gtxCheckNames) {
+      XCTAssertTrue([htmlDescription containsString:name]);
+      assertionCount += 1;
+    }
+  }
+  XCTAssertGreaterThanOrEqual(assertionCount, 1, @"At least one HTML must be checked.");
+}
+
+- (void)testGSCXResultCanProvideHTMLDescription {
+  NSArray<GSCXScannerIssue *> *issues = @[
+    [GSCXScannerIssue issueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
+                        checkDescriptions:@[ kGSCXScannerResultTestsCheckDescription1 ]
+                      frameInScreenBounds:kGSCXScannerResultTestsFrame1
+                       accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel1],
+    [GSCXScannerIssue issueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ]
+                        checkDescriptions:@[ kGSCXScannerResultTestsCheckDescription2 ]
+                      frameInScreenBounds:kGSCXScannerResultTestsFrame2
+                       accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel2]
+  ];
+  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  NSString *resultHTML = [result htmlDescription:[[GSCXReportContext alloc] init]];
+
+  NSInteger assertionCount = 0;
+  for (GSCXScannerIssue *issue in issues) {
+    for (NSString *name in issue.gtxCheckNames) {
+      XCTAssertTrue([resultHTML containsString:name]);
+      assertionCount += 1;
+    }
+  }
+  XCTAssertGreaterThanOrEqual(assertionCount, 1, @"At least one HTML must be checked.");
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

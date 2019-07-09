@@ -18,10 +18,7 @@
 #import <XCTest/XCTest.h>
 
 #import "GSCXScanner.h"
-#import "GTXCheckBlock.h"
-#import "GTXChecking.h"
-#import "NSError+GTXAdditions.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 static NSString *const kGSCXScannerTestsDummyCheckName = @"kGSCXScannerTestsDummyCheckName";

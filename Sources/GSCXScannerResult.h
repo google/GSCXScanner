@@ -17,6 +17,7 @@
 #import <UIKit/UIKit.h>
 
 #import "GSCXScannerIssue.h"
+#import "GSCXReportContext.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -59,10 +60,12 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return A GSCXScannerResult object containing only the issues whose frames contain @c point.
  */
 - (instancetype)resultWithIssuesAtPoint:(CGPoint)point;
+
 /**
  *  Returns the number of issues found in the scan.
  */
 - (NSUInteger)issueCount;
+
 /**
  *  Returns the name of the GTX check at the given index.
  *
@@ -70,6 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return A string representing the name of the check at the given index.
  */
 - (NSString *)gtxCheckNameAtIndex:(NSUInteger)index;
+
 /**
  *  Returns the description of the GTX check at the given index.
  *
@@ -77,6 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return A string representing the description of the check at the given index.
  */
 - (NSString *)gtxCheckDescriptionAtIndex:(NSUInteger)index;
+
 /**
  *  Returns the frame of the GTX check at the given index in screen coordinates.
  *
@@ -84,6 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return The frame of the check at the given index in screen coordinates.
  */
 - (CGRect)frameAtIndex:(NSUInteger)index;
+
 /**
  *  Returns the accessibility label of the UI element corresponding to the issue at the given index.
  *
@@ -91,6 +97,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return The accessibility label of the UI element for the issue at the given index.
  */
 - (NSString *)accessibilityLabelAtIndex:(NSUInteger)index;
+
+/**
+ *  Returns a HTML description of the results with all images and other file resources added to the
+ *  given context.
+ *
+ *  @param context The context to reciieve all file resources in the HTML description.
+ *  @return The HTML description of the result.
+ */
+- (NSString *)htmlDescription:(GSCXReportContext *)context;
 
 @end
 

@@ -107,6 +107,26 @@ NS_ASSUME_NONNULL_BEGIN
   return nil;
 }
 
+- (UIImage *)screenshotImage {
+  UIGraphicsBeginImageContextWithOptions(self.screenshot.bounds.size, YES, 0.0);
+  [self.screenshot drawViewHierarchyInRect:self.screenshot.bounds afterScreenUpdates:NO];
+  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return image;
+}
+
+- (NSString *)htmlDescription:(GSCXReportContext *)context {
+  NSMutableArray *htmlSnippets  = [[NSMutableArray alloc] init];
+  for (GSCXScannerIssue *issue in self.issues) {
+    [htmlSnippets addObject:[issue htmlDescription]];
+  }
+  [htmlSnippets addObject:@"<hr>"];
+  [htmlSnippets addObject:@"<h2>Window Screenshot</h2>"];
+  NSString *screenshotPath = [context pathByAddingImage:[self  screenshotImage]];
+  [htmlSnippets addObject:[NSString stringWithFormat:@"<img src=\"%@\" />", screenshotPath]];
+  return [htmlSnippets componentsJoinedByString:@"<br/>"];
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

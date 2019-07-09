@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		610B2F9522D508320005CE68 /* GSCXReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F8C22D508310005CE68 /* GSCXReport.h */; };
+		610B2F9622D508320005CE68 /* GSCXReportContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F9022D508310005CE68 /* GSCXReportContext.h */; };
+		610B2F9722D508320005CE68 /* GSCXAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F9122D508310005CE68 /* GSCXAnalytics.h */; };
+		610B2F9822D508320005CE68 /* GSCXReportContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 610B2F9222D508310005CE68 /* GSCXReportContext.m */; };
+		610B2F9922D508320005CE68 /* GSCXReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 610B2F9322D508320005CE68 /* GSCXReport.m */; };
+		610B2F9A22D508320005CE68 /* GSCXAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 610B2F9422D508320005CE68 /* GSCXAnalytics.m */; };
 		616525DD2208F12E00CBC788 /* GSCXWindowOverlayViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525B82208F12C00CBC788 /* GSCXWindowOverlayViewController.h */; };
 		616525DE2208F12E00CBC788 /* GSCXScannerIssue.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525B92208F12C00CBC788 /* GSCXScannerIssue.m */; };
 		616525DF2208F12E00CBC788 /* GSCXScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525BA2208F12C00CBC788 /* GSCXScanner.m */; };
@@ -85,6 +91,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		610B2F8C22D508310005CE68 /* GSCXReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXReport.h; path = Sources/GSCXReport.h; sourceTree = SOURCE_ROOT; };
+		610B2F9022D508310005CE68 /* GSCXReportContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXReportContext.h; path = Sources/GSCXReportContext.h; sourceTree = SOURCE_ROOT; };
+		610B2F9122D508310005CE68 /* GSCXAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXAnalytics.h; path = Sources/GSCXAnalytics.h; sourceTree = SOURCE_ROOT; };
+		610B2F9222D508310005CE68 /* GSCXReportContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXReportContext.m; path = Sources/GSCXReportContext.m; sourceTree = SOURCE_ROOT; };
+		610B2F9322D508320005CE68 /* GSCXReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXReport.m; path = Sources/GSCXReport.m; sourceTree = SOURCE_ROOT; };
+		610B2F9422D508320005CE68 /* GSCXAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXAnalytics.m; path = Sources/GSCXAnalytics.m; sourceTree = SOURCE_ROOT; };
 		616525AB2208F0EE00CBC788 /* GSCXScanner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GSCXScanner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		616525B62208F11E00CBC788 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		616525B82208F12C00CBC788 /* GSCXWindowOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXWindowOverlayViewController.h; path = Sources/GSCXWindowOverlayViewController.h; sourceTree = SOURCE_ROOT; };
@@ -158,6 +170,12 @@
 		616525AD2208F0EE00CBC788 /* GSCXScanner */ = {
 			isa = PBXGroup;
 			children = (
+				610B2F9122D508310005CE68 /* GSCXAnalytics.h */,
+				610B2F9422D508320005CE68 /* GSCXAnalytics.m */,
+				610B2F8C22D508310005CE68 /* GSCXReport.h */,
+				610B2F9322D508320005CE68 /* GSCXReport.m */,
+				610B2F9022D508310005CE68 /* GSCXReportContext.h */,
+				610B2F9222D508310005CE68 /* GSCXReportContext.m */,
 				616525B62208F11E00CBC788 /* Info.plist */,
 				616525CE2208F12D00CBC788 /* GSCXAutoInstaller.h */,
 				616525BD2208F12C00CBC788 /* GSCXAutoInstaller.m */,
@@ -224,6 +242,7 @@
 				616525F82208F12E00CBC788 /* GSCXScannerIssue.h in Headers */,
 				616525E72208F12E00CBC788 /* GSCXInstaller.h in Headers */,
 				616525EF2208F12E00CBC788 /* GSCXHitForwardingView.h in Headers */,
+				610B2F9722D508320005CE68 /* GSCXAnalytics.h in Headers */,
 				616525FC2208F12E00CBC788 /* GSCXCornerConstraints.h in Headers */,
 				616525E52208F12E00CBC788 /* GSCXHitForwardingWindow.h in Headers */,
 				616525E02208F12E00CBC788 /* GSCXScanner.h in Headers */,
@@ -231,10 +250,12 @@
 				616525F42208F12E00CBC788 /* GSCXScannerResult.h in Headers */,
 				616525FB2208F12E00CBC788 /* GSCXRingView.h in Headers */,
 				616525F72208F12E00CBC788 /* GSCXScannerScreenshotViewController.h in Headers */,
+				610B2F9522D508320005CE68 /* GSCXReport.h in Headers */,
 				616525DD2208F12E00CBC788 /* GSCXWindowOverlayViewController.h in Headers */,
 				616525E82208F12E00CBC788 /* UIViewController+GSCXTraversal.h in Headers */,
 				616526012208F12E00CBC788 /* GSCXWindowOverlayPair.h in Headers */,
 				616525FD2208F12E00CBC788 /* GSCXScannerResultDetailViewController.h in Headers */,
+				610B2F9622D508320005CE68 /* GSCXReportContext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,11 +376,14 @@
 				616525F12208F12E00CBC788 /* GSCXWindowOverlayPair.m in Sources */,
 				616525E62208F12E00CBC788 /* GSCXScannerScreenshotViewController.m in Sources */,
 				616525F02208F12E00CBC788 /* GSCXCornerConstraints.m in Sources */,
+				610B2F9822D508320005CE68 /* GSCXReportContext.m in Sources */,
 				616525DE2208F12E00CBC788 /* GSCXScannerIssue.m in Sources */,
 				616525E22208F12E00CBC788 /* GSCXAutoInstaller.m in Sources */,
 				616525EB2208F12E00CBC788 /* GSCXScannerResultTableViewController.m in Sources */,
+				610B2F9A22D508320005CE68 /* GSCXAnalytics.m in Sources */,
 				616525F92208F12E00CBC788 /* GSCXRingView.m in Sources */,
 				616525DF2208F12E00CBC788 /* GSCXScanner.m in Sources */,
+				610B2F9922D508320005CE68 /* GSCXReport.m in Sources */,
 				616525E92208F12E00CBC788 /* GSCXHitForwardingView.m in Sources */,
 				616525EC2208F12E00CBC788 /* GSCXWindowOverlayViewController.m in Sources */,
 				616525EA2208F12E00CBC788 /* GSCXScannerOverlayViewController.m in Sources */,

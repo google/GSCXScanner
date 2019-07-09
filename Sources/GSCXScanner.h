@@ -17,19 +17,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "GSCXAnalytics.h"
 #import "GSCXScannerDelegate.h"
 #import "GSCXScannerResult.h"
 
 // All GTXiLib imports are grouped here to help with OSS release script which replaces the below
 // with GTXiLib framework import.
-#import <GTXiLib/GTXBlacklisting.h>
-#import <GTXiLib/GTXChecking.h>
-#import <GTXiLib/GTXCheckBlock.h>
-#import <GTXiLib/GTXChecksCollection.h>
-#import <GTXiLib/GTXTestEnvironment.h>
-#import <GTXiLib/GTXToolKit.h>
-#import <GTXiLib/NSError+GTXAdditions.h>
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**

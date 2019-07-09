@@ -18,12 +18,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation GSCXScannerIssue
+@implementation GSCXScannerIssue {
+  NSString *_elementDescription;
+}
 
 - (instancetype)initWithCheckNames:(NSArray<NSString *> *)gtxCheckNames
                  checkDescriptions:(NSArray<NSString *> *)gtxCheckDescriptions
                frameInScreenBounds:(CGRect)frameInScreenBounds
-                accessibilityLabel:(nullable NSString *)accessibilityLabel {
+                accessibilityLabel:(nullable NSString *)accessibilityLabel
+                elementDescription:(nonnull NSString *)elementDescription {
   self = [super init];
   if (self) {
     NSParameterAssert(gtxCheckNames.count == gtxCheckDescriptions.count);
@@ -32,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
     _gtxCheckDescriptions = [gtxCheckDescriptions copy];
     _frame = frameInScreenBounds;
     _accessibilityLabel = [accessibilityLabel copy];
+    _elementDescription = [elementDescription copy];
   }
   return self;
 }
@@ -43,11 +47,40 @@ NS_ASSUME_NONNULL_BEGIN
   return [[GSCXScannerIssue alloc] initWithCheckNames:gtxCheckNames
                                     checkDescriptions:gtxCheckDescriptions
                                   frameInScreenBounds:frameInScreenBounds
-                                   accessibilityLabel:accessibilityLabel];
+                                   accessibilityLabel:accessibilityLabel
+                                   elementDescription:accessibilityLabel ?: @"Unknown"];
+}
+
++ (instancetype)issueWithCheckNames:(NSArray<NSString *> *)gtxCheckNames
+                  checkDescriptions:(NSArray<NSString *> *)gtxCheckDescriptions
+                frameInScreenBounds:(CGRect)frameInScreenBounds
+                 accessibilityLabel:(nullable NSString *)accessibilityLabel
+                 elementDescription:(nonnull NSString *)elementDescription {
+  // @TODO Instead of passing in @c elementDescription, pass in an element and define a description
+  // method on it. Ditto above as well.
+  return [[GSCXScannerIssue alloc] initWithCheckNames:gtxCheckNames
+                                    checkDescriptions:gtxCheckDescriptions
+                                  frameInScreenBounds:frameInScreenBounds
+                                   accessibilityLabel:accessibilityLabel
+                                   elementDescription:elementDescription];
 }
 
 - (NSUInteger)underlyingIssueCount {
   return [self.gtxCheckNames count];
+}
+
+- (NSString *)htmlDescription {
+  NSMutableArray *htmlSnippets  = [[NSMutableArray alloc] init];
+  NSString *elementDesc = [NSString stringWithFormat:@"<h2>%@</h2>", _elementDescription];
+  [htmlSnippets addObject:elementDesc];
+  [htmlSnippets addObject:@"<ul>"];
+  for (NSUInteger i = 0; i < _gtxCheckNames.count; i++) {
+    [htmlSnippets addObject:[NSString stringWithFormat:@"<li><b>%@</b>: %@</li>",
+                                                       _gtxCheckNames[i],
+                                                       _gtxCheckDescriptions[i]]];
+  }
+  [htmlSnippets addObject:@"</ul>"];
+  return [htmlSnippets componentsJoinedByString:@"<br/>"];
 }
 
 @end
