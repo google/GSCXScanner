@@ -28,7 +28,7 @@
                     </connections>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="mN0-VA-iXO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="KCB-Fj-Wj8"/>
                 <constraint firstAttribute="trailing" secondItem="mN0-VA-iXO" secondAttribute="trailing" id="XFE-fY-jws"/>
@@ -37,7 +37,7 @@
         </view>
         <tapGestureRecognizer id="mm4-qt-8RT">
             <connections>
-                <action selector="tapRecognized:" destination="-1" id="I1A-wg-QYW"/>
+                <action selector="gscx_tapRecognized:" destination="-1" id="I1A-wg-QYW"/>
             </connections>
         </tapGestureRecognizer>
     </objects>

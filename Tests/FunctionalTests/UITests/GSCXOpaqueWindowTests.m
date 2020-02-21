@@ -22,8 +22,8 @@
 #import "GSCXUITestCase.h"
 
 /**
- *  Tests that pure UIWindow does not forward hits to underlying windows, so users cannot interact
- *  with the original application.
+ * Tests that pure UIWindow does not forward hits to underlying windows, so users cannot interact
+ * with the original application.
  */
 @interface GSCXOpaqueWindowTests : GSCXUITestCase
 @end

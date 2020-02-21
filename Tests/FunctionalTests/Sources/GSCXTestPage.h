@@ -15,16 +15,16 @@
 //
 
 /**
- *  Classes should conform to this protocol so other objects can access them by their pageName.
+ * Classes should conform to this protocol so other objects can access them by their pageName.
  */
 @protocol GSCXTestPage
 
 /**
- *  The name of this page, used to identify view controllers and set
- *  accessibility identifiers. Conforming classes are required to call setTitle:
- *  with the result of this method in viewDidLoad.
+ * The name of this page, used to identify view controllers and set
+ * accessibility identifiers. Conforming classes are required to call setTitle:
+ * with the result of this method in viewDidLoad.
  *
- *  @return A string uniquely identifying this page.
+ * @return A string uniquely identifying this page.
  */
 + (NSString *)pageName;
 

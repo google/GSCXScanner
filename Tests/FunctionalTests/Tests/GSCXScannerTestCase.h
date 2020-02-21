@@ -19,13 +19,8 @@
 #import "GSCXTestPage.h"
 
 /**
- *  Encapsulates common functionality needed by all EarlGrey tests.
+ * Encapsulates common functionality needed by all EarlGrey tests.
  */
 @interface GSCXScannerTestCase : XCTestCase
-
-/**
- *  Opens the given page by tapping on the corresponding cell on the main table view.
- */
-- (void)openPage:(Class<GSCXTestPage>)pageClass;
 
 @end

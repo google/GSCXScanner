@@ -19,28 +19,29 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Encapsulates functionality to snap a view to screen corners using Autolayout constraints.
+ * Encapsulates functionality to snap a view to screen corners using Autolayout constraints.
  */
 @interface GSCXCornerConstraints : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
+
 /**
- *  Constructs a GSCXCornerConstraints object with a given view inside a given container. The view
- *  starts in the bottom leading (left in LTR languages, right in RTL languages) corner.
+ * Constructs a GSCXCornerConstraints object with a given view inside a given container. The view
+ * starts in the bottom leading (left in LTR languages, right in RTL languages) corner.
  *
- *  @param view The view to snap to different corners of the container.
- *  @param container The view controller whose view contains @c view. @c view must be a subview of
- *                   container's view.
+ * @param view The view to snap to different corners of the container.
+ * @param container The view controller whose view contains @c view. @c view must be a subview of
+ * container's view.
  */
 + (instancetype)constraintsWithView:(UIView *)view container:(UIViewController *)container;
 
 /**
- *  Snaps the view to the next corner of the screen in the clockwise direction.
+ * Snaps the view to the next corner of the screen in the clockwise direction.
  */
 - (void)rotateClockwise;
 
 /**
- *  Returns an array of custom actions used to invoke rotation actions from VoiceOver.
+ * Returns an array of custom actions used to invoke rotation actions from VoiceOver.
  */
 - (NSArray<UIAccessibilityCustomAction *> *)rotateAccessibilityActions;
 

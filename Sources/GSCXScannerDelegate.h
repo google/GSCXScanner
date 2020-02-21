@@ -23,22 +23,24 @@ NS_ASSUME_NONNULL_BEGIN
 @class GSCXScanner;
 
 /**
- *  Allows objects to hook into a scan's lifecycle and perform custom functionality.
+ * Allows objects to hook into a scan's lifecycle and perform custom functionality.
  */
 @protocol GSCXScannerDelegate <NSObject>
 
 @optional
+
 /**
- *  Called before the scanner begins a scan.
+ * Called before the scanner begins a scan.
  *
- *  @param scanner The scanner object about to perform the scan.
+ * @param scanner The scanner object about to perform the scan.
  */
 - (void)scannerWillBeginScan:(GSCXScanner *)scanner;
+
 /**
- *  Called after the scanner finishes a scan.
+ * Called after the scanner finishes a scan.
  *
- *  @param scanner The scanner object that just completed the scan.
- *  @param scanResult The result of the scan. The same as [scanner lastScanResult].
+ * @param scanner The scanner object that just completed the scan.
+ * @param scanResult The result of the scan. The same as [scanner lastScanResult].
  */
 - (void)scanner:(GSCXScanner *)scanner didFinishScanWithResult:(GSCXScannerResult *)scanResult;
 

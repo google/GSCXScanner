@@ -19,28 +19,28 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  A handler type for for-each method that provides image and its associated filename.
+ * A handler type for for-each method that provides image and its associated filename.
  */
 typedef void(^GSCXReportContextForEachImageHandler)(UIImage *image, NSString *filename);
 
 /**
- *  Contextual information about current report, allows for adding images to the report.
+ * Contextual information about current report, allows for adding images to the report.
  */
 @interface GSCXReportContext : NSObject
 
 /**
- *  Adds an image to the report and returns an appropriate path for it.
+ * Adds an image to the report and returns an appropriate path for it.
  *
- *  @param image Image to be added.
+ * @param image Image to be added.
  *
- *  @return A relative path to be used for saving the image.
+ * @return A relative path to be used for saving the image.
  */
 - (NSString *)pathByAddingImage:(UIImage *)image;
 
 /**
- *  Iterates through all the images in the context.
+ * Iterates through all the images in the context.
  *
- *  @param handler The handler to be invoked on each of the images.
+ * @param handler The handler to be invoked on each of the images.
  */
 - (void)forEachImageWithHandler:(GSCXReportContextForEachImageHandler)handler;
 

@@ -16,67 +16,91 @@
 
 #import "GSCXReport.h"
 
-#import "GSCXReportContext.h"
 #import <WebKit/WebKit.h>
 
+#import "GSCXReportContext.h"
+#import "GSCXUtils.h"
+#import <GTXiLib/GTXiLib.h>
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GSCXReport ()<WKNavigationDelegate>
+
+/**
+ * Invoked when an HTML report has been created.
+ */
+@property(strong, nonatomic) GSCXHTMLReportCompletionBlock onComplete;
+
+/**
+ * Renders the report.
+ */
+@property(strong, nonatomic, nullable) WKWebView *helperWebview;
+
 @end
 
-@implementation GSCXReport {
-  GSCXReportCompletionBlock _onComplete;
-  WKWebView *_helperWebview;
+@implementation GSCXReport
+
+- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results {
+  self = [super init];
+  if (self) {
+    _results = results;
+  }
+  return self;
 }
 
-- (void)beginSharingResult:(GSCXScannerResult *)result
-       withCompletionBlock:(GSCXReportCompletionBlock)onComplete {
-  _onComplete = onComplete ?: ^(NSURL *reportUrl){};
+- (void)createHTMLReportWithCompletionBlock:(GSCXHTMLReportCompletionBlock)onComplete {
+  GTX_ASSERT(onComplete, @"Report generation callback cannot be nil.");
+  self.onComplete = onComplete;
 
   // Create a HTML file renders the PDF.
   GSCXReportContext *context = [[GSCXReportContext alloc] init];
-  NSString *html = [result htmlDescription:context];
-  NSURL *path = [[self class] _createLocalSiteWithHTMLString:html context:context];
+  NSMutableArray<NSString *> *htmlSnippets = [NSMutableArray array];
+  for (GSCXScannerResult *result in self.results) {
+    [htmlSnippets addObject:[result htmlDescription:context]];
+  }
+  NSString *html = [htmlSnippets componentsJoinedByString:@""];
+  NSURL *path = [[self class] gscx_createLocalSiteWithHTMLString:html context:context];
 
   // Create a 1 pixel webview but do not add it to the hierarchy, the webview will be used to render
   // PDF.
   CGRect webViewFrame = CGRectMake(0, 0, 1, 1);
-  _helperWebview = [[WKWebView alloc] initWithFrame:webViewFrame];
-  _helperWebview.navigationDelegate = self;
+  self.helperWebview = [[WKWebView alloc] initWithFrame:webViewFrame];
+  self.helperWebview.navigationDelegate = self;
 
   [_helperWebview loadFileURL:[path URLByAppendingPathComponent:@"index.html"]
      allowingReadAccessToURL:path];
 }
 
+- (void)createPDFReportWithCompletionBlock:(GSCXPDFReportCompletionBlock)onComplete {
+  [self createHTMLReportWithCompletionBlock:^(WKWebView *webView) {
+    NSURL *url = [GSCXReport gscx_getPDFFromWebView:webView];
+    onComplete(url);
+  }];
+}
+
 #pragma mark - WKNavigationDelegate
 
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-  NSURL *pdfURL = [[self class] _getPDFFromWebView:_helperWebview];
-  _onComplete(pdfURL);
+- (void)webView:(WKWebView *)webView
+    didFinishNavigation:(null_unspecified WKNavigation *)navigation {
+  _onComplete(self.helperWebview);
+  self.helperWebview = nil;
 }
 
 #pragma mark - Private
 
 /**
- *  Creates a local HTML page with the given context.
+ * Creates a local HTML page with the given context.
  */
-+ (NSURL *)_createLocalSiteWithHTMLString:(NSString *)html context:(GSCXReportContext *)context {
++ (NSURL *)gscx_createLocalSiteWithHTMLString:(NSString *)html
+                                      context:(GSCXReportContext *)context {
   // Create a temp directory to hold the local website.
-  NSURL *temporaryDirectoryURL = [NSURL fileURLWithPath:NSTemporaryDirectory()
-                                            isDirectory:YES];
-  NSString *tempDirName = [[NSProcessInfo processInfo] globallyUniqueString];
-  temporaryDirectoryURL = [temporaryDirectoryURL URLByAppendingPathComponent:tempDirName];
-  NSError *error;
-      [[NSFileManager defaultManager] createDirectoryAtURL:temporaryDirectoryURL
-                               withIntermediateDirectories:YES
-                                                attributes:nil
-                                                     error:&error];
-  NSAssert(error == nil, @"Could not create sharable dir: %@", error);
-
+  NSURL *temporaryDirectoryURL = [GSCXUtils uniqueTemporaryDirectoryURL];
   // Add an index.html which will be the home page with the given HTML.
   NSURL *indexURL = [temporaryDirectoryURL URLByAppendingPathComponent:@"index.html"];
-  [[html dataUsingEncoding:NSASCIIStringEncoding] writeToURL:indexURL atomically:YES];
+  BOOL success = [[html dataUsingEncoding:NSUTF8StringEncoding] writeToURL:indexURL atomically:YES];
+  GTX_ASSERT(success, @"Could not write HTML data to file: %@", indexURL);
 
   // Add all the images into the temp directory
-  [context forEachImageWithHandler:^(UIImage * _Nonnull image, NSString * _Nonnull filename) {
+  [context forEachImageWithHandler:^(UIImage *image, NSString *filename) {
     NSURL *url = [temporaryDirectoryURL URLByAppendingPathComponent:filename];
     [UIImagePNGRepresentation(image) writeToURL:url atomically:YES];
   }];
@@ -85,9 +109,9 @@
 }
 
 /**
- *  Generates a PDF from the webpage in the given webview.
+ * Generates a PDF from the webpage in the given webview.
  */
-+ (NSURL *)_getPDFFromWebView:(UIView *)webView {
++ (NSURL *)gscx_getPDFFromWebView:(UIView *)webView {
   // Prepare a PDF renderer.
   UIViewPrintFormatter *formatter = [webView viewPrintFormatter];
   UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
@@ -119,3 +143,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

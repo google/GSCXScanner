@@ -16,13 +16,16 @@
 
 #import "GSCXTestViewController.h"
 
+#import "GSCXTestConstraintsViewController.h"
+#import "GSCXTestReportViewController.h"
 #import "GSCXTestScannerViewController.h"
 #import "GSCXTestUIAccessibilityElementViewController.h"
 #import "GSCXUITestViewController.h"
-
+#import <GTXiLib/GTXiLib.h>
 NSString *const kMainTableViewAccessibilityId = @"kMainTableViewAccessibilityId";
+
 /**
- *  The cell reuse identifier for the table view.
+ * The cell reuse identifier for the table view.
  */
 static NSString *const kGSCXTestTableViewReuseIdentifier = @"kGSCXTestTableViewReuseIdentifier";
 
@@ -41,9 +44,11 @@ static NSString *const kGSCXTestTableViewReuseIdentifier = @"kGSCXTestTableViewR
   self.tableView.accessibilityIdentifier = kMainTableViewAccessibilityId;
   [self.tableView registerClass:[UITableViewCell class]
          forCellReuseIdentifier:kGSCXTestTableViewReuseIdentifier];
-  self.controllerClasses =
-      @ [[GSCXUITestViewController class], [GSCXTestScannerViewController class],
-         [GSCXTestUIAccessibilityElementViewController class]];
+  self.controllerClasses = @[
+    [GSCXUITestViewController class], [GSCXTestScannerViewController class],
+    [GSCXTestUIAccessibilityElementViewController class], [GSCXTestReportViewController class],
+    [GSCXTestConstraintsViewController class]
+  ];
 }
 
 + (NSString *)accessibilityIdentifierOfCellForPage:(Class<GSCXTestPage>)pageClass {
@@ -57,7 +62,7 @@ static NSString *const kGSCXTestTableViewReuseIdentifier = @"kGSCXTestTableViewR
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  NSAssert(section == 0, @"GSCXTestViewController should not have multiple sections.");
+  GTX_ASSERT(section == 0, @"GSCXTestViewController should not have multiple sections.");
   return (NSInteger)[self.controllerClasses count];
 }
 

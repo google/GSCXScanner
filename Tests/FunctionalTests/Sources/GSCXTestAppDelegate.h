@@ -17,68 +17,128 @@
 #import <UIKit/UIKit.h>
 
 /**
- *  The name of the environment variable determining whether the overlay window forwards or does not
- *  forward hits.
+ * The name of the environment variable determining whether the overlay window forwards or does not
+ * forward hits.
  */
 FOUNDATION_EXTERN NSString *const kWindowOverlayTypeKey;
+
 /**
- *  The value of the overlay type environment variable configuring the overlay window to forward
- *  hits.
+ * The value of the overlay type environment variable configuring the overlay window to forward
+ * hits.
  */
 FOUNDATION_EXTERN NSString *const kWindowOverlayTypeTransparent;
+
 /**
- *  The value of the overlay type environment variable configuring the overlay window to not forward
- *  hits. The app starts on the GSCXUITestsViewController page instead of the table view page
- *  because there's no other way to navigate to the UI tests page manually with an opaque window.
+ * The value of the overlay type environment variable configuring the overlay window to not forward
+ * hits. The app starts on the GSCXUITestsViewController page instead of the table view page
+ * because there's no other way to navigate to the UI tests page manually with an opaque window.
  */
 FOUNDATION_EXTERN NSString *const kWindowOverlayTypeOpaque;
+
 /**
- *  The accessibility identifier of the main application window.
+ * The name of the environment variable determining whether multiple results windows can be
+ * displayed.
+ */
+FOUNDATION_EXTERN NSString *const kResultsWindowPresentationTypeKey;
+
+/**
+ * The value of the results window presentation type environment variable allowing only a single
+ * results window.
+ */
+FOUNDATION_EXTERN NSString *const kResultsWindowPresentationTypeSingle;
+
+/**
+ * The value of the results window presentation type environment variable allowing multiple results
+ * windows.
+ */
+FOUNDATION_EXTERN NSString *const kResultsWindowPresentationTypeMultiple;
+
+/**
+ * The name of the environment variable determining how frequently continuous scans should be
+ * scheduled
+ */
+FOUNDATION_EXTERN NSString *const kContinuousScannerTimeIntervalKey;
+
+/**
+ * The name of the environment variable determining if the default sharing delegate is used or if a
+ * dummy sharing delegate is used.
+ */
+FOUNDATION_EXTERN NSString *const kUseTestSharingDelegateKey;
+
+/**
+ * The accessibility identifier of the main application window.
  */
 FOUNDATION_EXTERN NSString *const kMainWindowAccessibilityId;
+
 /**
- *  The name of the first installed check which fails elements for a given tag.
+ * The name of the first installed check which fails elements for a given tag.
  */
-FOUNDATION_EXTERN NSString *const kGSCXTestTagCheckName1;
+FOUNDATION_EXTERN NSString *const kGSCXTestCheckName1;
+
 /**
- *  The tag for which the first installed check fails elements.
+ * The tag for which the first installed check fails elements.
  */
-FOUNDATION_EXTERN const NSInteger kGSCXTestTagCheckTag1;
+FOUNDATION_EXTERN const NSInteger kGSCXTestCheckTag1;
+
 /**
- *  The name of the second installed check which fails elements for a given tag.
+ * The name of the second installed check which fails elements for a given tag.
  */
-FOUNDATION_EXTERN NSString *const kGSCXTestTagCheckName2;
+FOUNDATION_EXTERN NSString *const kGSCXTestCheckName2;
+
 /**
- *  The tag for which the second installed check fails elements.
+ * The tag for which the second installed check fails elements.
  */
-FOUNDATION_EXTERN const NSInteger kGSCXTestTagCheckTag2;
+FOUNDATION_EXTERN const NSInteger kGSCXTestCheckTag2;
+
 /**
- *  The name of the third installed check which fails elements for a given tag.
+ * The name of the third installed check which fails elements for a given tag.
  */
-FOUNDATION_EXTERN NSString *const kGSCXTestTagCheckName3;
+FOUNDATION_EXTERN NSString *const kGSCXTestCheckName3;
+
 /**
- *  The tag for which the third installed check fails elements.
+ * The tag for which the third installed check fails elements.
  */
-FOUNDATION_EXTERN const NSInteger kGSCXTestTagCheckTag3;
+FOUNDATION_EXTERN const NSInteger kGSCXTestCheckTag3;
+
 /**
- *  The name of the fourth installed check which fails elements for a given tag. Fails the same
- *  elements as the first installed check.
+ * The name of the fourth installed check which fails elements for a given tag. Fails the same
+ * elements as the first installed check.
  */
-FOUNDATION_EXTERN NSString *const kGSCXTestTagCheckName4;
+FOUNDATION_EXTERN NSString *const kGSCXTestCheckName4;
+
 /**
- *  The tag for which the fourth installed check fails elements. Equal to kGSCXTagCheckTag1.
+ * The tag for which the fourth installed check fails elements. Equal to kGSCXTagCheckTag1.
  */
-FOUNDATION_EXTERN const NSInteger kGSCXTestTagCheckTag4;
+FOUNDATION_EXTERN const NSInteger kGSCXTestCheckTag4;
+
+/**
+ * The name of the fifth installed check which fails elements for a given tag. The description
+ * of this check contains non-ASCII UTF8 characters.
+ */
+FOUNDATION_EXTERN NSString *const kGSCXTestUTF8CheckName5;
+
+/**
+ * The tag for which the fifth installed check fails elements.
+ */
+FOUNDATION_EXTERN const NSInteger kGSCXTestUTF8CheckTag5;
 
 @interface GSCXTestAppDelegate : UIResponder <UIApplicationDelegate>
 
 /**
- *  The main application window.
+ * The main application window.
  */
 @property(strong, nonatomic) UIWindow *window;
+
 /**
- *  The overlay window presented above the main application window.
+ * The overlay window presented above the main application window.
  */
 @property(strong, nonatomic) UIWindow *overlayWindow;
+
+/**
+ * Simulates a continuous scanning scheduling event. If the continuous scanner
+ * is enabled, this causes a scan event. Otherwise, nothing happens. Crashes if
+ * the app is using periodic scheduling instead of manual scheduling.
+ */
+- (void)triggerScheduleScanEvent;
 
 @end

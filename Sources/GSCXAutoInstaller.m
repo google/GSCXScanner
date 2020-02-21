@@ -17,19 +17,21 @@
 #import "GSCXAutoInstaller.h"
 
 #import "GSCXInstaller.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - GSCXAutoInstallerAppListener Interface
 
 /**
- *  Listens to app notifications and installs scanner when app is launched.
+ * Listens to app notifications and installs scanner when app is launched.
  */
 @interface GSCXAutoInstallerAppListener : NSObject
+
 /**
- *  Begin listening for app notifications.
+ * Begin listening for app notifications.
  */
-+ (void)startListening;
++ (void)gscx_startListening;
+
 @end
 
 #pragma mark - GSCXAutoInstallerAppListener Implementation
@@ -38,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
   UIWindow *_overlayWindow;
 }
 
-+ (instancetype)defaultListener {
++ (instancetype)gscx_defaultListener {
   static dispatch_once_t onceToken;
   static GSCXAutoInstallerAppListener *defaultInstance;
   dispatch_once(&onceToken, ^{
@@ -47,15 +49,16 @@ NS_ASSUME_NONNULL_BEGIN
   return defaultInstance;
 }
 
-+ (void)startListening {
-  [[NSNotificationCenter defaultCenter] addObserver:[GSCXAutoInstallerAppListener defaultListener]
-                                           selector:@selector(applicationDidFinishLaunching:)
-                                               name:UIApplicationDidFinishLaunchingNotification
-                                             object:nil];
++ (void)gscx_startListening {
+  [[NSNotificationCenter defaultCenter]
+      addObserver:[GSCXAutoInstallerAppListener gscx_defaultListener]
+         selector:@selector(applicationDidFinishLaunching:)
+             name:UIApplicationDidFinishLaunchingNotification
+           object:nil];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
-  NSAssert(_overlayWindow == nil, @"iOS Scanner was already installed.");
+  GTX_ASSERT(_overlayWindow == nil, @"iOS Scanner was already installed.");
   // TODO: Also check if scanner was installed using other APIs in GSCXInstaller.
   _overlayWindow = [GSCXInstaller installScanner];
 }
@@ -67,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation GSCXAutoInstaller
 
 + (void)load {
-  [GSCXAutoInstallerAppListener startListening];
+  [GSCXAutoInstallerAppListener gscx_startListening];
 }
 
 @end

@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 const CGFloat kGSCXRingViewDefaultInnerWidth = 2.0f;
 const CGFloat kGSCXRingViewDefaultOuterWidth = 4.0f;
 
+/**
+ * The minimum size the width or height of a rectangle can be to be accessible.
+ */
+static const CGFloat kGSCXRingViewMinimumSize = 44.0;
+
 @implementation GSCXRingView
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -46,7 +51,10 @@ const CGFloat kGSCXRingViewDefaultOuterWidth = 4.0f;
                              innerWidth:(CGFloat)innerWidth
                              outerWidth:(CGFloat)outerWidth {
   NSParameterAssert(innerWidth < outerWidth);
-  CGRect ringFrame = CGRectInset(focusRect, -outerWidth / 2.0f, -outerWidth / 2.0f);
+  CGFloat width = MAX(CGRectGetWidth(focusRect) + outerWidth, kGSCXRingViewMinimumSize);
+  CGFloat height = MAX(CGRectGetHeight(focusRect) + outerWidth, kGSCXRingViewMinimumSize);
+  CGRect ringFrame = CGRectMake(CGRectGetMidX(focusRect) - width / 2.0,
+                                CGRectGetMidY(focusRect) - height / 2.0, width, height);
   GSCXRingView *ringView = [[GSCXRingView alloc] initWithFrame:ringFrame];
   [ringView setInnerWidth:innerWidth outerWidth:outerWidth];
   return ringView;

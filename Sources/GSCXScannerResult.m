@@ -16,7 +16,18 @@
 
 #import "GSCXScannerResult.h"
 
+#import "GSCXRingViewArranger.h"
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
+
+@interface GSCXScannerResult() {
+  /**
+   * The frame of the screenshot when this object was created.
+   */
+  CGRect _originalScreenshotFrame;
+}
+
+@end
 
 @implementation GSCXScannerResult
 
@@ -26,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (self) {
     _issues = issues;
     _screenshot = screenshot;
+    _originalScreenshotFrame = screenshot.frame;
   }
   return self;
 }
@@ -90,8 +102,8 @@ NS_ASSUME_NONNULL_BEGIN
     }
     count += issue.underlyingIssueCount;
   }
-  NSAssert(NO, @"Should not reach end of method for count %ld at index %ld.", (long)self.issueCount,
-           (long)index);
+  GTX_ASSERT(NO, @"Should not reach end of method for count %ld at index %ld.",
+             (long)self.issueCount, (long)index);
   return CGRectNull;
 }
 
@@ -107,24 +119,68 @@ NS_ASSUME_NONNULL_BEGIN
   return nil;
 }
 
-- (UIImage *)screenshotImage {
-  UIGraphicsBeginImageContextWithOptions(self.screenshot.bounds.size, YES, 0.0);
-  [self.screenshot drawViewHierarchyInRect:self.screenshot.bounds afterScreenUpdates:NO];
-  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
-  return image;
-}
-
 - (NSString *)htmlDescription:(GSCXReportContext *)context {
   NSMutableArray *htmlSnippets  = [[NSMutableArray alloc] init];
+  [htmlSnippets addObject:@"<meta charset=\"UTF-8\">"];
   for (GSCXScannerIssue *issue in self.issues) {
     [htmlSnippets addObject:[issue htmlDescription]];
   }
   [htmlSnippets addObject:@"<hr>"];
   [htmlSnippets addObject:@"<h2>Window Screenshot</h2>"];
-  NSString *screenshotPath = [context pathByAddingImage:[self  screenshotImage]];
+  NSString *screenshotPath = [context pathByAddingImage:[self gscx_screenshotImage]];
   [htmlSnippets addObject:[NSString stringWithFormat:@"<img src=\"%@\" />", screenshotPath]];
   return [htmlSnippets componentsJoinedByString:@"<br/>"];
+}
+
+- (CGRect)originalScreenshotFrame {
+  return _originalScreenshotFrame;
+}
+
+- (void)moveIssuesWithExistingElementsFromResult:(GSCXScannerResult *)result {
+  NSMutableArray<GSCXScannerIssue *> *currentIssues = [NSMutableArray array];
+  NSMutableArray<GSCXScannerIssue *> *otherIssues = [result.issues mutableCopy];
+  for (GSCXScannerIssue *issue in self.issues) {
+    BOOL hasFoundDuplicate = NO;
+    for (NSInteger i = (NSInteger)[otherIssues count] - 1; i >= 0; i--) {
+      if ([issue hasEqualElementAsIssue:otherIssues[i]]) {
+        hasFoundDuplicate = YES;
+        [currentIssues addObject:[issue issueByCombiningWithDuplicateIssue:otherIssues[i]]];
+        [otherIssues removeObjectAtIndex:i];
+        // Issues in GSCXScannerResult objects are assumed to be unique, so it is not possible to
+        // find another issue with equal element.
+        break;
+      }
+    }
+    if (!hasFoundDuplicate) {
+      [currentIssues addObject:issue];
+    }
+  }
+  _issues = [NSArray arrayWithArray:currentIssues];
+  result->_issues = [NSArray arrayWithArray:otherIssues];
+}
+
++ (NSArray<GSCXScannerResult *> *)resultsArrayByDedupingResultsArray:
+    (NSArray<GSCXScannerResult *> *)results {
+  NSMutableArray<GSCXScannerResult *> *dedupedResults = [results mutableCopy];
+  for (NSInteger i = 0; i < (NSInteger)[dedupedResults count]; i++) {
+    for (NSInteger j = i + 1; j < (NSInteger)[dedupedResults count]; j++) {
+      [dedupedResults[i] moveIssuesWithExistingElementsFromResult:dedupedResults[j]];
+    }
+    if ([dedupedResults[i].issues count] == 0) {
+      [dedupedResults removeObjectAtIndex:i];
+      i--;
+    }
+  }
+  return [NSArray arrayWithArray:dedupedResults];
+}
+
+#pragma mark - Private
+
+- (UIImage *)gscx_screenshotImage {
+  GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:self];
+  CGRect originalCoordinates = [[UIScreen mainScreen] bounds];
+  return [arranger imageByAddingRingViewsToSuperview:self.screenshot
+                                     fromCoordinates:originalCoordinates];
 }
 
 @end

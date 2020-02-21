@@ -23,7 +23,7 @@
 #import "XCUIElement+GSCXScanner.h"
 
 /**
- *  Tests that GSCXHitForwardingWindow properly forwards hits to underlying window.
+ * Tests that GSCXHitForwardingWindow properly forwards hits to underlying window.
  */
 @interface GSCXTransparentWindowTests : GSCXUITestCase
 @end
@@ -61,7 +61,10 @@
   XCUICoordinate *startCoordinate = [slider coordinateWithNormalizedOffset:CGVectorMake(0.5, 0.5)];
   XCUICoordinate *endCoordinate = [slider coordinateWithNormalizedOffset:CGVectorMake(1.0, 0.5)];
   [startCoordinate pressForDuration:0.0 thenDragToCoordinate:endCoordinate];
-  XCTAssertEqualObjects([slider value], @"100%");
+  // On some iOS versions, dragging the slider all the way to the end correctly sets the value to
+  // the maximum. On others, it stops slightly before the maximum because it is not perfectly
+  // continuous. Checking both cases fixes this error.
+  XCTAssert([[slider value] isEqualToString:@"100%"] || [[slider value] isEqualToString:@"99%"]);
 }
 
 - (void)testTransparentWindowAllowsPressingButton {

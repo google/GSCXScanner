@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GSCXScannerOverlayViewController">
             <connections>
-                <outlet property="performScanButton" destination="PN0-s7-QL2" id="mfC-7v-dLu"/>
+                <outlet property="settingsButton" destination="PN0-s7-QL2" id="mfC-7v-dLu"/>
+                <outlet property="settingsButtonBlur" destination="7ML-st-0xG" id="ydK-Nc-91L"/>
                 <outlet property="view" destination="iN0-l3-epB" id="sfx-zR-GJt"/>
             </connections>
         </placeholder>
@@ -20,29 +19,49 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PN0-s7-QL2">
-                    <rect key="frame" x="16" y="617" width="94" height="30"/>
-                    <color key="backgroundColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <gestureRecognizers/>
-                    <constraints>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="5NE-iN-HBi"/>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="8es-6i-FBd"/>
-                    </constraints>
-                    <state key="normal" title="Perform Scan">
-                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                    </state>
-                    <connections>
-                        <action selector="performScanButtonPressed:" destination="-1" eventType="touchUpInside" id="XHW-5A-ofO"/>
-                        <outletCollection property="gestureRecognizers" destination="5ha-wf-q5l" appends="YES" id="QT4-ZD-BbQ"/>
-                    </connections>
-                </button>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7ML-st-0xG">
+                    <rect key="frame" x="67" y="269" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="As7-Id-P2p">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PN0-s7-QL2">
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="48"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="5NE-iN-HBi"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="8es-6i-FBd"/>
+                                </constraints>
+                                <state key="normal" title="Scanner Menu">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="gscx_settingsButtonPressed:" destination="-1" eventType="touchUpInside" id="XHW-5A-ofO"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="PN0-s7-QL2" secondAttribute="trailing" id="5QG-qN-cZO"/>
+                            <constraint firstItem="PN0-s7-QL2" firstAttribute="top" secondItem="As7-Id-P2p" secondAttribute="top" id="9TE-G7-Bh7"/>
+                            <constraint firstItem="PN0-s7-QL2" firstAttribute="leading" secondItem="As7-Id-P2p" secondAttribute="leading" id="tB5-pg-kzo"/>
+                            <constraint firstAttribute="bottom" secondItem="PN0-s7-QL2" secondAttribute="bottom" id="xyz-CF-gdD"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="WJz-yx-8bE" appends="YES" id="OPZ-2R-KXH"/>
+                        </connections>
+                    </view>
+                    <blurEffect style="dark"/>
+                </visualEffectView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="140" y="153"/>
         </view>
-        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="5ha-wf-q5l">
+        <panGestureRecognizer minimumNumberOfTouches="1" id="WJz-yx-8bE">
             <connections>
-                <action selector="longPressGestureRecognized:" destination="-1" id="hSv-0U-1YZ"/>
+                <action selector="gscx_dragSettingsButton:" destination="-1" id="dxV-eL-dmE"/>
             </connections>
-        </pongPressGestureRecognizer>
+        </panGestureRecognizer>
     </objects>
 </document>

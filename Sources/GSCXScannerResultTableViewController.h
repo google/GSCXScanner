@@ -14,8 +14,6 @@
 // limitations under the License.
 //
 
-#import "GSCXWindowOverlayViewController.h"
-
 #import <UIKit/UIKit.h>
 
 #import "GSCXScannerResult.h"
@@ -23,16 +21,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GSCXScannerResultTableViewController
-    : GSCXWindowOverlayViewController <UITableViewDataSource, UITableViewDelegate>
+    : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 /**
- *  The result of a scan. It is the responsibility of this object's owner to set scanResult before
- *  this view controller appears.
+ * The result of a scan. It is the responsibility of this object's owner to set scanResult before
+ * this view controller appears.
  */
 @property(strong, nonatomic) GSCXScannerResult *scanResult;
 
 /**
- *  The table view displaying all individual issues found in a scan.
+ * The table view displaying all individual issues found in a scan.
  */
 @property(weak, nonatomic) IBOutlet UITableView *tableView;
 

@@ -19,17 +19,12 @@
 /**
  Storage for GSCXAnalytics.enabled property.
  */
-static BOOL gEnabled = YES;
+static BOOL gEnabled = NO;
 
 /**
  Storage for GSCXAnalytics.handler property.
  */
 static GSCXAnalyticsHandlerBlock gHandler;
-
-/**
- The Analytics tracking ID that receives GSCXiLib usage data.
- */
-static NSString *const kGSCXAnalyticsTrackingID = @"UA-113761703-1";
 
 #pragma mark - Implementation
 

@@ -14,35 +14,55 @@
 // limitations under the License.
 //
 
-#import "GSCXWindowOverlayViewController.h"
-
 #import <UIKit/UIKit.h>
 
 #import "GSCXRingView.h"
 #import "GSCXScannerResult.h"
+#import "GSCXSharingDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Presents a screenshot of a scanned view hiearchy. Overlays rings over elements with
- *  accessibility issues so users can see which elements have issues. Users can tap on issues to see
- *  a detail view containing issue name, description, and resolution. This view controller is
- *  considered opaque.
+ * The accessibility identifier of the share report button.
  */
-@interface GSCXScannerScreenshotViewController
-    : GSCXWindowOverlayViewController <UINavigationControllerDelegate>
+FOUNDATION_EXTERN NSString *const kGSCXShareReportButtonAccessibilityIdentifier;
 
 /**
- *  The result of scanning a view hierarchy. It is the responsibility of the owner of this view
- *  controller to set this property before viewDidLoad is called.
+ * Presents a screenshot of a scanned view hiearchy. Overlays rings over elements with
+ * accessibility issues so users can see which elements have issues. Users can tap on issues to see
+ * a detail view containing issue name, description, and resolution. This view controller is
+ * considered opaque.
+ */
+@interface GSCXScannerScreenshotViewController : UIViewController <UINavigationControllerDelegate>
+
+/**
+ * The result of scanning a view hierarchy. It is the responsibility of the owner of this view
+ * controller to set this property before viewDidLoad is called.
  */
 @property(strong, nonatomic) GSCXScannerResult *scanResult;
 
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
+                         bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+
 /**
- *  Returns the accessibility identifier of the ring view at the given index.
+ * Initializes this object by loading from a xib file from a given bundle. The user provides
+ * whether accessibility is enabled or not.
  *
- *  @param index The index of the ring view.
- *  @return A string representing the accessibility identifier of the corresponding ring view.
+ * @param nibName The name of the xib file to load from (without the ".xib" extension).
+ * @param bundle The bundle the xib file is located in, or nil if it's in the main bundle.
+ * @param scanResult The result of a scan.
+ * @param sharingDelegate Controls how the report of the results is shared.
+ * @return An initialized @c GSCXContinuousScannerResultViewController object.
+ */
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
+                         bundle:(nullable NSBundle *)nibBundleOrNil
+                     scanResult:(GSCXScannerResult *)scanResult
+                sharingDelegate:(id<GSCXSharingDelegate>)sharingDelegate;
+/**
+ * Returns the accessibility identifier of the ring view at the given index.
+ *
+ * @param index The index of the ring view.
+ * @return A string representing the accessibility identifier of the corresponding ring view.
  */
 + (NSString *)accessibilityIdentifierForRingViewAtIndex:(NSInteger)index;
 

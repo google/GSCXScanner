@@ -19,8 +19,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Including this class in Objective-C runtime will cause the scanner to be installed when the app
- *  is launched.
+ * Including this class in Objective-C runtime will cause the scanner to be installed when the app
+ * is launched.
  */
 @interface GSCXAutoInstaller : NSObject
 @end

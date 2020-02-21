@@ -27,57 +27,78 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Scans a view hieararchy(s) for accessibility issues based on a set of registered checks.
+ * Scans a view hieararchy(s) for accessibility issues based on a set of registered checks.
  */
 @interface GSCXScanner : NSObject
 
 /**
- *  The object that receives notifications about scan events.
+ * The object that receives notifications about scan events.
  */
 @property(weak, nonatomic) id<GSCXScannerDelegate> _Nullable delegate;
+
 /**
- *  The most recent result of scanning the view hierarchy, or nil if no scan has
- *  been performed yet. Old results are overwritten.
+ * The most recent result of scanning the view hierarchy, or nil if no scan has
+ * been performed yet. Old results are overwritten.
  */
 @property(strong, nonatomic, readonly) GSCXScannerResult *_Nullable lastScanResult;
 
 /**
- *  Constructs a GSCXScanner object.
+ * Constructs a GSCXScanner object.
  */
 + (instancetype)scanner;
+
 /**
- *  Constructs a GSCXScanner object with the given checks and blacklists.
+ * Constructs a GSCXScanner object with the given checks and blacklists.
  *
- *  @param checks The accessibility checks to register.
- *  @param blacklists The blacklists to register.
- *  @return A GSCXScanner object with registered checks and blacklists.
+ * @param checks The accessibility checks to register.
+ * @param blacklists The blacklists to register.
+ * @return A GSCXScanner object with registered checks and blacklists.
  */
 + (instancetype)scannerWithChecks:(NSArray<id<GTXChecking>> *)checks
                        blacklists:(NSArray<id<GTXBlacklisting>> *)blacklists;
+
 /**
- *  Scans the view hierarchy with root given by the data source for accessibility
- *  issues. rootViews is an array of UIViews representing the roots of
- *  view hierarchies for the scanner to check. lastScanResult is set to the return
- *  value of this method.
+ * Scans the view hierarchy with root given by the data source for accessibility
+ * issues. rootViews is an array of UIViews representing the roots of
+ * view hierarchies for the scanner to check. lastScanResult is set to the return
+ * value of this method.
  *
- *  @param rootViews An array of views to check for accessibility issues. Checks the given views
- *  and all subviews.
- *  @return A GSCXScannerResult object containing all the issues found in the scan.
+ * @param rootViews An array of views to check for accessibility issues. Checks the given views
+ * and all subviews.
+ * @return A GSCXScannerResult object containing all the issues found in the scan.
  */
 - (GSCXScannerResult *)scanRootViews:(NSArray<UIView *> *)rootViews;
+
 /**
- *  Registers the given check to be executed on all elements this instance is used
- *  on.
+ * Registers the given check to be executed on all elements this instance is used
+ * on.
  *
- *  @param check A GTXChecking object used to check for accessibility issues.
+ * @param check A GTXChecking object used to check for accessibility issues.
  */
 - (void)registerCheck:(id<GTXChecking>)check;
+
 /**
- *  Configures this instance to skip elements by a given blacklist.
+ * Removes the given check from being executed on all elements. If the check is not registered, does
+ * nothing.
  *
- *  @param blacklist A GTXBlacklisting object used to skip elements for accessibility checks.
+ * @param check A @c GTXChecking object that needs to be de-registered.
+ */
+- (void)deregisterCheck:(id<GTXChecking>)check;
+
+/**
+ * Configures this instance to skip elements by a given blacklist.
+ *
+ * @param blacklist A GTXBlacklisting object used to skip elements for accessibility checks.
  */
 - (void)registerBlacklist:(id<GTXBlacklisting>)blacklist;
+
+/**
+ * Removes the blacklist from skipping all elements. If the blacklist is not registered, does
+ * nothing.
+ *
+ * @param blacklist A @c GTXBlacklisting object that needs to be de-registered.
+ */
+- (void)deregisterBlacklist:(id<GTXBlacklisting>)blacklist;
 
 @end
 

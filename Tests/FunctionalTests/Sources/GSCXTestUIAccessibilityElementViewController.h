@@ -19,23 +19,25 @@
 #import "GSCXTestPage.h"
 
 /**
- *  A view controller containing UIAccessibilityElements (not UIViews) which fail accessibility
- *  checks.
+ * A view controller containing UIAccessibilityElements (not UIViews) which fail accessibility
+ * checks.
  */
 @interface GSCXTestUIAccessibilityElementViewController : UIViewController <GSCXTestPage>
 
 /**
- *  A visual indicator for the location of the underlying pure UIAccessibilityElement.
+ * A visual indicator for the location of the underlying pure UIAccessibilityElement.
  */
 @property(weak, nonatomic) IBOutlet UIView *visualIndicator;
+
 /**
- *  A visual indicator for the location of the underlying pure UIAccessibilityElement acting as an
- *  accessibility container.
+ * A visual indicator for the location of the underlying pure UIAccessibilityElement acting as an
+ * accessibility container.
  */
 @property(weak, nonatomic) IBOutlet UIView *container;
+
 /**
- *  A visual indicator for the location of the underlying pure UIAccessibilityElement nested inside
- *  the accessibility container.
+ * A visual indicator for the location of the underlying pure UIAccessibilityElement nested inside
+ * the accessibility container.
  */
 @property(weak, nonatomic) IBOutlet UIView *subVisualIndicator;
 

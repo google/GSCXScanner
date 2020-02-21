@@ -14,50 +14,106 @@
 // limitations under the License.
 //
 
-#import "GSCXWindowOverlayViewController.h"
-
 #import <UIKit/UIKit.h>
 
+#import "GSCXContinuousScanner.h"
+#import "GSCXContinuousScannerDelegate.h"
+#import "GSCXResultsWindowCoordinating.h"
 #import "GSCXScanner.h"
-#import "GSCXWindowOverlayPair.h"
+#import "GSCXSharingDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  The text of the button dismissing the alert shown when a scan finds no accessibility issues.
+ * The accessibility identifier of the button displaying the settings page.
  */
-FOUNDATION_EXTERN NSString *const kGSCXNoIssuesDismissButtonText;
+FOUNDATION_EXTERN NSString *const kGSCXScannerOverlaySettingsButtonAccessibilityIdentifier;
+
 /**
- *  The accessibility identifier of the button that performs a scan.
+ * The accessibility identifier of the button that performs a scan.
  */
 FOUNDATION_EXTERN NSString *const kGSCXPerformScanAccessibilityIdentifier;
 
 /**
- *  Contains the UI for manually triggering a scan on an application.
+ * The title of the button that performs a scan.
  */
-@interface GSCXScannerOverlayViewController : GSCXWindowOverlayViewController
+FOUNDATION_EXTERN NSString *const kGSCXPerformScanTitle;
 
 /**
- *  The scanner used to check the application for issues. It is the responsibility of this object's
- *  owner to set this before it is used.
+ * The accessibility identifier of the button that dismisses the settings page.
+ */
+FOUNDATION_EXTERN NSString *const kGSCXDismissSettingsAccessibilityIdentifier;
+
+/**
+ * The title of the button that dismisses the settings page.
+ */
+FOUNDATION_EXTERN NSString *const kGSCXDismissSettingsTitle;
+
+/**
+ * The text of the bar button item that dismisses the results window and returns to the main
+ * application.
+ */
+FOUNDATION_EXTERN NSString *const kGSCXScannerOverlayDismissButtonText;
+
+/**
+ * The text of the button dismissing the alert shown when a scan finds no accessibility issues.
+ */
+FOUNDATION_EXTERN NSString *const kGSCXNoIssuesDismissButtonText;
+
+/**
+ * The corner radius of the rounded corners of the settings button.
+ */
+FOUNDATION_EXTERN const CGFloat kGSCXSettingsCornerRadius;
+
+/**
+ * Contains the UI for manually triggering a scan on an application.
+ */
+@interface GSCXScannerOverlayViewController : UIViewController <GSCXContinuousScannerDelegate>
+
+/**
+ * The scanner used to check the application for issues. It is the responsibility of this object's
+ * owner to set this before it is used.
  */
 @property(strong, nonatomic, nullable) GSCXScanner *scanner;
+
 /**
- *  Displays the number of accessibility issues discovered by the last scan.
- *  Tapping on this button displays the table view of all accessibility issues.
+ * Scans the application for accessibility issues in the background without explicit user
+ * interaction. This object's owner must set this before it is used.
  */
-@property(weak, nonatomic, nullable) IBOutlet UIButton *performScanButton;
+@property(strong, nonatomic, nullable) GSCXContinuousScanner *continuousScanner;
+
+/**
+ * Used to present and dismiss the results of scans.
+ */
+@property(strong, nonatomic) id<GSCXResultsWindowCoordinating> resultsWindowCoordinator;
+
+/**
+ * A button displaying the settings page on tap.
+ */
+@property(weak, nonatomic, nullable) IBOutlet UIButton *settingsButton;
+
+/**
+ * A dark blur wrapping the settings button to visually differentiate the scanner overlay UI from
+ * the application UI.
+ */
+@property(weak, nonatomic) IBOutlet UIVisualEffectView *settingsButtonBlur;
+
+/**
+ * Controls how scan reports are shared.
+ */
+@property(strong, nonatomic) id<GSCXSharingDelegate> sharingDelegate;
 
 - (instancetype)initWithNibName:(nullable NSString *)nibName
                          bundle:(nullable NSBundle *)bundle NS_UNAVAILABLE;
+
 /**
- *  Initializes this object by loading from a xib file from a given bundle. The user provides
- *  whether accessibility is enabled or not.
+ * Initializes this object by loading from a xib file from a given bundle. The user provides
+ * whether accessibility is enabled or not.
  *
- *  @param nibName The name of the xib file to load from (without the ".xib" extension).
- *  @param bundle The bundle the xib file is located in, or nil if it's in the main bundle.
- *  @param accessibilityEnabled YES if accessibility is enabled, NO otherwise.
- *  @return An initialized GSCXScannerOverlayViewController object.
+ * @param nibName The name of the xib file to load from (without the ".xib" extension).
+ * @param bundle The bundle the xib file is located in, or nil if it's in the main bundle.
+ * @param accessibilityEnabled YES if accessibility is enabled, NO otherwise.
+ * @return An initialized GSCXScannerOverlayViewController object.
  */
 - (instancetype)initWithNibName:(nullable NSString *)nibName
                          bundle:(nullable NSBundle *)bundle

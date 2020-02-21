@@ -20,50 +20,50 @@
 #import "GSCXTestPage.h"
 
 /**
- *  Base class for UI tests. Encapsulates functionality to navigate to the
- *  correct page on set up and terminate the app on tear down.
+ * Base class for UI tests. Encapsulates functionality to navigate to the
+ * correct page on set up and terminate the app on tear down.
  */
 @interface GSCXUITestCase : XCTestCase
 
 /**
- *  The application corresponding to the host app.
+ * The application corresponding to the host app.
  */
 @property(strong, nonatomic) XCUIApplication *app;
 
 /**
- *  Determines if the overlay window of the host app is transparent (forwards
- *  hits) or opaque (does not forward hits).
+ * Determines if the overlay window of the host app is transparent (forwards
+ * hits) or opaque (does not forward hits).
  *
- *  @return YES if the overlay window is transparent, NO otherwise. Defaults to
- *  YES.
+ * @return YES if the overlay window is transparent, NO otherwise. Defaults to
+ * YES.
  */
 - (BOOL)isApplicationOverlayTransparent;
 
 /**
- *  Taps the cell with the given accessibility identifier in the main table view. Scrolls the table
- *  view down until the cell is visible before tapping. If no cell exists in the main table view
- *  with the given accessibility identifier, then the test fails and no scrolling is performed.
+ * Taps the cell with the given accessibility identifier in the main table view. Scrolls the table
+ * view down until the cell is visible before tapping. If no cell exists in the main table view
+ * with the given accessibility identifier, then the test fails and no scrolling is performed.
  *
- *  @param accessibilityIdentifier The accessibility identifier of the cell to be tapped.
+ * @param accessibilityIdentifier The accessibility identifier of the cell to be tapped.
  */
 - (void)tapCellWithIdentifier:(NSString *)accessibilityIdentifier;
 
 /**
- *  Scrolls the table view with the given accessibility identifier down so the cell with the given
- *  accessibility identifier is visible. If the cell does not exist in the table, then the test
- *  fails.
+ * Scrolls the table view with the given accessibility identifier down so the cell with the given
+ * accessibility identifier is visible. If the cell does not exist in the table, then the test
+ * fails.
  *
- *  @param tableViewIdentifier The accessibility identifier of the table view to scroll.
- *  @param cellIdentifier The accessibility identifier of the cell to scroll to.
+ * @param tableViewIdentifier The accessibility identifier of the table view to scroll.
+ * @param cellIdentifier The accessibility identifier of the cell to scroll to.
  */
 - (void)tableViewMatchingIdentifier:(NSString *)tableViewIdentifier
                    dragUntilVisible:(NSString *)cellIdentifier;
 
 /**
- *  Asserts that the view controller corresponding to the given page is visible. If not, the test
- *  fails.
+ * Asserts that the view controller corresponding to the given page is visible. If not, the test
+ * fails.
  *
- *  @param pageClass The class corresponding to GSCXPage representing a page of the app.
+ * @param pageClass The class corresponding to GSCXPage representing a page of the app.
  */
 - (BOOL)assertOnPage:(Class<GSCXTestPage>)pageClass;
 

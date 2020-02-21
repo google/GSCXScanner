@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSString *)pathByAddingImage:(UIImage *)image {
-  NSString *pathPlaceholder = [self _nextImagePathPlaceholder];
+  NSString *pathPlaceholder = [self gscx_nextImagePathPlaceholder];
   _imageFromPathPlaceholder[pathPlaceholder] = image;
   return pathPlaceholder;
 }
@@ -46,9 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Private
 
 /**
- *  @return The next image path placeholder.
+ * @return The next image path placeholder.
  */
-- (NSString  *)_nextImagePathPlaceholder {
+- (NSString *)gscx_nextImagePathPlaceholder {
   _imageIndex += 1;
   return [NSString stringWithFormat:@"image_%d.png", (int)_imageIndex];
 }

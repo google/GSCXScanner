@@ -21,7 +21,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Reuse identifier for GSCXScannerResultTableViewController's table view cells.
+ * Reuse identifier for GSCXScannerResultTableViewController's table view cells.
  */
 static NSString *const kGSCXScannerResultCellReuseIdentifier =
     @"kGSCXScannerResultCellReuseIdentifier";
@@ -48,8 +48,8 @@ static NSString *const kGSCXScannerResultCellReuseIdentifier =
   return (NSInteger)self.scanResult.issueCount;
 }
 
-- (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView
-                 cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewCell *cell =
       [tableView dequeueReusableCellWithIdentifier:kGSCXScannerResultCellReuseIdentifier
                                       forIndexPath:indexPath];
@@ -66,12 +66,6 @@ static NSString *const kGSCXScannerResultCellReuseIdentifier =
                    bundle:[NSBundle bundleForClass:[GSCXScannerResultDetailViewController class]]];
   [detailController setScanResult:self.scanResult issueIndex:(NSUInteger)indexPath.row];
   [self.navigationController pushViewController:detailController animated:YES];
-}
-
-#pragma mark - GSCXWindowOverlayViewController
-
-- (BOOL)isTransparentOverlay {
-  return NO;
 }
 
 @end
