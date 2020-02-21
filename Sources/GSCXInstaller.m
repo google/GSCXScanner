@@ -16,41 +16,81 @@
 
 #import "GSCXInstaller.h"
 
+#import "GSCXAnalytics.h"
+#import "GSCXContinuousScanner.h"
+#import "GSCXContinuousScannerPeriodicScheduler.h"
+#import "GSCXDefaultSharingDelegate.h"
+#import "GSCXInstallerOptions+Internal.h"
+#import "GSCXMasterScheduler.h"
 #import "GSCXScanner.h"
-#import "GSCXHitForwardingWindow.h"
 #import "GSCXScannerOverlayViewController.h"
+#import "GSCXScannerOverlayWindow.h"
+#import "GSCXScannerWindowCoordinator+Internal.h"
+#import "GSCXScannerWindowCoordinator.h"
+#import "GSCXTouchActivitySource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+static const NSTimeInterval kGSCXContinuousScannerInterval = 2.0;
+
 @implementation GSCXInstaller
 
-+ (UIWindow *)installScannerOverWindow:(UIWindow *)applicationWindow
-                                checks:(NSArray<id<GTXChecking>> *)checks
-                            blacklists:(NSArray<id<GTXBlacklisting>> *)blacklists
-                              delegate:(nullable id<GSCXScannerDelegate>)delegate {
++ (GSCXContinuousScanner *)
+    _continuousScannerWithScanner:(GSCXScanner *)scanner
+                  activitySources:
+                      (nullable NSArray<id<GSCXActivitySourceMonitoring>> *)activitySources
+                       schedulers:
+                           (nullable NSArray<id<GSCXContinuousScannerScheduling>> *)schedulers
+                         delegate:(id<GSCXContinuousScannerDelegate>)delegate {
+  if (activitySources == nil) {
+    activitySources = @[ [GSCXTouchActivitySource touchSource] ];
+  }
+  if (schedulers == nil) {
+    schedulers = @[ [GSCXContinuousScannerPeriodicScheduler
+        schedulerWithTimeInterval:kGSCXContinuousScannerInterval] ];
+  }
+  id<GSCXContinuousScannerScheduling> masterScheduler =
+      [GSCXMasterScheduler schedulerWithActivitySources:activitySources schedulers:schedulers];
+  return [GSCXContinuousScanner scannerWithScanner:scanner
+                                          delegate:delegate
+                                         scheduler:masterScheduler];
+}
+
++ (GSCXScannerOverlayWindow *)installScannerWithOptions:(GSCXInstallerOptions *)options {
   BOOL setupSuccessful = [GTXTestEnvironment setupEnvironmentWithError:nil];
   CGRect frame = [[UIScreen mainScreen] bounds];
-  GSCXHitForwardingWindow *overlayWindow = [[GSCXHitForwardingWindow alloc] initWithFrame:frame];
+  GSCXScannerOverlayWindow *overlayWindow = [[GSCXScannerOverlayWindow alloc] initWithFrame:frame];
   GSCXScannerOverlayViewController *viewController = [[GSCXScannerOverlayViewController alloc]
            initWithNibName:@"GSCXScannerOverlayViewController"
                     bundle:[NSBundle bundleForClass:[GSCXScannerOverlayViewController class]]
       accessibilityEnabled:setupSuccessful || UIAccessibilityIsVoiceOverRunning()];
-  viewController.windowOverlayPair =
-      [[GSCXWindowOverlayPair alloc] initWithOverlayWindow:overlayWindow
-                                         applicationWindow:applicationWindow];
-  viewController.scanner = [GSCXScanner scannerWithChecks:checks blacklists:blacklists];
-  viewController.scanner.delegate = delegate;
+  viewController.scanner = [GSCXScanner scannerWithChecks:options.checks
+                                               blacklists:options.blacklists];
+  viewController.scanner.delegate = options.scannerDelegate;
+
+  GSCXContinuousScanner *continuousScanner =
+      [GSCXInstaller _continuousScannerWithScanner:viewController.scanner
+                                   activitySources:options.activitySources
+                                        schedulers:options.schedulers
+                                          delegate:viewController];
+  viewController.continuousScanner = continuousScanner;
+  viewController.resultsWindowCoordinator = [GSCXScannerWindowCoordinator
+      coordinatorWithMultiWindowPresentation:options.isMultiWindowPresentation];
+  viewController.sharingDelegate =
+      options.sharingDelegate ?: [[GSCXDefaultSharingDelegate alloc] init];
+  // This forces the performScanButton into memory if it isn't already.
+  [viewController loadViewIfNeeded];
+  overlayWindow.windowLevel = [GSCXScannerWindowCoordinator windowLevel];
+  overlayWindow.settingsButton = viewController.settingsButton;
   overlayWindow.rootViewController = viewController;
   overlayWindow.hidden = NO;
+  overlayWindow.continuousScanner = continuousScanner;
+  [GSCXAnalytics invokeAnalyticsEvent:GSCXAnalyticsEventScannerInstalled count:1];
   return overlayWindow;
 }
 
-+ (UIWindow *)installScanner {
-  NSArray<id<GTXChecking>> *checks = [GTXChecksCollection allGTXChecks];
-  return [GSCXInstaller installScannerOverWindow:[[UIApplication sharedApplication] keyWindow]
-                                          checks:checks
-                                      blacklists:@[]
-                                        delegate:nil];
++ (GSCXScannerOverlayWindow *)installScanner {
+  return [GSCXInstaller installScannerWithOptions:[[GSCXInstallerOptions alloc] init]];
 }
 
 @end

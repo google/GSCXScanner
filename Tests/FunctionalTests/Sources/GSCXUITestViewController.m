@@ -17,21 +17,32 @@
 #import "GSCXUITestViewController.h"
 
 NSString *const kUITestsDefaultControlState = @"None";
+
 NSString *const kUITestsPageTextFieldAccessibilityIdentifier =
     @"kUITestsPageTextFieldAccessibilityIdentifier";
+
 NSString *const kUITestsPageSliderAccessibilityIdentifier =
     @"kUITestsPageSliderAccessibilityIdentifier";
+
 NSString *const kUITestsPageButtonAccessibilityIdentifier =
     @"kUITestsPageButtonAccessibilityIdentifier";
+
 NSString *const kUITestsPageButtonPressedTitle = @"Pressed";
+
 NSString *const kUITestsSwipeLabelAccessibilityIdentifier =
     @"kUITestsSwipeLabelAccessibilityIdentifier";
+
 NSString *const kUITestsSwipeLabelRightValue = @"Right Swipe";
+
 NSString *const kUITestsSwipeLabelLeftValue = @"Left Swipe";
+
 NSString *const kUITestsSwipeLabelUpValue = @"Up Swipe";
+
 NSString *const kUITestsSwipeLabelDownValue = @"Down Swipe";
+
 NSString *const kUITestsPinchLabelAccessibilityIdentifier =
     @"kUITestsPinchLabelAccessibilityIdentifier";
+
 NSString *const kUITestsPinchLabelPinchedValue = @"Pinched";
 
 @interface GSCXUITestViewController ()
@@ -54,7 +65,7 @@ NSString *const kUITestsPinchLabelPinchedValue = @"Pinched";
 
   [self.view addGestureRecognizer:[[UIPinchGestureRecognizer alloc]
                                       initWithTarget:self
-                                              action:@selector(pinchRecognized:)]];
+                                              action:@selector(gscxtest_pinchRecognized:)]];
 }
 
 #pragma mark - GSCXTestPage
@@ -63,15 +74,17 @@ NSString *const kUITestsPinchLabelPinchedValue = @"Pinched";
   return @"UI Tests";
 }
 
-- (IBAction)buttonPressed:(UIButton *)sender {
+#pragma mark - Private
+
+- (IBAction)gscxtest_buttonPressed:(UIButton *)sender {
   [self.button setTitle:kUITestsPageButtonPressedTitle forState:UIControlStateNormal];
 }
 
-- (IBAction)tapRecognized:(UITapGestureRecognizer *)sender {
+- (IBAction)gscxtest_tapRecognized:(UITapGestureRecognizer *)sender {
   self.swipeLabel.text = kUITestsDefaultControlState;
 }
 
-- (IBAction)swipeRecognized:(UISwipeGestureRecognizer *)sender {
+- (IBAction)gscxtest_swipeRecognized:(UISwipeGestureRecognizer *)sender {
   switch ([sender direction]) {
     case UISwipeGestureRecognizerDirectionRight:
       self.swipeLabel.text = kUITestsSwipeLabelRightValue;
@@ -88,7 +101,7 @@ NSString *const kUITestsPinchLabelPinchedValue = @"Pinched";
   }
 }
 
-- (IBAction)pinchRecognized:(id)sender {
+- (IBAction)gscxtest_pinchRecognized:(id)sender {
   self.pinchLabel.text = kUITestsPinchLabelPinchedValue;
 }
 

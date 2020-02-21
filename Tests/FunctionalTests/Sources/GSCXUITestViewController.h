@@ -19,57 +19,68 @@
 #import "GSCXTestPage.h"
 
 /**
- *  Default state of a UI control when no action has been detected.
+ * Default state of a UI control when no action has been detected.
  */
 FOUNDATION_EXTERN NSString *const kUITestsDefaultControlState;
+
 /**
- *  Accessibility identifier for GSCXUITestViewController's text field.
+ * Accessibility identifier for GSCXUITestViewController's text field.
  */
 FOUNDATION_EXTERN NSString *const kUITestsPageTextFieldAccessibilityIdentifier;
+
 /**
- *  Accessibility identifier for GSCXUITestViewController's slider.
+ * Accessibility identifier for GSCXUITestViewController's slider.
  */
 FOUNDATION_EXTERN NSString *const kUITestsPageSliderAccessibilityIdentifier;
+
 /**
- *  Accessibility identifier for GSCXUITestViewController's button.
+ * Accessibility identifier for GSCXUITestViewController's button.
  */
 FOUNDATION_EXTERN NSString *const kUITestsPageButtonAccessibilityIdentifier;
+
 /**
- *  The GSCXUITestViewController's button's title after it has been pressed at least once.
+ * The GSCXUITestViewController's button's title after it has been pressed at least once.
  */
 FOUNDATION_EXTERN NSString *const kUITestsPageButtonPressedTitle;
+
 /**
- *  Accessibility identifier for GSCXUITestViewController's swipe label.
+ * Accessibility identifier for GSCXUITestViewController's swipe label.
  */
 FOUNDATION_EXTERN NSString *const kUITestsSwipeLabelAccessibilityIdentifier;
+
 /**
- *  GSCXUITestViewController's swipe label's value when a swipe right has been detected.
+ * GSCXUITestViewController's swipe label's value when a swipe right has been detected.
  */
 FOUNDATION_EXTERN NSString *const kUITestsSwipeLabelRightValue;
+
 /**
- *  GSCXUITestViewController's swipe label's value when a swipe left has been detected.
+ * GSCXUITestViewController's swipe label's value when a swipe left has been detected.
  */
 FOUNDATION_EXTERN NSString *const kUITestsSwipeLabelLeftValue;
+
 /**
- *  GSCXUITestViewController's swipe label's value when a swipe up has been detected.
+ * GSCXUITestViewController's swipe label's value when a swipe up has been detected.
  */
 FOUNDATION_EXTERN NSString *const kUITestsSwipeLabelUpValue;
+
 /**
- *  GSCXUITestViewController's swipe label's value when a swipe down has been detected.
+ * GSCXUITestViewController's swipe label's value when a swipe down has been detected.
  */
 FOUNDATION_EXTERN NSString *const kUITestsSwipeLabelDownValue;
+
 /**
- *  Accessibility identifier for GSCXUITestViewController's pinch label.
+ * Accessibility identifier for GSCXUITestViewController's pinch label.
  */
 FOUNDATION_EXTERN NSString *const kUITestsPinchLabelAccessibilityIdentifier;
+
 /**
- *  GSCXUITestViewController's pinch label's value when a pinch has been detected.
+ * GSCXUITestViewController's pinch label's value when a pinch has been detected.
  */
 FOUNDATION_EXTERN NSString *const kUITestsPinchLabelPinchedValue;
 
 /**
- *  A view controller containing interactable elements that should remain interactable if the window
- *  forwards hit events.
+ * A view controller containing interactable elements that should remain interactable if the window
+ * forwards hit events.
  */
 @interface GSCXUITestViewController : UIViewController <GSCXTestPage>
 

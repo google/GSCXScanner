@@ -20,49 +20,65 @@
 #import "GSCXRingView.h"
 
 /**
- *  Accuracy of floating point comparisons for GSCXRingView tests.
+ * Accuracy of floating point comparisons for GSCXRingView tests.
  */
 static const CGFloat kRingViewTestsComparisonAccuracy = 0.00001;
 
 /**
- *  Contains tests for GSCXRingView methods.
+ * Contains tests for GSCXRingView methods.
  */
 @interface GSCXRingViewTests : XCTestCase
-
-@property(nonatomic, assign) CGRect uiElementFrame;
-
-/**
- *  Asserts that the four sides of @c rect are @c expectedDifference points away from the
- *  corresponding sides of @c otherRect.
- *
- *  @c rect The rect that surrounds @c otherRect.
- *  @c otherRect The otherRect used to calculate the surrounding rect.
- *  @c expectedDifference The distance between corresponding sides.
- */
-- (void)_assertRect:(CGRect)rect containsRect:(CGRect)otherRect withAccuracy:(CGFloat)accuracy;
-
 @end
 
 @implementation GSCXRingViewTests
 
-- (void)setUp {
-  [super setUp];
-
-  self.uiElementFrame = CGRectMake(10.0, 12.0, 20.0, 30.0);
+- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrame {
+  GSCXRingView *ringView =
+      [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 44.0, 44.0)];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(8.0, 10.0, 48.0, 48.0)];
 }
 
-- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrame {
-  CGFloat accuracy = kGSCXRingViewDefaultOuterWidth / 2.0;
-  GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:self.uiElementFrame];
-  [self _assertRect:ringView.frame containsRect:self.uiElementFrame withAccuracy:accuracy];
+- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrameWidthLargeAfterInset {
+  GSCXRingView *ringView =
+      [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 42.0, 44.0)];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(8.0, 10.0, 46.0, 48.0)];
+}
+
+- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrameWidthSmall {
+  GSCXRingView *ringView =
+      [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 30.0, 44.0)];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(3.0, 10.0, 44.0, 48.0)];
+}
+
+- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrameHeightLargeAfterInset {
+  GSCXRingView *ringView =
+      [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 44.0, 42.0)];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(8.0, 10.0, 48.0, 46.0)];
+}
+
+- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrameHeightSmall {
+  GSCXRingView *ringView =
+      [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 44.0, 20.0)];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(8.0, 00.0, 48.0, 44.0)];
+}
+
+- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrameWidthAndHeightLargeAfterInset {
+  GSCXRingView *ringView =
+      [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 42.0, 42.0)];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(8.0, 10.0, 46.0, 46.0)];
+}
+
+- (void)testRingViewAroundFrameWithDefaultValuesCreatesCorrectFrameWidthAndHeightTooSmall {
+  GSCXRingView *ringView =
+      [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 20.0, 30.0)];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(-2.0, 5.0, 44.0, 44.0)];
 }
 
 - (void)testRingViewAroundFrameWithCustomValuesCreatesCorrectFrame {
-  CGFloat accuracy = 8.0;
   GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 20.0, 30.0)
                                                       innerWidth:8.0
                                                       outerWidth:16.0];
-  [self _assertRect:ringView.frame containsRect:self.uiElementFrame withAccuracy:accuracy];
+  [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(-2.0, 4.0, 44.0, 46.0)];
 }
 
 - (void)testRingViewAroundFrameInnerWidthGreaterThanOuterWidthFailsAssertion {
@@ -101,14 +117,14 @@ static const CGFloat kRingViewTestsComparisonAccuracy = 0.00001;
 
 #pragma mark - Private
 
-- (void)_assertRect:(CGRect)rect containsRect:(CGRect)otherRect withAccuracy:(CGFloat)accuracy {
-  XCTAssertEqualWithAccuracy(CGRectGetMinX(otherRect) - CGRectGetMinX(rect), accuracy,
+- (void)gscxtest_assertRect:(CGRect)rect equalsRect:(CGRect)otherRect {
+  XCTAssertEqualWithAccuracy(CGRectGetMinX(rect), CGRectGetMinX(otherRect),
                              kRingViewTestsComparisonAccuracy);
-  XCTAssertEqualWithAccuracy(CGRectGetMinY(otherRect) - CGRectGetMinY(rect), accuracy,
+  XCTAssertEqualWithAccuracy(CGRectGetMaxX(rect), CGRectGetMaxX(otherRect),
                              kRingViewTestsComparisonAccuracy);
-  XCTAssertEqualWithAccuracy(CGRectGetMaxX(rect) - CGRectGetMaxX(otherRect), accuracy,
+  XCTAssertEqualWithAccuracy(CGRectGetMinY(rect), CGRectGetMinY(otherRect),
                              kRingViewTestsComparisonAccuracy);
-  XCTAssertEqualWithAccuracy(CGRectGetMaxY(rect) - CGRectGetMaxY(otherRect), accuracy,
+  XCTAssertEqualWithAccuracy(CGRectGetMaxY(rect), CGRectGetMaxY(otherRect),
                              kRingViewTestsComparisonAccuracy);
 }
 

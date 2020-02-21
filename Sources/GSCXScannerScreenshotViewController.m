@@ -16,66 +16,89 @@
 
 #import "GSCXScannerScreenshotViewController.h"
 
+#import "GSCXContinuousScannerGalleryViewController.h"
+#import "GSCXDefaultSharingDelegate.h"
 #import "GSCXReport.h"
 #import "GSCXRingView.h"
+#import "GSCXRingViewArranger.h"
 #import "GSCXScannerResultTableViewController.h"
+
+NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
+    @"kGSCXShareReportButtonAccessibilityIdentifier";
 
 @interface GSCXScannerScreenshotViewController ()
 
 /**
- *  A view that adds black bars to the side of the screenshot. The controller's view cannot be made
- *  black because that causes the navigation bar to look different than expected.
+ * A view that adds black bars to the side of the screenshot. The controller's view cannot be made
+ * black because that causes the navigation bar to look different than expected.
  */
 @property(weak, nonatomic) IBOutlet UIView *blackBackgroundView;
-/**
- *  An array of rings used to highlight UI elements with accessibility issues.
- */
-@property(strong, nonatomic) NSArray<GSCXRingView *> *ringViews;
 
 /**
- *  Adds constraints to the given screenshot and adds it to the view hierarchy.
- *
- *  @param screenshot The screenshot to display.
+ * A copy of the screenshot so the original screenshot is not modified.
  */
-- (void)_addScreenshotToScreen:(UIView *)screenshot;
+@property(strong, nonatomic) UIView *screenshot;
+
 /**
- *  Adds constraints to the subviews of a screenshot (themselves screenshots of other views).
- *
- *  @param screenshot The screenshot containing other screenshots as subviews.
+ * Manages the rings used to highlight UI elements with accessibility issues. @c nil until the rings
+ * are added to the screen.
  */
-- (void)_addConstraintsToScreenshotSubviews:(UIView *)screenshot;
+@property(strong, nonatomic, nullable) GSCXRingViewArranger *ringViewArranger;
+
 /**
- *  Multiplies all components of @c rect by @c factor.
- *
- *  @param rect The CGRect instance to be scaled.
- *  @param factor The factor to multiply each component by.
- *  @return A CGRect instance with all components scaled.
+ * Shares a report of the scan result.
  */
-- (CGRect)_scaleRect:(CGRect)rect byFactor:(CGFloat)factor;
+@property(strong, nonatomic) id<GSCXSharingDelegate> sharingDelegate;
+
 /**
- *  Adds ring views to highlight UI elements with accessibility issues in the screenshot.
+ * Adds constraints to the given screenshot and adds it to the view hierarchy.
  *
- *  @param screenshot The screenshot of the view hierarchy that was scanned.
+ * @param screenshot The screenshot to display.
  */
-- (void)_addRingsToScreenshot:(UIView *)screenshot;
+- (void)gscx_addScreenshotToScreen:(UIView *)screenshot;
+
 /**
- *  Returns a GSCXScannerResult instance with only the issues at the given point, after converting
- *  it to the correct coordinate system. @c point should be in @c scanResult.screenshot's
- *  coordinates.
+ * Adds constraints to the subviews of a screenshot (themselves screenshots of other views).
  *
- *  @param point The point UI elements must contain for their issues to be included in the result.
- *  @return A GSCXScannerResult object containing only issues whose frames contain the given point
- *          when converted to screen coordinates.
+ * @param screenshot The screenshot containing other screenshots as subviews.
  */
-- (GSCXScannerResult *)_resultWithIssuesAtPoint:(CGPoint)point;
+- (void)gscx_addConstraintsToScreenshotSubviews:(UIView *)screenshot;
+
 /**
- *  Returns the accessibility label for the ring view at the given index by determining the number
- *  of issues associated with the corresponding UI element and the UI element's accessibility label.
+ * Multiplies all components of @c rect by @c factor.
  *
- *  @param index The index of the ring view. Must be less than @c self.scanResult.issues.count.
- *  @return The accessibility label of the ring view at the given index.
+ * @param rect The CGRect instance to be scaled.
+ * @param factor The factor to multiply each component by.
+ * @return A CGRect instance with all components scaled.
  */
-- (NSString *)_accessibilityLabelForRingAtIndex:(NSInteger)index;
+- (CGRect)gscx_scaleRect:(CGRect)rect byFactor:(CGFloat)factor;
+
+/**
+ * Adds ring views to highlight UI elements with accessibility issues in the screenshot.
+ *
+ * @param screenshot The screenshot of the view hierarchy that was scanned.
+ */
+- (void)gscx_addRingsToScreenshot:(UIView *)screenshot;
+
+/**
+ * Returns a GSCXScannerResult instance with only the issues at the given point, after converting
+ * it to the correct coordinate system. @c point should be in @c scanResult.screenshot's
+ * coordinates.
+ *
+ * @param point The point UI elements must contain for their issues to be included in the result.
+ * @return A GSCXScannerResult object containing only issues whose frames contain the given point
+ * when converted to screen coordinates.
+ */
+- (GSCXScannerResult *)gscx_resultWithIssuesAtPoint:(CGPoint)point;
+
+/**
+ * Returns the accessibility label for the ring view at the given index by determining the number
+ * of issues associated with the corresponding UI element and the UI element's accessibility label.
+ *
+ * @param index The index of the ring view. Must be less than @c self.scanResult.issues.count.
+ * @return The accessibility label of the ring view at the given index.
+ */
+- (NSString *)gscx_accessibilityLabelForRingAtIndex:(NSInteger)index;
 
 @end
 
@@ -83,49 +106,50 @@
   GSCXReport *_report;
 }
 
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil
+                         bundle:(NSBundle *)nibBundleOrNil
+                     scanResult:(GSCXScannerResult *)scanResult
+                sharingDelegate:(id<GSCXSharingDelegate>)sharingDelegate {
+  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+  if (self) {
+    _scanResult = scanResult;
+    _sharingDelegate = sharingDelegate;
+  }
+  return self;
+}
+
 - (void)viewDidLoad {
   [super viewDidLoad];
 
   self.title = [NSString stringWithFormat:@"%ld Issues", (unsigned long)self.scanResult.issueCount];
-  [self replaceLeftNavigationItemWithDismissButton];
-  [self _addScreenshotToScreen:self.scanResult.screenshot];
-  UIBarButtonItem *shareButton = [[UIBarButtonItem alloc]
-                                  initWithTitle:@"Share"
-                                  style:UIBarButtonItemStylePlain
-                                  target:self
-                                  action:@selector(beginSharingIssues)];
+  self.screenshot = [self.scanResult.screenshot snapshotViewAfterScreenUpdates:YES];
+  [self gscx_addScreenshotToScreen:self.screenshot];
+  UIBarButtonItem *shareButton =
+      [[UIBarButtonItem alloc] initWithTitle:@"Share"
+                                       style:UIBarButtonItemStylePlain
+                                      target:self
+                                      action:@selector(gscx_beginSharingIssues)];
+  shareButton.accessibilityIdentifier = kGSCXShareReportButtonAccessibilityIdentifier;
   self.navigationItem.rightBarButtonItem = shareButton;
 }
 
-- (void)beginSharingIssues {
-  _report = [[GSCXReport alloc] init];
-  __weak typeof(self) weakSelf = self;
-  [_report beginSharingResult:self.scanResult withCompletionBlock:^(NSURL *reportUrl) {
-    [weakSelf _shareReportAtURL:reportUrl];
-  }];
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+  [super traitCollectionDidChange:previousTraitCollection];
+  if (@available(iOS 12.0, *)) {
+    self.blackBackgroundView.backgroundColor =
+        self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor whiteColor]
+                                                                            : [UIColor blackColor];
+  }
+}
+
+- (void)gscx_beginSharingIssues {
+  _report = [[GSCXReport alloc] initWithResults:@[ self.scanResult ]];
+  [_sharingDelegate shareReport:_report inViewController:self];
 }
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
-  [self _addRingsToScreenshot:self.scanResult.screenshot];
-}
-
-- (IBAction)tapRecognized:(id)sender {
-  CGPoint location = [sender locationInView:self.scanResult.screenshot];
-  GSCXScannerResult *result = [self _resultWithIssuesAtPoint:location];
-  if (result.issueCount == 0) {
-    return;
-  }
-  GSCXScannerResultTableViewController *resultController =
-      [[GSCXScannerResultTableViewController alloc]
-          initWithNibName:@"GSCXScannerResultTableViewController"
-                   bundle:[NSBundle bundleForClass:[GSCXScannerResultTableViewController class]]];
-  resultController.scanResult = result;
-  [self.navigationController pushViewController:resultController animated:YES];
-}
-
-- (BOOL)isTransparentOverlay {
-  return NO;
+  [self gscx_addRingsToScreenshot:self.screenshot];
 }
 
 + (NSString *)accessibilityIdentifierForRingViewAtIndex:(NSInteger)index {
@@ -141,18 +165,24 @@
 
 #pragma mark - Private
 
-- (void)_shareReportAtURL:(NSURL *)reportUrl {
-  if (reportUrl) {
-    NSMutableArray *activityItems = [[NSMutableArray alloc] init];
-    [activityItems addObject:reportUrl];
-    UIActivityViewController *controller =
-        [[UIActivityViewController alloc] initWithActivityItems:activityItems
-                                          applicationActivities:nil];
-    [self presentViewController:controller animated:YES completion:nil];
+- (IBAction)gscx_tapRecognized:(id)sender {
+  CGPoint location = [sender locationInView:self.screenshot];
+  for (NSUInteger index = 0; index < [self.ringViewArranger.ringViews count]; index++) {
+    if (CGRectContainsPoint(self.ringViewArranger.ringViews[index].frame, location)) {
+      GSCXContinuousScannerGalleryViewController *galleryController =
+          [[GSCXContinuousScannerGalleryViewController alloc]
+              initWithNibName:@"GSCXContinuousScannerGalleryViewController"
+                       bundle:[NSBundle
+                                  bundleForClass:[GSCXContinuousScannerGalleryViewController class]]
+                       result:self.scanResult];
+      [galleryController focusIssueAtIndex:index animated:NO];
+      [self.navigationController pushViewController:galleryController animated:YES];
+      return;
+    }
   }
 }
 
-- (void)_addScreenshotToScreen:(UIView *)screenshot {
+- (void)gscx_addScreenshotToScreen:(UIView *)screenshot {
   screenshot.translatesAutoresizingMaskIntoConstraints = NO;
   screenshot.userInteractionEnabled = NO;
   CGFloat aspectRatio = screenshot.frame.size.width / screenshot.frame.size.height;
@@ -188,7 +218,7 @@
                                   constant:0.0],
   ];
   [NSLayoutConstraint activateConstraints:constraints];
-  [self _addConstraintsToScreenshotSubviews:screenshot];
+  [self gscx_addConstraintsToScreenshotSubviews:screenshot];
 
   [NSLayoutConstraint constraintWithItem:self.blackBackgroundView
                                attribute:NSLayoutAttributeTop
@@ -200,7 +230,7 @@
       .active = YES;
 }
 
-- (void)_addConstraintsToScreenshotSubviews:(UIView *)screenshot {
+- (void)gscx_addConstraintsToScreenshotSubviews:(UIView *)screenshot {
   for (UIView *subview in screenshot.subviews) {
     subview.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint
@@ -216,38 +246,32 @@
   }
 }
 
-- (CGRect)_scaleRect:(CGRect)rect byFactor:(CGFloat)factor {
+- (CGRect)gscx_scaleRect:(CGRect)rect byFactor:(CGFloat)factor {
   return CGRectMake(rect.origin.x * factor, rect.origin.y * factor, rect.size.width * factor,
                     rect.size.height * factor);
 }
 
-- (void)_addRingsToScreenshot:(UIView *)screenshot {
-  if (self.ringViews.count > 0) {
+- (void)gscx_addRingsToScreenshot:(UIView *)screenshot {
+  if (self.ringViewArranger) {
     return;
   }
-  CGFloat scaleFactor = screenshot.frame.size.width / self.view.frame.size.width;
-  NSMutableArray *ringViews = [[NSMutableArray alloc] init];
+  self.ringViewArranger = [[GSCXRingViewArranger alloc] initWithResult:self.scanResult];
+  [self.ringViewArranger addRingViewsToSuperview:screenshot
+                                 fromCoordinates:[[UIScreen mainScreen] bounds]];
   NSInteger index = 0;
-  for (GSCXScannerIssue *issue in self.scanResult.issues) {
-    CGRect frame = [self _scaleRect:issue.frame byFactor:scaleFactor];
-    GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:frame];
-    ringView.accessibilityLabel = [self _accessibilityLabelForRingAtIndex:index];
+  for (GSCXRingView *ringView in self.ringViewArranger.ringViews) {
     ringView.accessibilityIdentifier =
         [GSCXScannerScreenshotViewController accessibilityIdentifierForRingViewAtIndex:index];
-    [screenshot addSubview:ringView];
-    [ringViews addObject:ringView];
+    ringView.accessibilityLabel = [self gscx_accessibilityLabelForRingAtIndex:index];
     index++;
   }
-  self.ringViews = ringViews;
 }
 
-- (GSCXScannerResult *)_resultWithIssuesAtPoint:(CGPoint)point {
-  CGFloat factor = self.scanResult.screenshot.frame.size.width / self.view.frame.size.width;
-  CGPoint scaledLocation = CGPointMake(point.x / factor, point.y / factor);
-  return [self.scanResult resultWithIssuesAtPoint:scaledLocation];
+- (GSCXScannerResult *)gscx_resultWithIssuesAtPoint:(CGPoint)point {
+  return [self.ringViewArranger resultWithIssuesAtPoint:point];
 }
 
-- (NSString *)_accessibilityLabelForRingAtIndex:(NSInteger)index {
+- (NSString *)gscx_accessibilityLabelForRingAtIndex:(NSInteger)index {
   NSParameterAssert((NSUInteger)index < self.scanResult.issues.count);
   NSUInteger count = self.scanResult.issues[(NSUInteger)index].gtxCheckNames.count;
   NSString *pluralModifier = (count == 1) ? @"" : @"s";

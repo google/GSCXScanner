@@ -19,12 +19,12 @@
 #import "GSCXTestAppDelegate.h"
 
 /**
- *  A UIAccessibilityElement containing a unique integer identifying it.
+ * A UIAccessibilityElement containing a unique integer identifying it.
  */
 @interface GSCXTestUIAccessibilityElement : UIAccessibilityElement
 
 /**
- *  A unique integer identifying this object.
+ * A unique integer identifying this object.
  */
 @property(assign, nonatomic) NSInteger tag;
 
@@ -36,15 +36,17 @@
 @interface GSCXTestUIAccessibilityElementViewController ()
 
 /**
- *  An accessibility element with the same frame as @c visualIndicator.
+ * An accessibility element with the same frame as @c visualIndicator.
  */
 @property(strong, nonatomic) GSCXTestUIAccessibilityElement *accessibilityElement;
+
 /**
- *  An accessibility container with the same frame as @c container.
+ * An accessibility container with the same frame as @c container.
  */
 @property(strong, nonatomic) GSCXTestUIAccessibilityElement *accessibilityContainer;
+
 /**
- *  An accessibility element with the same frame as @c subVisualIndicator.
+ * An accessibility element with the same frame as @c subVisualIndicator.
  */
 @property(strong, nonatomic) GSCXTestUIAccessibilityElement *subAccessibilityElement;
 
@@ -61,8 +63,10 @@
       [[GSCXTestUIAccessibilityElement alloc] initWithAccessibilityContainer:self.view];
   GSCXTestUIAccessibilityElement *subElement =
       [[GSCXTestUIAccessibilityElement alloc] initWithAccessibilityContainer:container];
-  element.tag = kGSCXTestTagCheckTag2;
-  subElement.tag = kGSCXTestTagCheckTag3;
+  element.tag = kGSCXTestCheckTag2;
+  element.accessibilityLabel = @"blank accessibility element";
+  subElement.tag = kGSCXTestCheckTag3;
+  subElement.accessibilityLabel = @"blank accessibility element nested in container";
   container.isAccessibilityElement = NO;
   container.accessibilityElements = @[ subElement ];
   self.view.accessibilityElements = @[ element, container ];

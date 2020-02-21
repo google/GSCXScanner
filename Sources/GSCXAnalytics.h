@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSUInteger, GSCXAnalyticsEvent) {
   /**
+   Analytics event indicating that the scanner was installed.
+   */
+  GSCXAnalyticsEventScannerInstalled,
+
+  /**
    Analytics event indicating that a scan was performed.
    */
   GSCXAnalyticsEventScanPerformed,
@@ -49,15 +54,16 @@ typedef void(^GSCXAnalyticsHandlerBlock)(GSCXAnalyticsEvent event, NSInteger cou
 @interface GSCXAnalytics : NSObject
 
 /**
- Boolean property that specifies if analytics is enabled or not.
+ Boolean property that specifies if analytics is enabled or not. Users must use this to quickly
+ toggle analytics rather than modifying the @c handler. Default is @c NO.
  */
 @property (class, nonatomic, assign) BOOL enabled;
 
 /**
- Current analytics handler, users can override this for custom handling of analytics events.
+ Current analytics handler. Default is a no-op block and all analytics events are ignored.
+ Users can set this block for custom handling of analytics events.
  */
 @property (class, nonatomic) GSCXAnalyticsHandlerBlock handler;
-
 
 /**
  Feeds an analytics event to be handled.

@@ -16,6 +16,7 @@
 
 #import "GSCXScannerResultDetailViewController.h"
 
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 NSString *const kGSCXDetailCheckNameAccessibilityIdentifier =
@@ -31,7 +32,7 @@ NSString *const kGSCXDetailCheckDescriptionAccessibilityIdentifier =
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  NSAssert(self.scanResult != nil, @"scanResult cannot be nil in viewDidLoad.");
+  GTX_ASSERT(self.scanResult != nil, @"scanResult cannot be nil in viewDidLoad.");
   self.checkName.text = [self.scanResult gtxCheckNameAtIndex:self.issueIndex];
   self.checkDescription.text = [self.scanResult gtxCheckDescriptionAtIndex:self.issueIndex];
   self.checkName.accessibilityIdentifier = kGSCXDetailCheckNameAccessibilityIdentifier;
@@ -44,10 +45,6 @@ NSString *const kGSCXDetailCheckDescriptionAccessibilityIdentifier =
   _issueIndex = issueIndex;
   self.checkName.text = [self.scanResult gtxCheckNameAtIndex:self.issueIndex];
   self.checkDescription.text = [self.scanResult gtxCheckDescriptionAtIndex:self.issueIndex];
-}
-
-- (BOOL)isTransparentOverlay {
-  return NO;
 }
 
 @end

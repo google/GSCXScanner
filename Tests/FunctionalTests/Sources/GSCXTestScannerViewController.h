@@ -19,25 +19,28 @@
 #import "GSCXTestPage.h"
 
 /**
- *  A view controller containing elements failing accessibility checks to test scanner
- *  functionality.
+ * A view controller containing elements failing accessibility checks to test scanner
+ * functionality.
  */
 @interface GSCXTestScannerViewController : UIViewController <GSCXTestPage>
 
 /**
- *  Label that fails the first and fourth custom checks.
+ * Label that fails the first and fourth custom checks.
  */
 @property(weak, nonatomic) IBOutlet UILabel *firstLabel;
+
 /**
- *  Label that passes checks.
+ * Label that passes checks.
  */
 @property(weak, nonatomic) IBOutlet UILabel *secondLabel;
+
 /**
- *  Label that fails the second custom check.
+ * Label that fails the second custom check.
  */
 @property(weak, nonatomic) IBOutlet UILabel *thirdLabel;
+
 /**
- *  Label that fails the third custom check and overlaps with thirdLabel.
+ * Label that fails the third custom check and overlaps with thirdLabel.
  */
 @property(weak, nonatomic) IBOutlet UILabel *fourthLabel;
 

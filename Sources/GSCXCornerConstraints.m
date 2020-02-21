@@ -16,45 +16,50 @@
 
 #import "GSCXCornerConstraints.h"
 
+#import <GTXiLib/GTXiLib.h>
 /**
- *  The offset between the the superview being snapped to and the view being snapped, in points.
+ * The offset between the the superview being snapped to and the view being snapped, in points.
  */
 static const CGFloat kGSCXCornerConstraintOffset = 16.0;
+
 /**
- *  The name of the action that rotates the view to the next corner of the screen clockwise. Spoken
- *  by VoiceOver.
+ * The name of the action that rotates the view to the next corner of the screen clockwise. Spoken
+ * by VoiceOver.
  */
 static NSString *const kGSCXCornerConstraintRotateClockwiseName = @"Rotate Clockwise";
 
-@interface GSCXCornerConstraints ()
+@interface GSCXCornerConstraints () {
+  /**
+   * Array of arrays of constraints. Each underlying array represents the constraints needed to
+   * snap a view to a different corner of the screen. The first constraint set snaps to the bottom
+   * left, and each successive constraint set snaps to the next corner, clockwise.
+   */
+  NSArray<NSArray<NSLayoutConstraint *> *> *_constraintSets;
+
+  /**
+   * The index of @c _constraintSets of the currently active constraints.
+   */
+  NSUInteger _currentConstraintsIndex;
+}
 
 /**
- *  Array of arrays of constraints. Each underlying array represents the constraints needed to
- *  snap a view to a different corner of the screen.
- */
-@property(strong, nonatomic) NSArray<NSArray<NSLayoutConstraint *> *> *constraintSets;
-/**
- *  The index of @c constraintSets of the currently active constraints.
- */
-@property(assign, nonatomic) NSUInteger currentConstraintsIndex;
-
-/**
- *  Initializes a GSCXCornerConstraints object with a given view inside a given container. The view
- *  starts in the bottom leading (left in LTR languages, right in RTL languages) corner.
+ * Initializes a GSCXCornerConstraints object with a given view inside a given container. The view
+ * starts in the bottom leading (left in LTR languages, right in RTL languages) corner.
  *
- *  @param view The view to snap to different corners of the container.
- *  @param container The view controller whose view contains @c view. @c view must be a subview of
- *                   container's view.
+ * @param view The view to snap to different corners of the container.
+ * @param container The view controller whose view contains @c view. @c view must be a subview of
+ * container's view.
  */
 - (instancetype)initWithView:(UIView *)view container:(UIViewController *)container;
+
 /**
- *  Called when performing a custom accessibility action. Moves the view to the next corner of the
- *  screen clockwise.
+ * Called when performing a custom accessibility action. Moves the view to the next corner of the
+ * screen clockwise.
  *
- *  @param action The accessibility action invoking this method.
- *  @return YES.
+ * @param action The accessibility action invoking this method.
+ * @return YES.
  */
-- (BOOL)_performRotateClockwiseAction:(UIAccessibilityCustomAction *)action;
+- (BOOL)gscx_performRotateClockwiseAction:(UIAccessibilityCustomAction *)action;
 
 @end
 
@@ -63,7 +68,7 @@ static NSString *const kGSCXCornerConstraintRotateClockwiseName = @"Rotate Clock
 - (instancetype)initWithView:(UIView *)view container:(UIViewController *)container {
   self = [super init];
   if (self) {
-    NSAssert(view.superview == container.view, @"view must be a subview of container.");
+    GTX_ASSERT(view.superview == container.view, @"view must be a subview of container.");
     NSArray<NSLayoutConstraint *> *bottomLeadingConstraints = @[
       [NSLayoutConstraint constraintWithItem:view
                                    attribute:NSLayoutAttributeLeading
@@ -128,7 +133,7 @@ static NSString *const kGSCXCornerConstraintRotateClockwiseName = @"Rotate Clock
                                   multiplier:1.0
                                     constant:-kGSCXCornerConstraintOffset]
     ];
-    self.constraintSets = @[
+    _constraintSets = @[
       bottomLeadingConstraints, topLeadingConstraints, topTrailingConstraints,
       bottomTrailingConstraints
     ];
@@ -142,19 +147,21 @@ static NSString *const kGSCXCornerConstraintRotateClockwiseName = @"Rotate Clock
 }
 
 - (void)rotateClockwise {
-  [NSLayoutConstraint deactivateConstraints:self.constraintSets[self.currentConstraintsIndex]];
-  self.currentConstraintsIndex = (self.currentConstraintsIndex + 1) % self.constraintSets.count;
-  [NSLayoutConstraint activateConstraints:self.constraintSets[self.currentConstraintsIndex]];
+  [NSLayoutConstraint deactivateConstraints:_constraintSets[_currentConstraintsIndex]];
+  _currentConstraintsIndex = (_currentConstraintsIndex + 1) % _constraintSets.count;
+  [NSLayoutConstraint activateConstraints:_constraintSets[_currentConstraintsIndex]];
 }
 
 - (NSArray<UIAccessibilityCustomAction *> *)rotateAccessibilityActions {
   return @[ [[UIAccessibilityCustomAction alloc]
       initWithName:kGSCXCornerConstraintRotateClockwiseName
             target:self
-          selector:@selector(_performRotateClockwiseAction:)] ];
+          selector:@selector(gscx_performRotateClockwiseAction:)] ];
 }
 
-- (BOOL)_performRotateClockwiseAction:(UIAccessibilityCustomAction *)action {
+#pragma mark - Private
+
+- (BOOL)gscx_performRotateClockwiseAction:(UIAccessibilityCustomAction *)action {
   [self rotateClockwise];
   return YES;
 }

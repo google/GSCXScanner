@@ -19,27 +19,27 @@
 #import "GSCXTestPage.h"
 
 /**
- *  The accessibility identifier of GSCXTestViewController's tableView property.
+ * The accessibility identifier of GSCXTestViewController's tableView property.
  */
 FOUNDATION_EXTERN NSString *const kMainTableViewAccessibilityId;
 
 /**
- *  A view controller exposing access to other view controllers in the app.
+ * A view controller exposing access to other view controllers in the app.
  */
 @interface GSCXTestViewController
     : UIViewController <UITableViewDelegate, UITableViewDataSource, GSCXTestPage>
 
 /**
- *  The table view containing all view controllers that can be accessed.
+ * The table view containing all view controllers that can be accessed.
  */
 @property(weak, nonatomic) IBOutlet UITableView *tableView;
 
 /**
- *  Returns the accessibilityIdentifier of the cell corresponding to the given
- *  page.
+ * Returns the accessibilityIdentifier of the cell corresponding to the given
+ * page.
  *
- *  @param pageClass The class of the page's view controller.
- *  @return The accessibility identifier of the cell that opens the given page.
+ * @param pageClass The class of the page's view controller.
+ * @return The accessibility identifier of the cell that opens the given page.
  */
 + (NSString *)accessibilityIdentifierOfCellForPage:(Class<GSCXTestPage>)pageClass;
 

@@ -19,8 +19,10 @@
 #import "GSCXReport.h"
 #import "GSCXReportContext.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GSCXReport (ExposedForTesting)
-+ (NSURL *)_createLocalSiteWithHTMLString:(NSString *)html context:(GSCXReportContext *)context;
++ (NSURL *)gscx_createLocalSiteWithHTMLString:(NSString *)html context:(GSCXReportContext *)context;
 @end
 
 @interface GSCXReportTests : XCTestCase
@@ -37,7 +39,7 @@
   NSString *filename2 = [context pathByAddingImage:image2];
 
   __block NSInteger count = 0;
-  [context forEachImageWithHandler:^(UIImage *_Nonnull image, NSString *_Nonnull filename) {
+  [context forEachImageWithHandler:^(UIImage *image, NSString *filename) {
     count += 1;
     if (image1 == image) {
       XCTAssertEqual(filename, filename1);
@@ -52,7 +54,7 @@
 - (void)testReportContextWithZeroImages {
   GSCXReportContext *context = [[GSCXReportContext alloc] init];
   __block NSInteger count = 0;
-  [context forEachImageWithHandler:^(UIImage *_Nonnull image, NSString *_Nonnull filename) {
+  [context forEachImageWithHandler:^(UIImage *image, NSString *filename) {
     count += 1;
   }];
   XCTAssertEqual(count, 0);
@@ -61,8 +63,7 @@
 - (void)testReportCanCreateHTMLForPDF {
   GSCXReportContext *context = [[GSCXReportContext alloc] init];
   NSString *expectedContents = @"<div>testing...</div>";
-  NSURL *siteURL = [GSCXReport _createLocalSiteWithHTMLString:expectedContents
-                                                      context:context];
+  NSURL *siteURL = [GSCXReport gscx_createLocalSiteWithHTMLString:expectedContents context:context];
   NSURL *pageURL = [siteURL URLByAppendingPathComponent:@"index.html"];
   NSError *error;
   NSString *actualContents = [NSString stringWithContentsOfURL:pageURL
@@ -72,3 +73,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

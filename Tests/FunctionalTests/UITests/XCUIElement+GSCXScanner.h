@@ -20,18 +20,18 @@
 @interface XCUIElement (GSCXScanner)
 
 /**
- *  Determines if the element is visible, where visible is defined as the element's frame
- *  intersects with the screen.
+ * Determines if the element is visible, where visible is defined as the element's frame
+ * intersects with the screen.
  *
- *  @param screenBounds The screen's bounds.
+ * @param screenBounds The screen's bounds.
  */
 - (BOOL)gscx_isVisible:(CGRect)screenBounds;
 
 /**
- *  Determines if the element is visible, using the main application window's frame as a proxy for
- *  the screen's frame.
+ * Determines if the element is visible, using the main application window's frame as a proxy for
+ * the screen's frame.
  *
- *  @param app The XCUIApplication object corresponding to the test host.
+ * @param app The XCUIApplication object corresponding to the test host.
  */
 - (BOOL)gscx_isVisibleWithProxyFrameFromApp:(XCUIApplication *)app;
 

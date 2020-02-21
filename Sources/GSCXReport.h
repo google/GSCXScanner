@@ -15,29 +15,57 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
 
 #import "GSCXScannerResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Block type definition for indicating report generation completion.
+ * Invoked when a @c GSCXReport instance has finished creating an HTML report.
+ *
+ * @param webView A @c WKWebView instance rendering the report. The caller owns this instance.
  */
-typedef void(^GSCXReportCompletionBlock)(NSURL *reportUrl);
+typedef void (^GSCXHTMLReportCompletionBlock)(WKWebView *webView);
 
 /**
- *  Class responsible for generating reports and showing UI for sharing it.
+ * Invoked when a @c GSCXReport instance has finished creating a PDF report.
+ *
+ * @param reportURL A URL representing a local file at which the PDF is stored.
+ */
+typedef void (^GSCXPDFReportCompletionBlock)(NSURL *reportUrl);
+
+/**
+ * Class responsible for generating reports and showing UI for sharing it.
  */
 @interface GSCXReport : NSObject
 
 /**
- *  Creates a report from the given  result object and shows a share sheet for it.
- *
- *  @param result The result objecct to be shown on the report.
- *  @param onComplete Completion handler to be invoked.
+ * The results found across all scans.
  */
-- (void)beginSharingResult:(GSCXScannerResult *)result
-       withCompletionBlock:(GSCXReportCompletionBlock)onComplete;
+@property(strong, nonatomic, readonly) NSArray<GSCXScannerResult *> *results;
+
+/**
+ * Initializes a @c GSCXReport instance displaying the given scan results.
+ *
+ * @param results The results to display in the report.
+ * @return An initialized @c GSCXReport instance.
+ */
+- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results;
+
+/**
+ * Creates an HTML report describing the issues found in all scans.
+ *
+ * @param onComplete Invoked when the report has been created.
+ */
+- (void)createHTMLReportWithCompletionBlock:(GSCXHTMLReportCompletionBlock)onComplete;
+
+/**
+ * Creates a PDF report describing the issues found in all scans.
+ *
+ * @param onComplete Invoked when the report has been created.
+ */
+- (void)createPDFReportWithCompletionBlock:(GSCXPDFReportCompletionBlock)onComplete;
 
 @end
 

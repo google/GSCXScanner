@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GSCXContinuousScannerGalleryViewController">
+            <connections>
+                <outlet property="detailScrollView" destination="0FY-hx-AXE" id="Oye-ek-2gN"/>
+                <outlet property="pageControl" destination="mey-Lh-68e" id="AVV-zD-Kkj"/>
+                <outlet property="screenshotScrollView" destination="1rp-JO-1Sm" id="lf6-xZ-gNj"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0FY-hx-AXE">
+                    <rect key="frame" x="87" y="582" width="240" height="128"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <viewLayoutGuide key="contentLayoutGuide" id="VMX-xv-a8K"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="uQt-Sw-5L9"/>
+                </scrollView>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1rp-JO-1Sm">
+                    <rect key="frame" x="87" y="258" width="240" height="128"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <viewLayoutGuide key="contentLayoutGuide" id="wZC-ir-cvM"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="ulA-HC-yhv"/>
+                </scrollView>
+                <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="mey-Lh-68e">
+                    <rect key="frame" x="187.5" y="825" width="39" height="37"/>
+                </pageControl>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <constraints>
+                <constraint firstItem="0FY-hx-AXE" firstAttribute="top" secondItem="1rp-JO-1Sm" secondAttribute="bottom" id="CCN-Bn-5Yo"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="1rp-JO-1Sm" secondAttribute="trailing" id="JPn-Ia-1FQ"/>
+                <constraint firstItem="0FY-hx-AXE" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="Pg9-qE-LAv"/>
+                <constraint firstItem="mey-Lh-68e" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="hky-I4-4I5"/>
+                <constraint firstItem="1rp-JO-1Sm" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" id="mph-WI-aKI"/>
+                <constraint firstItem="1rp-JO-1Sm" firstAttribute="height" secondItem="0FY-hx-AXE" secondAttribute="height" id="pen-MN-Qu3"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="0FY-hx-AXE" secondAttribute="trailing" id="qLO-dX-zMT"/>
+                <constraint firstItem="1rp-JO-1Sm" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="qPN-DA-5P8"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="0FY-hx-AXE" secondAttribute="bottom" id="rEO-GZ-Dct"/>
+                <constraint firstItem="mey-Lh-68e" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="yNX-rX-bxm"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <point key="canvasLocation" x="139" y="154"/>
+        </view>
+    </objects>
+</document>

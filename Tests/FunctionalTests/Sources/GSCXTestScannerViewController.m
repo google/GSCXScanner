@@ -24,9 +24,9 @@
   [super viewDidLoad];
 
   self.title = [GSCXTestScannerViewController pageName];
-  self.firstLabel.tag = kGSCXTestTagCheckTag1;
-  self.thirdLabel.tag = kGSCXTestTagCheckTag2;
-  self.fourthLabel.tag = kGSCXTestTagCheckTag3;
+  self.firstLabel.tag = kGSCXTestCheckTag1;
+  self.thirdLabel.tag = kGSCXTestCheckTag2;
+  self.fourthLabel.tag = kGSCXTestCheckTag3;
 }
 
 #pragma mark - GSCXTestPage

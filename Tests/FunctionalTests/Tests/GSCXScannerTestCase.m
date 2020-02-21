@@ -18,46 +18,30 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GSCXScanner.h"
-#import "GSCXTestViewController.h"
-#import "third_party/objective_c/EarlGrey/EarlGrey/EarlGrey.h"
+#import "third_party/objective_c/EarlGreyV2/TestLib/EarlGreyImpl/EarlGrey.h"
+#import "GSCXTestAppDelegate.h"
+#import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/Utils/GSCXScannerTestUtils.h"
 
-@implementation GSCXScannerTestCase
+@implementation GSCXScannerTestCase {
+  XCUIApplication *_application;
+}
+
+- (void)setUp {
+  [super setUp];
+
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _application = [[XCUIApplication alloc] init];
+    _application.launchEnvironment = @{kUseTestSharingDelegateKey : @"YES"};
+    [_application launch];
+  });
+}
 
 // Cleans up after each test case is run. Navigates to the original app screen so other test cases
 // start from a valid state.
 - (void)tearDown {
-  UIWindow *delegateWindow = [UIApplication sharedApplication].delegate.window;
-  UINavigationController *navController;
-  if ([delegateWindow.rootViewController isKindOfClass:[UINavigationController class]]) {
-    navController = (UINavigationController *)delegateWindow.rootViewController;
-  } else {
-    navController = delegateWindow.rootViewController.navigationController;
-  }
-  [navController popToRootViewControllerAnimated:YES];
-  [[GREYConfiguration sharedInstance] reset];
-
+  [GSCXScannerTestUtils navigateToRootPage];
   [super tearDown];
-}
-
-- (void)openPage:(Class<GSCXTestPage>)pageClass {
-  NSString *accessibilityId =
-      [GSCXTestViewController accessibilityIdentifierOfCellForPage:pageClass];
-  // Attempt to open the named view. The views are listed as a rows of a UITableView and tapping it
-  // opens the view.
-  NSError *error;
-  id<GREYMatcher> cellMatcher = grey_accessibilityID(accessibilityId);
-  [[EarlGrey selectElementWithMatcher:cellMatcher] performAction:grey_tap() error:&error];
-  if (!error) {
-    return;
-  }
-  // The view is probably not visible, scroll to top of the table view and go searching for it.
-  [[EarlGrey selectElementWithMatcher:grey_kindOfClass([UITableView class])]
-      performAction:grey_scrollToContentEdge(kGREYContentEdgeTop)];
-  // Scroll to the cell we need and tap it.
-  [[[EarlGrey selectElementWithMatcher:grey_allOf(cellMatcher, grey_interactable(), nil)]
-         usingSearchAction:grey_scrollInDirection(kGREYDirectionDown, 200)
-      onElementWithMatcher:grey_kindOfClass([UITableView class])] performAction:grey_tap()];
 }
 
 @end

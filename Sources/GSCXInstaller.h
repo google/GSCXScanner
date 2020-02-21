@@ -16,42 +16,36 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GSCXScanner.h"
-#import "GSCXScannerDelegate.h"
+#import "GSCXInstallerOptions.h"
+#import "GSCXScannerOverlayWindow.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  Contains methods for installing the overlay window and scanner UI into an application.
+ * Contains methods for installing the overlay window and scanner UI into an application.
  *
- *  @note It is the application's responsibility to ensure the scanner is not installed in release
- *        builds.
+ * @note It is the application's responsibility to ensure the scanner is not installed in release
+ * builds.
  */
 @interface GSCXInstaller : NSObject
 
-/**
- *  Creates the scanner UI in a window overlaid on the main application window. The caller of this
- *  method owns the returned window.
- *
- *  @param applicationWindow The main application window.
- *  @param checks An array of checks the scanner uses to evaluate accessibility elements.
- *  @param blacklists An array of blacklists the scanner uses to skip accessibility elements.
- *  @param delegate The delegate of the GSCXScanner. Optional.
- *  @return A window containing the UI to manually perform scans and see scan results.
- */
-+ (UIWindow *)installScannerOverWindow:(UIWindow *)applicationWindow
-                                checks:(NSArray<id<GTXChecking>> *)checks
-                            blacklists:(NSArray<id<GTXBlacklisting>> *)blacklists
-                              delegate:(nullable id<GSCXScannerDelegate>)delegate;
+; /**
+   * Creates the scanner UI in a window overlaid on the main application window. The caller of this
+   * method owns the returned window.
+   *
+   * @param options Configures the scanner.
+   * @return A window containing the UI to manually perform scans and see scan results.
+   */
++ (GSCXScannerOverlayWindow *)installScannerWithOptions:(GSCXInstallerOptions *)options;
 
 /**
- *  Creates the scanner UI in a window overlaid on the main application window. Uses the default set
- *  of checks, no blacklists, and no delegate. The overlay is installed on the current key window.
- *  The caller of this method owns the returned window.
+ * Creates the scanner UI in a window overlaid on the main application window. Uses the default set
+ * of checks, no blacklists, and no delegate. The overlay is installed on the current key window.
+ * The caller of this method owns the returned window.
  *
- *  @return A window containing the UI to manually perform scans and see scan results.
+ * @return A window containing the UI to manually perform scans and see scan results.
  */
-+ (UIWindow *)installScanner;
++ (GSCXScannerOverlayWindow *)installScanner;
 
 @end
 
