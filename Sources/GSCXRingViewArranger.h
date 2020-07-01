@@ -64,6 +64,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeRingViewsFromSuperview;
 
 /**
+ * Adds accessibility labels and identifiers to each ring view describing how many issues it
+ * represents and what view it is highlighting.
+ */
+- (void)addAccessibilityAttributesToRingViews;
+
+/**
  * Returns a new result containing only issues found at @c point from the new coordinate space.
  *
  * @param point The point at which to find issues in the new coordinate space.
@@ -84,6 +90,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (UIImage *)imageByAddingRingViewsToSuperview:(UIView *)superview
                                fromCoordinates:(CGRect)originalCoordinates;
+
+/**
+ * Returns the accessibility identifier of the ring view at the given index.
+ *
+ * @param index The index of the ring view.
+ * @return A string representing the accessibility identifier of the corresponding ring view.
+ */
++ (NSString *)accessibilityIdentifierForRingViewAtIndex:(NSUInteger)index;
 
 @end
 

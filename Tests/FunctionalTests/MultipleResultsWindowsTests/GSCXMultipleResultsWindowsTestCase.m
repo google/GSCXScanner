@@ -16,7 +16,7 @@
 
 #import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/MultipleResultsWindowsTests/GSCXMultipleResultsWindowsTestCase.h"
 
-#import "GSCXTestAppDelegate.h"
+#import "GSCXTestEnvironmentVariables.h"
 #import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/Utils/GSCXScannerTestUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
   dispatch_once(&onceToken, ^{
     _application = [[XCUIApplication alloc] init];
     _application.launchEnvironment =
-        @{kResultsWindowPresentationTypeKey : kResultsWindowPresentationTypeMultiple};
+        @{kEnvResultsWindowPresentationTypeKey : kEnvResultsWindowPresentationTypeMultiple};
     [_application launch];
   });
 }

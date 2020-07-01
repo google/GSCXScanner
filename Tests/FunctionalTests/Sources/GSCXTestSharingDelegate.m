@@ -33,20 +33,55 @@ static NSString *const kGSCXTestSharingDelegateAlertMessage =
 
 NSString *const kGSCXTestSharingDelegateAlertDismissTitle = @"Dismiss Sharing";
 
+@interface GSCXTestSharingDelegate ()
+
+/**
+ * @c YES if a share action is in progress, @c NO otherwise.
+ */
+@property(assign, nonatomic, getter=isSharing) BOOL sharing;
+
+/**
+ * Invoked when the share action finishes.
+ */
+@property(copy, nonatomic, nullable) GSCXSharingDelegateCompletionBlock completionBlock;
+
+@end
+
 @implementation GSCXTestSharingDelegate
 
-- (void)shareReport:(GSCXReport *)report inViewController:(UIViewController *__weak)viewController {
+- (BOOL)shareReport:(GSCXReport *)report
+    inViewController:(UIViewController *__weak)viewController
+          completion:(nullable GSCXSharingDelegateCompletionBlock)completionBlock {
+  if (self.sharing) {
+    return NO;
+  }
+  self.sharing = YES;
+  self.completionBlock = completionBlock;
   UIAlertController *alert =
       [UIAlertController alertControllerWithTitle:kGSCXTestSharingDelegateAlertTitle
                                           message:kGSCXTestSharingDelegateAlertMessage
                                    preferredStyle:UIAlertControllerStyleAlert];
+  __weak __typeof__(self) weakSelf = self;
   [alert addAction:[UIAlertAction actionWithTitle:kGSCXTestSharingDelegateAlertDismissTitle
                                             style:UIAlertActionStyleCancel
-                                          handler:^(UIAlertAction *_Nonnull action){
-                                              // The alert will be automatically dismissed, so no
-                                              // action needs to be taken.
+                                          handler:^(UIAlertAction *_Nonnull action) {
+                                            [weakSelf gscx_onSharingComplete];
                                           }]];
   [viewController presentViewController:alert animated:YES completion:nil];
+  return YES;
+}
+
+#pragma mark - Private
+
+/**
+ * Invoked when the alert is dismissed. Invokes the completion block, if it exists.
+ */
+- (void)gscx_onSharingComplete {
+  self.sharing = NO;
+  if (self.completionBlock != nil) {
+    self.completionBlock();
+    self.completionBlock = nil;
+  }
 }
 
 @end

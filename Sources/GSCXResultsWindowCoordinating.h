@@ -56,6 +56,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray<UIWindow *> *)windowsToScan;
 
+/**
+ * @return The number of windows currently presented by this coordinator.
+ */
+- (NSUInteger)presentedWindowCount;
+
 @end
 
 NS_ASSUME_NONNULL_END

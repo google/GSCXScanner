@@ -14,9 +14,14 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ * The minimum dimensions of a UI element to satisfy touch target guidelines.
+ */
+FOUNDATION_EXTERN const CGFloat kGSCXMinimumTouchTargetSize;
 
 /**
  * Contains common utility methods for GSCXScanner.

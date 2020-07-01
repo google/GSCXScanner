@@ -42,12 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GSCXScannerResultCarousel () <UICollectionViewDelegate, UICollectionViewDataSource>
 
 /**
- * Copies of the screenshots for each scan result. Copies are needed to avoid mutating the original
- * screenshot.
- */
-@property(strong, nonatomic) NSArray<UIView *> *resultScreenshots;
-
-/**
  * Configures the display of the carousel.
  */
 @property(strong, nonatomic) UICollectionViewFlowLayout *layout;
@@ -77,14 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
   if (self != nil) {
     _results = results;
     _selectionBlock = selectionBlock;
-    NSMutableArray<UIView *> *resultScreenshots =
-        [NSMutableArray arrayWithCapacity:[results count]];
-    for (GSCXScannerResult *result in results) {
-      UIView *screenshot = [result.screenshot snapshotViewAfterScreenUpdates:YES];
-      screenshot.translatesAutoresizingMaskIntoConstraints = NO;
-      [resultScreenshots addObject:screenshot];
-    }
-    _resultScreenshots = resultScreenshots;
     _layout = [[UICollectionViewFlowLayout alloc] init];
     _layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _layout.minimumInteritemSpacing = kHorizontalSpacing;
@@ -96,25 +82,52 @@ NS_ASSUME_NONNULL_BEGIN
     _carouselView.delegate = self;
     _carouselView.dataSource = self;
     _carouselView.allowsSelection = YES;
-    _carouselView.isAccessibilityElement = YES;
-    _carouselView.accessibilityValue = @"Scan 1";
-    _carouselView.accessibilityLabel =
-        [NSString stringWithFormat:@"%lu issues", _results[0].issueCount];
+    _carouselView.isAccessibilityElement = NO;
     [_carouselView selectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]
                                 animated:NO
                           scrollPosition:UICollectionViewScrollPositionNone];
     [_carouselView registerClass:[GSCXScannerResultCarouselCollectionViewCell class]
         forCellWithReuseIdentifier:kGSCXScannerResultCarouselReuseIdentifier];
+    __weak __typeof__(self) weakSelf = self;
+    _carouselAccessibilityElement =
+        [[GSCXAdjustableAccessibilityElement alloc] initWithAccessibilityContainer:_carouselView
+            decrementBlock:^(id sender) {
+              __typeof__(self) strongSelf = weakSelf;
+              if (strongSelf == nil || strongSelf.selectedIndex == 0) {
+                return;
+              }
+              [strongSelf focusResultAtIndex:strongSelf.selectedIndex - 1 animated:YES];
+            }
+            incrementBlock:^(id sender) {
+              __typeof__(self) strongSelf = weakSelf;
+              if (strongSelf == nil || strongSelf.selectedIndex == strongSelf.results.count - 1) {
+                return;
+              }
+              [strongSelf focusResultAtIndex:strongSelf.selectedIndex + 1 animated:YES];
+            }];
+    _carouselAccessibilityElement.accessibilityLabel =
+        [NSString stringWithFormat:@"%lu issues", (unsigned long)_results[0].issueCount];
+    _carouselAccessibilityElement.accessibilityValue =
+        [GSCXScannerResultCarousel gscx_accessibilityValueAtSelectedIndex:0];
+    _carouselView.accessibilityElements = @[ _carouselAccessibilityElement ];
   }
   return self;
 }
 
 - (void)focusResultAtIndex:(NSUInteger)index animated:(BOOL)animated {
-  _selectedIndex = index;
   NSIndexPath *indexPath = [NSIndexPath indexPathForItem:(NSInteger)index inSection:0];
   [self.carouselView selectItemAtIndexPath:indexPath
                                   animated:animated
                             scrollPosition:UICollectionViewScrollPositionCenteredHorizontally];
+  // -[UICollectionView selectItemAtIndexPath:...] does not invoke delegate methods.
+  [self.carouselView.delegate collectionView:self.carouselView didSelectItemAtIndexPath:indexPath];
+  _selectedIndex = index;
+}
+
+- (void)layoutSubviews {
+  self.carouselAccessibilityElement.accessibilityFrame =
+      [self.carouselView.superview convertRect:self.carouselView.frame
+                                        toView:self.carouselView.window];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -125,25 +138,13 @@ NS_ASSUME_NONNULL_BEGIN
       dequeueReusableCellWithReuseIdentifier:kGSCXScannerResultCarouselReuseIdentifier
                                 forIndexPath:indexPath];
   cell.isAccessibilityElement = NO;
+  cell.accessibilityIdentifier =
+      [GSCXScannerResultCarousel accessibilityIdentifierForCellAtIndex:indexPath.item];
   if ([cell isKindOfClass:[GSCXScannerResultCarouselCollectionViewCell class]]) {
     GSCXScannerResultCarouselCollectionViewCell *carouselCell =
         (GSCXScannerResultCarouselCollectionViewCell *)cell;
     [self gscx_removeSelectionHighlightFromCell:carouselCell];
-    // If the user swipes the carousel back and forth rapidly, it is possible for the screenshot
-    // to disappear. This occurs when a cell that just left the screen contained the screenshot
-    // that is being added to this cell. The screenshot will be added as a subview to that cell,
-    // which automatically removes it from this one. However, the screenshot property is not set to
-    // nil, because the cell cannot access the screenshot's current cell. Thus, when this cell is
-    // reused, it removes the screenshot from the superview, which is no longer this cell. This
-    // removes it from its new, correct cell, disappearing the screenshot. Only removing screenshots
-    // that are still in the current cell solves this.
-    if (carouselCell.screenshot.superview == carouselCell.contentView) {
-      [carouselCell.screenshot removeFromSuperview];
-    }
-    carouselCell.screenshot = self.resultScreenshots[indexPath.row];
-    [carouselCell.contentView addSubview:carouselCell.screenshot];
-    [NSLayoutConstraint gscx_constraintsToFillSuperviewWithView:carouselCell.screenshot
-                                                      activated:YES];
+    carouselCell.screenshot.image = self.results[indexPath.item].screenshot;
     if ((NSUInteger)indexPath.row == self.selectedIndex) {
       [self gscx_addSelectionHighlightToCell:carouselCell];
     }
@@ -154,12 +155,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGSize)collectionView:(UICollectionView *)collectionView
                     layout:(UICollectionViewLayout *)collectionViewLayout
     sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-  UIView *screenshot = self.results[indexPath.row].screenshot;
   CGFloat height = collectionView.frame.size.height - 2.0 * kVerticalSpacing;
-  if (screenshot == nil) {
-    return CGSizeMake(height, height);
-  }
-  CGFloat aspectRatio = screenshot.frame.size.width / screenshot.frame.size.height;
+  UIImage *screenshot = self.results[indexPath.row].screenshot;
+  CGFloat aspectRatio = screenshot.size.width / screenshot.size.height;
   return CGSizeMake(aspectRatio * height, height);
 }
 
@@ -185,13 +183,18 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscx_addSelectionHighlightToCell:carouselCell];
 }
 
++ (NSString *)accessibilityIdentifierForCellAtIndex:(NSInteger)index {
+  return [NSString stringWithFormat:@"GSCXScannerResultCarouselCollectionViewCell%ld", (long)index];
+}
+
 #pragma mark - Private
 
 - (void)gscx_setAccessibilityOfCarouselForResultAtIndex:(NSUInteger)index {
   GTX_ASSERT(index < self.results.count, @"index must be within bounds");
-  self.carouselView.accessibilityLabel =
-      [NSString stringWithFormat:@"%lu issues", self.results[index].issueCount];
-  self.carouselView.accessibilityValue = [NSString stringWithFormat:@"Scan %lu\n", index + 1];
+  self.carouselAccessibilityElement.accessibilityLabel =
+      [NSString stringWithFormat:@"%lu issues", (unsigned long)self.results[index].issueCount];
+  self.carouselAccessibilityElement.accessibilityValue =
+      [GSCXScannerResultCarousel gscx_accessibilityValueAtSelectedIndex:index];
 }
 
 /**
@@ -238,6 +241,16 @@ NS_ASSUME_NONNULL_BEGIN
   selectionHighlight.isAccessibilityElement = NO;
   cell.selectionHighlight = selectionHighlight;
   [cell.contentView addSubview:selectionHighlight];
+}
+
+/**
+ * Returns the accessibility value of the carousel when scan at the given index is selected.
+ *
+ * @param index The index of the selected scan to determine the accessibility value for.
+ * @return The accessibility value of the carousel when the scan at @c index is selected.
+ */
++ (NSString *)gscx_accessibilityValueAtSelectedIndex:(NSUInteger)index {
+  return [NSString stringWithFormat:@"Screen %lu", (unsigned long)index + 1];
 }
 
 @end

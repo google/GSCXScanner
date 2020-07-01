@@ -26,6 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXTERN NSString *const kGSCXContinuousScannerGalleryDetailViewAccessibilityIdentifier;
 
 /**
+ * Maximum zoom scale the screenshot can have. The minimum zoom is the reciprocal of this value.
+ */
+FOUNDATION_EXTERN const CGFloat kGSCXContinuousScannerGalleryZoomScale;
+
+/**
  * Displays detailed information about accessibility issues in a single screen found during a scan.
  * Provides a screenshot that is automatically focused so users can focus on individual elements
  * containing accessibility issues.
@@ -49,7 +54,10 @@ FOUNDATION_EXTERN NSString *const kGSCXContinuousScannerGalleryDetailViewAccessi
                          result:(GSCXScannerResult *)result;
 
 /**
- * Focuses the screenshot and detail views on the accessibility issue at the given index.
+ * Focuses the screenshot and detail views on the accessibility issue at the given index. If this
+ * view controller is not visible when @c focusIssueAtIndex is called, the index will be stored and
+ * the focus will not occur until directly before the view controller appears. May only be called
+ * from the UI thread.
  *
  * @param index The index of the accessibility issue on which to focus.
  * @param animated @c YES if the transition should be animated, @c NO if it should occur

@@ -230,7 +230,7 @@ static NSString *const kGSCXScannerSettingsItemSwitchItemLabel = @"Switch Item";
  */
 - (void)gscxtest_assertHasButtonItemConfiguredCellCorrectly:
     (GSCXScannerSettingsTableViewCell *)cell {
-  NSString *title = [cell.button titleForState:UIControlStateNormal];
+  NSString *title = [cell.button attributedTitleForState:UIControlStateNormal].string;
   XCTAssertFalse(cell.button.hidden);
   XCTAssertEqualObjects(title, kGSCXScannerSettingsItemButtonItemTitle);
   XCTAssertNil(cell.textLabel.text);

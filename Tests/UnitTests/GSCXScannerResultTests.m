@@ -58,9 +58,20 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
     @"kGSCXScannerResultTestsAccessibilityLabel3";
 
 @interface GSCXScannerResultTests : XCTestCase
+
+/**
+ * A blank image to pass to @c GSCXScannerResult initializers.
+ */
+@property(strong, nonatomic) UIImage *dummyImage;
+
 @end
 
 @implementation GSCXScannerResultTests
+
+- (void)setUp {
+  [super setUp];
+  self.dummyImage = [[UIImage alloc] init];
+}
 
 /**
  * Constructs a @c GSCXScannerIssue instance with the given check names, corresponding descriptions,
@@ -98,7 +109,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
 }
 
 - (void)testIssueCountIsZeroWithEmptyIssues {
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:@[] screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                             screenshot:self.dummyImage];
   XCTAssertEqual(result.issueCount, 0ul);
 }
 
@@ -111,7 +123,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                            frameInScreenBounds:kGSCXScannerResultTestsFrame1
                             accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel1
                        accessibilityIdentifier:nil] ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
 
   XCTAssertEqual(result.issueCount, 1ul);
 
@@ -140,7 +153,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                        accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel2
                   accessibilityIdentifier:nil]
   ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
 
   XCTAssertEqual(result.issueCount, 2ul);
 
@@ -172,7 +186,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
           frameInScreenBounds:kGSCXScannerResultTestsFrame1
            accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel1
       accessibilityIdentifier:nil] ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
 
   XCTAssertEqual(result.issueCount, 2ul);
 
@@ -218,7 +233,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
              accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel2
         accessibilityIdentifier:nil]
   ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
 
   XCTAssertEqual(result.issueCount, 4ul);
 
@@ -273,7 +289,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
              accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel2
         accessibilityIdentifier:nil]
   ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
 
   XCTAssertEqual(result.issueCount, 3ul);
 
@@ -300,7 +317,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
 }
 
 - (void)testResultWithIssuesAtPointWithEmptyIssues {
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:@[] screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                             screenshot:self.dummyImage];
   GSCXScannerResult *filteredResult = [result resultWithIssuesAtPoint:CGPointZero];
   XCTAssertEqual(filteredResult.issueCount, 0ul);
 }
@@ -314,7 +332,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                            frameInScreenBounds:kGSCXScannerResultTestsFrame1
                             accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel1
                        accessibilityIdentifier:nil] ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
   GSCXScannerResult *filteredResult =
       [result resultWithIssuesAtPoint:kGSCXScannerResultTestsContainingPoint1];
 
@@ -337,7 +356,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                            frameInScreenBounds:kGSCXScannerResultTestsFrame1
                             accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel1
                        accessibilityIdentifier:nil] ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
   GSCXScannerResult *filteredResult = [result resultWithIssuesAtPoint:CGPointZero];
 
   XCTAssertEqual(filteredResult.issueCount, 0ul);
@@ -360,7 +380,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                        accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel2
                   accessibilityIdentifier:nil]
   ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
   GSCXScannerResult *filteredResult =
       [result resultWithIssuesAtPoint:kGSCXScannerResultTestsContainingPoint2];
 
@@ -398,7 +419,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                        accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel3
                   accessibilityIdentifier:nil]
   ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
   GSCXScannerResult *filteredResult =
       [result resultWithIssuesAtPoint:kGSCXScannerResultTestsContainingPoint3];
 
@@ -443,7 +465,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                        accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel3
                   accessibilityIdentifier:nil]
   ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
   GSCXScannerResult *filteredResult = [result resultWithIssuesAtPoint:CGPointZero];
 
   XCTAssertEqual(filteredResult.issueCount, 0ul);
@@ -495,7 +518,8 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
                        accessibilityLabel:kGSCXScannerResultTestsAccessibilityLabel2
                   accessibilityIdentifier:nil]
   ];
-  GSCXScannerResult *result = [GSCXScannerResult resultWithIssues:issues screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:issues
+                                                             screenshot:self.dummyImage];
   NSString *resultHTML = [result htmlDescription:[[GSCXReportContext alloc] init]];
 
   NSInteger assertionCount = 0;
@@ -509,8 +533,10 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
 }
 
 - (void)testDedupeWithEmptyResultsEmptyisEmpty {
-  GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[] screenshot:nil];
-  GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[] screenshot:nil];
+  GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                              screenshot:self.dummyImage];
+  GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 0);
   XCTAssertEqual([result2.issues count], 0);
@@ -520,8 +546,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue1 = [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                                elementAddress:1];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue1 ]
-                                                              screenshot:nil];
-  GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[] screenshot:nil];
+                                                              screenshot:self.dummyImage];
+  GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 1);
   XCTAssertEqual([result1.issues[0].gtxCheckNames count], 1);
@@ -532,9 +559,10 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
 - (void)testDedupeWithNonEmptyAndEmptyResultsIsEmpty {
   GSCXScannerIssue *issue2 = [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                                elementAddress:1];
-  GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[] screenshot:nil];
+  GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue2 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 0);
   XCTAssertEqual([result2.issues count], 1);
@@ -547,9 +575,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue2 = [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                                elementAddress:1];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue1 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue2 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 1);
   XCTAssertEqualObjects(result1.issues[0].gtxCheckNames, @[ kGSCXScannerResultTestsCheckName1 ]);
@@ -562,9 +590,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue2 = [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ]
                                                elementAddress:2];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue1 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue2 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 1);
   XCTAssertEqualObjects(result1.issues[0].gtxCheckNames, @[ kGSCXScannerResultTestsCheckName1 ]);
@@ -582,9 +610,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   ]
                                                elementAddress:1];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue1 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue2 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 1);
   NSArray<NSString *> *expectedNames = @[
@@ -603,9 +631,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue22 =
       [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName3 ] elementAddress:3];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue1 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue21, issue22 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 1);
   XCTAssertEqualObjects(result1.issues[0].gtxCheckNames, @[ kGSCXScannerResultTestsCheckName1 ]);
@@ -622,9 +650,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue22 =
       [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName3 ] elementAddress:3];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue1 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue21, issue22 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 1);
   XCTAssertEqual([result1.issues[0].gtxCheckNames count], 2);
@@ -645,9 +673,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue22 =
       [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ] elementAddress:1];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue11, issue12 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue21, issue22 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 2);
   XCTAssertEqualObjects(result1.issues[0].gtxCheckNames, @[ kGSCXScannerResultTestsCheckName1 ]);
@@ -665,9 +693,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue22 =
       [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ] elementAddress:1];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue11, issue12 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue21, issue22 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 2);
   NSArray<NSString *> *expectedNames1 =
@@ -689,9 +717,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerIssue *issue22 =
       [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ] elementAddress:2];
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[ issue11, issue12 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[ issue21, issue22 ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   [result1 moveIssuesWithExistingElementsFromResult:result2];
   XCTAssertEqual([result1.issues count], 2);
   XCTAssertEqualObjects(result1.issues[0].gtxCheckNames, @[ kGSCXScannerResultTestsCheckName1 ]);
@@ -711,7 +739,7 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                           elementAddress:1] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   NSArray<GSCXScannerResult *> *results = @[ result1 ];
   NSArray<GSCXScannerResult *> *actual =
       [GSCXScannerResult resultsArrayByDedupingResultsArray:results];
@@ -724,11 +752,11 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                           elementAddress:1] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ]
                                           elementAddress:2] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   NSArray<GSCXScannerResult *> *results = @[ result1, result2 ];
   NSArray<GSCXScannerResult *> *actual =
       [GSCXScannerResult resultsArrayByDedupingResultsArray:results];
@@ -740,11 +768,12 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
 }
 
 - (void)testArrayByDedupingMultipleFirstHasNoIssues {
-  GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[] screenshot:nil];
+  GSCXScannerResult *result1 = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ]
                                           elementAddress:2] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   NSArray<GSCXScannerResult *> *results = @[ result1, result2 ];
   NSArray<GSCXScannerResult *> *actual =
       [GSCXScannerResult resultsArrayByDedupingResultsArray:results];
@@ -757,8 +786,9 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                           elementAddress:1] ]
-          screenshot:nil];
-  GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[] screenshot:nil];
+          screenshot:self.dummyImage];
+  GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[]
+                                                              screenshot:self.dummyImage];
   NSArray<GSCXScannerResult *> *results = @[ result1, result2 ];
   NSArray<GSCXScannerResult *> *actual =
       [GSCXScannerResult resultsArrayByDedupingResultsArray:results];
@@ -771,11 +801,11 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                           elementAddress:1] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                           elementAddress:1] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   NSArray<GSCXScannerResult *> *results = @[ result1, result2 ];
   NSArray<GSCXScannerResult *> *actual =
       [GSCXScannerResult resultsArrayByDedupingResultsArray:results];
@@ -788,15 +818,15 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
   GSCXScannerResult *result1 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ]
                                           elementAddress:1] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ]
                                           elementAddress:2] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   GSCXScannerResult *result3 = [[GSCXScannerResult alloc]
       initWithIssues:@[ [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName3 ]
                                           elementAddress:1] ]
-          screenshot:nil];
+          screenshot:self.dummyImage];
   NSArray<GSCXScannerResult *> *results = @[ result1, result2, result3 ];
   NSArray<GSCXScannerResult *> *actual =
       [GSCXScannerResult resultsArrayByDedupingResultsArray:results];
@@ -814,18 +844,18 @@ static NSString *const kGSCXScannerResultTestsAccessibilityLabel3 =
     [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ] elementAddress:1],
     [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName1 ] elementAddress:2]
   ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result2 = [[GSCXScannerResult alloc] initWithIssues:@[
     [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ] elementAddress:3],
     [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ] elementAddress:1],
     [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName2 ] elementAddress:2]
   ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   GSCXScannerResult *result3 = [[GSCXScannerResult alloc] initWithIssues:@[
     [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName3 ] elementAddress:3],
     [self defaultIssueWithCheckNames:@[ kGSCXScannerResultTestsCheckName3 ] elementAddress:2]
   ]
-                                                              screenshot:nil];
+                                                              screenshot:self.dummyImage];
   NSArray<GSCXScannerResult *> *results = @[ result1, result2, result3 ];
   NSArray<GSCXScannerResult *> *actual =
       [GSCXScannerResult resultsArrayByDedupingResultsArray:results];

@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "UIView+GSCXAppearance.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -79,6 +81,11 @@ const CGFloat kGSCXScannerWindowLevelOffset = 2.0f;
   if (self = [super init]) {
     _isMultiWindowPresentation = isMultiWindowPresentation;
     _resultsWindows = [[NSMutableArray alloc] init];
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(gscx_updateUserInterfaceStyleForOverlayWindows)
+               name:UIApplicationDidBecomeActiveNotification
+             object:nil];
   }
   return self;
 }
@@ -139,6 +146,10 @@ const CGFloat kGSCXScannerWindowLevelOffset = 2.0f;
   return [[UIApplication sharedApplication] windows];
 }
 
+- (NSUInteger)presentedWindowCount {
+  return _resultsWindows.count;
+}
+
 #pragma mark - Private
 
 - (nullable UIWindow *)gscx_topWindow {
@@ -173,15 +184,32 @@ const CGFloat kGSCXScannerWindowLevelOffset = 2.0f;
   // underlying window must remain visible.
   rootViewController.view.backgroundColor = [UIColor clearColor];
   resultsWindow.rootViewController = rootViewController;
+  [resultsWindow gscx_setOverrideUserInterfaceStyleForCurrentApperance];
   resultsWindow.windowLevel = [GSCXScannerWindowCoordinator windowLevel];
   if (_isMultiWindowPresentation) {
     // Decreasing the window level presents the results window behind the overlay window, allowing
     // the user to tap the perform scan button again, presenting another results window.
     resultsWindow.windowLevel--;
   }
+  // On iOS 13 (and potentially earlier versions), the scanner menu button is accessible via
+  // VoiceOver even though it is completely covered by results windows. Treating the results windows
+  // as modal prevents this. However, in multi window presentation mode, the menu button appears
+  // over the results window. In this case, it should still be accessible, so
+  // accessibilityViewIsModal should be NO.
+  resultsWindow.accessibilityViewIsModal = !_isMultiWindowPresentation;
   [resultsWindow makeKeyAndVisible];
   [_resultsWindows addObject:resultsWindow];
   return resultsWindow;
+}
+
+/**
+ * Updates the user interface style for all overlay windows for the user's current settings. Called
+ * when the application enters the foreground.
+ */
+- (void)gscx_updateUserInterfaceStyleForOverlayWindows {
+  for (UIWindow *window in _resultsWindows) {
+    [window gscx_setOverrideUserInterfaceStyleForCurrentApperance];
+  }
 }
 
 @end

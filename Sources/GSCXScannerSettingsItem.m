@@ -45,7 +45,11 @@ static const CGFloat kGSCXScannerSettingsItemButtonInset = 4.0;
   return [GSCXScannerSettingsBlockItem itemWithBlock:^(GSCXScannerSettingsTableViewCell *cell) {
     // Remove all previously added targets and actions.
     [cell.button removeTarget:nil action:nil forControlEvents:UIControlEventAllEvents];
-    [cell.button setTitle:title forState:UIControlStateNormal];
+    NSDictionary<NSAttributedStringKey, id> *attributes =
+        @{NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]};
+    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title
+                                                                          attributes:attributes];
+    [cell.button setAttributedTitle:attributedTitle forState:UIControlStateNormal];
     [cell.button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     cell.button.accessibilityIdentifier = accessibilityIdentifier;
     cell.button.backgroundColor = [UIColor grayColor];

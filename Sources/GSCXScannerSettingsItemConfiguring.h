@@ -22,8 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Represents an item in the scanner settings page. Items may contain interactive elements or static
- * text. Instances may optionally provide custom styling to the table view cell elements, but it is
- * the responsibliity of the data source to apply default styles.
+ * text. Instances may optionally provide custom styling to the table view cell elements. The data
+ * source is allowed to change these styles, but they must call @c configureTableViewCell first or
+ * else they will be overwritten.
  */
 @protocol GSCXScannerSettingsItemConfiguring <NSObject>
 

@@ -17,7 +17,7 @@
 #import "GSCXContinuousScanner.h"
 
 #import "GSCXScanner.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GSCXContinuousScanner ()
@@ -63,6 +63,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)startScanning {
+  GTX_ASSERT(![self isScanning], @"Cannot start scanning while already scanning.");
+  if ([self.delegate respondsToSelector:@selector(continuousScannerWillStart:)]) {
+    [self.delegate continuousScannerWillStart:self];
+  }
+  _scanResults = @[];
   __weak __typeof__(self) weakSelf = self;
   [self.scheduler startSchedulingWithCallback:^(id<GSCXContinuousScannerScheduling> scheduler) {
     return [weakSelf gscx_performScan];
@@ -70,6 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)stopScanning {
+  GTX_ASSERT([self isScanning], @"Cannot stop scanning while not scanning.");
   [self.scheduler stopScheduling];
 }
 
@@ -108,7 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)gscx_performScan {
   GSCXScannerResult *result = [self.scanner scanRootViews:[self.delegate rootViewsToScan]];
   _scanResults = [_scanResults arrayByAddingObject:result];
-  [self.delegate continuousScanner:self didPerformScanWithResult:result];
+  if ([self.delegate respondsToSelector:@selector(continuousScanner:didPerformScanWithResult:)]) {
+    [self.delegate continuousScanner:self didPerformScanWithResult:result];
+  }
   return YES;
 }
 

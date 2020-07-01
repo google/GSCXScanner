@@ -19,7 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "third_party/objective_c/EarlGreyV2/TestLib/EarlGreyImpl/EarlGrey.h"
-#import "GSCXTestAppDelegate.h"
+#import "GSCXTestEnvironmentVariables.h"
 #import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/Utils/GSCXScannerTestUtils.h"
 
 @implementation GSCXScannerTestCase {
@@ -32,7 +32,7 @@
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _application = [[XCUIApplication alloc] init];
-    _application.launchEnvironment = @{kUseTestSharingDelegateKey : @"YES"};
+    _application.launchEnvironment = @{kEnvUseTestSharingDelegateKey : @"YES"};
     [_application launch];
   });
 }

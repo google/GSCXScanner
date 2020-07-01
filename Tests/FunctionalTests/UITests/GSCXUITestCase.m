@@ -17,6 +17,7 @@
 #import "GSCXUITestCase.h"
 
 #import "GSCXTestAppDelegate.h"
+#import "GSCXTestEnvironmentVariables.h"
 #import "GSCXTestViewController.h"
 #import "XCUIElement+GSCXScanner.h"
 
@@ -25,9 +26,9 @@
 - (void)setUp {
   [super setUp];
   self.app = [[XCUIApplication alloc] init];
-  NSString *overlayType = [self isApplicationOverlayTransparent] ? kWindowOverlayTypeTransparent
-                                                                 : kWindowOverlayTypeOpaque;
-  self.app.launchEnvironment = @{kWindowOverlayTypeKey : overlayType};
+  NSString *overlayType = [self isApplicationOverlayTransparent] ? kEnvWindowOverlayTypeTransparent
+                                                                 : kEnvWindowOverlayTypeOpaque;
+  self.app.launchEnvironment = @{kEnvWindowOverlayTypeKey : overlayType};
   [self.app launch];
 }
 

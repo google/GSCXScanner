@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The title of the button dismissing the alert presented when sharing a report.
  */
-NSString *const kGSCXTestSharingDelegateAlertDismissTitle;
+FOUNDATION_EXTERN NSString *const kGSCXTestSharingDelegateAlertDismissTitle;
 
 @interface GSCXTestSharingDelegate : NSObject <GSCXSharingDelegate>
 

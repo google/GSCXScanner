@@ -7,87 +7,127 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		610B2F9522D508320005CE68 /* GSCXReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F8C22D508310005CE68 /* GSCXReport.h */; };
-		610B2F9622D508320005CE68 /* GSCXReportContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F9022D508310005CE68 /* GSCXReportContext.h */; };
-		610B2F9722D508320005CE68 /* GSCXAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F9122D508310005CE68 /* GSCXAnalytics.h */; };
+		610B2F9522D508320005CE68 /* GSCXReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F8C22D508310005CE68 /* GSCXReport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		610B2F9622D508320005CE68 /* GSCXReportContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F9022D508310005CE68 /* GSCXReportContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		610B2F9722D508320005CE68 /* GSCXAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 610B2F9122D508310005CE68 /* GSCXAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		610B2F9822D508320005CE68 /* GSCXReportContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 610B2F9222D508310005CE68 /* GSCXReportContext.m */; };
 		610B2F9922D508320005CE68 /* GSCXReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 610B2F9322D508320005CE68 /* GSCXReport.m */; };
 		610B2F9A22D508320005CE68 /* GSCXAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 610B2F9422D508320005CE68 /* GSCXAnalytics.m */; };
-		616525DD2208F12E00CBC788 /* GSCXWindowOverlayViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525B82208F12C00CBC788 /* GSCXWindowOverlayViewController.h */; };
+		616525DD2208F12E00CBC788 /* GSCXWindowOverlayViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525B82208F12C00CBC788 /* GSCXWindowOverlayViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525DE2208F12E00CBC788 /* GSCXScannerIssue.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525B92208F12C00CBC788 /* GSCXScannerIssue.m */; };
 		616525DF2208F12E00CBC788 /* GSCXScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525BA2208F12C00CBC788 /* GSCXScanner.m */; };
-		616525E02208F12E00CBC788 /* GSCXScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525BB2208F12C00CBC788 /* GSCXScanner.h */; };
+		616525E02208F12E00CBC788 /* GSCXScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525BB2208F12C00CBC788 /* GSCXScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525E12208F12E00CBC788 /* GSCXScannerResultTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 616525BC2208F12C00CBC788 /* GSCXScannerResultTableViewController.xib */; };
 		616525E22208F12E00CBC788 /* GSCXAutoInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525BD2208F12C00CBC788 /* GSCXAutoInstaller.m */; };
 		616525E32208F12E00CBC788 /* GSCXScannerScreenshotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 616525BE2208F12C00CBC788 /* GSCXScannerScreenshotViewController.xib */; };
 		616525E42208F12E00CBC788 /* GSCXScannerResultDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 616525BF2208F12C00CBC788 /* GSCXScannerResultDetailViewController.xib */; };
-		616525E52208F12E00CBC788 /* GSCXHitForwardingWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525C02208F12C00CBC788 /* GSCXHitForwardingWindow.h */; };
+		616525E52208F12E00CBC788 /* GSCXHitForwardingWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525C02208F12C00CBC788 /* GSCXHitForwardingWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525E62208F12E00CBC788 /* GSCXScannerScreenshotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525C12208F12C00CBC788 /* GSCXScannerScreenshotViewController.m */; };
-		616525E72208F12E00CBC788 /* GSCXInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525C22208F12C00CBC788 /* GSCXInstaller.h */; };
-		616525E82208F12E00CBC788 /* UIViewController+GSCXTraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525C32208F12C00CBC788 /* UIViewController+GSCXTraversal.h */; };
+		616525E72208F12E00CBC788 /* GSCXInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525C22208F12C00CBC788 /* GSCXInstaller.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616525E82208F12E00CBC788 /* UIViewController+GSCXTraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525C32208F12C00CBC788 /* UIViewController+GSCXTraversal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525E92208F12E00CBC788 /* GSCXHitForwardingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525C42208F12C00CBC788 /* GSCXHitForwardingView.m */; };
 		616525EA2208F12E00CBC788 /* GSCXScannerOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525C52208F12D00CBC788 /* GSCXScannerOverlayViewController.m */; };
 		616525EB2208F12E00CBC788 /* GSCXScannerResultTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525C62208F12D00CBC788 /* GSCXScannerResultTableViewController.m */; };
 		616525EC2208F12E00CBC788 /* GSCXWindowOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525C72208F12D00CBC788 /* GSCXWindowOverlayViewController.m */; };
 		616525ED2208F12E00CBC788 /* GSCXScannerOverlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 616525C82208F12D00CBC788 /* GSCXScannerOverlayViewController.xib */; };
 		616525EE2208F12E00CBC788 /* UIViewController+GSCXTraversal.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525C92208F12D00CBC788 /* UIViewController+GSCXTraversal.m */; };
-		616525EF2208F12E00CBC788 /* GSCXHitForwardingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CA2208F12D00CBC788 /* GSCXHitForwardingView.h */; };
+		616525EF2208F12E00CBC788 /* GSCXHitForwardingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CA2208F12D00CBC788 /* GSCXHitForwardingView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525F02208F12E00CBC788 /* GSCXCornerConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525CB2208F12D00CBC788 /* GSCXCornerConstraints.m */; };
 		616525F12208F12E00CBC788 /* GSCXWindowOverlayPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525CC2208F12D00CBC788 /* GSCXWindowOverlayPair.m */; };
-		616525F22208F12E00CBC788 /* GSCXScannerOverlayViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CD2208F12D00CBC788 /* GSCXScannerOverlayViewController.h */; };
-		616525F32208F12E00CBC788 /* GSCXAutoInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CE2208F12D00CBC788 /* GSCXAutoInstaller.h */; };
-		616525F42208F12E00CBC788 /* GSCXScannerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CF2208F12D00CBC788 /* GSCXScannerResult.h */; };
+		616525F22208F12E00CBC788 /* GSCXScannerOverlayViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CD2208F12D00CBC788 /* GSCXScannerOverlayViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616525F32208F12E00CBC788 /* GSCXAutoInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CE2208F12D00CBC788 /* GSCXAutoInstaller.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616525F42208F12E00CBC788 /* GSCXScannerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525CF2208F12D00CBC788 /* GSCXScannerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525F52208F12E00CBC788 /* GSCXScannerResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525D02208F12D00CBC788 /* GSCXScannerResult.m */; };
 		616525F62208F12E00CBC788 /* GSCXInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525D12208F12D00CBC788 /* GSCXInstaller.m */; };
-		616525F72208F12E00CBC788 /* GSCXScannerScreenshotViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D22208F12D00CBC788 /* GSCXScannerScreenshotViewController.h */; };
-		616525F82208F12E00CBC788 /* GSCXScannerIssue.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D32208F12D00CBC788 /* GSCXScannerIssue.h */; };
+		616525F72208F12E00CBC788 /* GSCXScannerScreenshotViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D22208F12D00CBC788 /* GSCXScannerScreenshotViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616525F82208F12E00CBC788 /* GSCXScannerIssue.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D32208F12D00CBC788 /* GSCXScannerIssue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525F92208F12E00CBC788 /* GSCXRingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525D42208F12D00CBC788 /* GSCXRingView.m */; };
 		616525FA2208F12E00CBC788 /* GSCXHitForwardingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525D52208F12D00CBC788 /* GSCXHitForwardingWindow.m */; };
-		616525FB2208F12E00CBC788 /* GSCXRingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D62208F12D00CBC788 /* GSCXRingView.h */; };
-		616525FC2208F12E00CBC788 /* GSCXCornerConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D72208F12D00CBC788 /* GSCXCornerConstraints.h */; };
-		616525FD2208F12E00CBC788 /* GSCXScannerResultDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D82208F12D00CBC788 /* GSCXScannerResultDetailViewController.h */; };
-		616525FE2208F12E00CBC788 /* GSCXScannerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D92208F12E00CBC788 /* GSCXScannerDelegate.h */; };
+		616525FB2208F12E00CBC788 /* GSCXRingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D62208F12D00CBC788 /* GSCXRingView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616525FC2208F12E00CBC788 /* GSCXCornerConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D72208F12D00CBC788 /* GSCXCornerConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616525FD2208F12E00CBC788 /* GSCXScannerResultDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D82208F12D00CBC788 /* GSCXScannerResultDetailViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616525FE2208F12E00CBC788 /* GSCXScannerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525D92208F12E00CBC788 /* GSCXScannerDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		616525FF2208F12E00CBC788 /* GSCXScannerResultDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 616525DA2208F12E00CBC788 /* GSCXScannerResultDetailViewController.m */; };
-		616526002208F12E00CBC788 /* GSCXScannerResultTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525DB2208F12E00CBC788 /* GSCXScannerResultTableViewController.h */; };
-		616526012208F12E00CBC788 /* GSCXWindowOverlayPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525DC2208F12E00CBC788 /* GSCXWindowOverlayPair.h */; };
+		616526002208F12E00CBC788 /* GSCXScannerResultTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525DB2208F12E00CBC788 /* GSCXScannerResultTableViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		616526012208F12E00CBC788 /* GSCXWindowOverlayPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 616525DC2208F12E00CBC788 /* GSCXWindowOverlayPair.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC3551A824AC327C003398A4 /* GSCXColoredView.m in Sources */ = {isa = PBXBuildFile; fileRef = DC3551A424AC327C003398A4 /* GSCXColoredView.m */; };
+		DC3551A924AC327C003398A4 /* GSCXColoredView.h in Headers */ = {isa = PBXBuildFile; fileRef = DC3551A524AC327C003398A4 /* GSCXColoredView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC3551AA24AC327C003398A4 /* GSCXAdjustableAccessibilityElement.h in Headers */ = {isa = PBXBuildFile; fileRef = DC3551A624AC327C003398A4 /* GSCXAdjustableAccessibilityElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC3551AB24AC327C003398A4 /* GSCXAdjustableAccessibilityElement.m in Sources */ = {isa = PBXBuildFile; fileRef = DC3551A724AC327C003398A4 /* GSCXAdjustableAccessibilityElement.m */; };
+		DC63B4382499A14B004084AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC63B4372499A14B004084AE /* Assets.xcassets */; };
+		DC8E693D249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E691A249AAB7500AA4A80 /* GSCXScannerIssueExpandableTableViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E693E249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E691B249AAB7500AA4A80 /* GSCXScannerIssueExpandableTableViewCell.m */; };
+		DC8E693F249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E691C249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarUtils.m */; };
+		DC8E6940249AAB7800AA4A80 /* GSCXContinuousScannerGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E691D249AAB7600AA4A80 /* GSCXContinuousScannerGridViewController.m */; };
+		DC8E6941249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E691E249AAB7600AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6942249AAB7800AA4A80 /* GSCXScanResultsPageConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E691F249AAB7600AA4A80 /* GSCXScanResultsPageConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6943249AAB7800AA4A80 /* GSCXScannerIssueTableViewSection.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6920249AAB7600AA4A80 /* GSCXScannerIssueTableViewSection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6944249AAB7800AA4A80 /* UIView+NSLayoutConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6921249AAB7600AA4A80 /* UIView+NSLayoutConstraint.m */; };
+		DC8E6945249AAB7800AA4A80 /* GSCXContinuousScannerGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6922249AAB7600AA4A80 /* GSCXContinuousScannerGridCell.m */; };
+		DC8E6946249AAB7800AA4A80 /* GSCXContinuousScannerScreenshotViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6923249AAB7600AA4A80 /* GSCXContinuousScannerScreenshotViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6947249AAB7800AA4A80 /* GSCXContinuousScannerScreenshotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6924249AAB7600AA4A80 /* GSCXContinuousScannerScreenshotViewController.m */; };
+		DC8E6948249AAB7800AA4A80 /* GSCXScannerIssueTableViewSection.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6925249AAB7600AA4A80 /* GSCXScannerIssueTableViewSection.m */; };
+		DC8E6949249AAB7800AA4A80 /* GSCXContinuousScannerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6926249AAB7600AA4A80 /* GSCXContinuousScannerListViewController.m */; };
+		DC8E694A249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6927249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E694B249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6928249AAB7600AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.m */; };
+		DC8E694C249AAB7800AA4A80 /* GSCXContinuousScannerGridViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6929249AAB7600AA4A80 /* GSCXContinuousScannerGridViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E694D249AAB7800AA4A80 /* GSCXScannerIssueTableViewRow.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E692A249AAB7600AA4A80 /* GSCXScannerIssueTableViewRow.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E694E249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E692B249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarViewController.m */; };
+		DC8E694F249AAB7800AA4A80 /* GSCXContinuousScannerGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC8E692C249AAB7700AA4A80 /* GSCXContinuousScannerGridViewController.xib */; };
+		DC8E6950249AAB7800AA4A80 /* GSCXContinuousScannerListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E692D249AAB7700AA4A80 /* GSCXContinuousScannerListViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6951249AAB7800AA4A80 /* GSCXContinuousScannerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC8E692E249AAB7700AA4A80 /* GSCXContinuousScannerListViewController.xib */; };
+		DC8E6952249AAB7800AA4A80 /* GSCXScannerIssueTableViewRow.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E692F249AAB7700AA4A80 /* GSCXScannerIssueTableViewRow.m */; };
+		DC8E6953249AAB7800AA4A80 /* GSCXContinuousScannerGridCell.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6930249AAB7700AA4A80 /* GSCXContinuousScannerGridCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6954249AAB7800AA4A80 /* GSCXScanResultsPageConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6931249AAB7700AA4A80 /* GSCXScanResultsPageConstants.m */; };
+		DC8E6955249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6932249AAB7700AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6956249AAB7800AA4A80 /* UIView+GSCXAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6933249AAB7700AA4A80 /* UIView+GSCXAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6957249AAB7800AA4A80 /* UIView+NSLayoutConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6934249AAB7700AA4A80 /* UIView+NSLayoutConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E6958249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6935249AAB7700AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.m */; };
+		DC8E6959249AAB7800AA4A80 /* GSCXImageNames.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E6936249AAB7700AA4A80 /* GSCXImageNames.m */; };
+		DC8E695A249AAB7800AA4A80 /* GSCXImageNames.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6937249AAB7700AA4A80 /* GSCXImageNames.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E695B249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E6938249AAB7700AA4A80 /* GSCXContinuousScannerListTabBarItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC8E695C249AAB7800AA4A80 /* GSCXContinuousScannerScreenshotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC8E6939249AAB7700AA4A80 /* GSCXContinuousScannerScreenshotViewController.xib */; };
+		DC8E695D249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E693A249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarItem.m */; };
+		DC8E695E249AAB7800AA4A80 /* UIView+GSCXAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E693B249AAB7800AA4A80 /* UIView+GSCXAppearance.m */; };
+		DC8E695F249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E693C249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420C123FF382700C8D9F3 /* GSCXInstallerOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4208123FF381500C8D9F3 /* GSCXInstallerOptions.m */; };
 		DCA420C223FF382700C8D9F3 /* GSCXContinuousScannerGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4208523FF381500C8D9F3 /* GSCXContinuousScannerGalleryViewController.m */; };
 		DCA420C323FF382700C8D9F3 /* GSCXScannerSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCA4208623FF381500C8D9F3 /* GSCXScannerSettingsViewController.xib */; };
-		DCA420C423FF382700C8D9F3 /* GSCXDefaultSharingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208723FF381500C8D9F3 /* GSCXDefaultSharingDelegate.h */; };
+		DCA420C423FF382700C8D9F3 /* GSCXDefaultSharingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208723FF381500C8D9F3 /* GSCXDefaultSharingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420C523FF382700C8D9F3 /* UIApplication+GSCXSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4208823FF381600C8D9F3 /* UIApplication+GSCXSwizzling.m */; };
-		DCA420C623FF382700C8D9F3 /* GSCXResultsWindowCoordinating.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208923FF381600C8D9F3 /* GSCXResultsWindowCoordinating.h */; };
-		DCA420C723FF382700C8D9F3 /* GSCXScannerOverlayWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208A23FF381600C8D9F3 /* GSCXScannerOverlayWindow.h */; };
-		DCA420C823FF382700C8D9F3 /* GSCXContinuousScannerResultViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208B23FF381700C8D9F3 /* GSCXContinuousScannerResultViewController.h */; };
-		DCA420C923FF382700C8D9F3 /* GSCXScannerSettingsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208C23FF381700C8D9F3 /* GSCXScannerSettingsViewController.h */; };
-		DCA420CA23FF382700C8D9F3 /* GSCXScannerSettingsItem.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208D23FF381700C8D9F3 /* GSCXScannerSettingsItem.h */; };
-		DCA420CB23FF382700C8D9F3 /* GSCXScannerSettingsTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208E23FF381700C8D9F3 /* GSCXScannerSettingsTableViewCell.h */; };
+		DCA420C623FF382700C8D9F3 /* GSCXResultsWindowCoordinating.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208923FF381600C8D9F3 /* GSCXResultsWindowCoordinating.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420C723FF382700C8D9F3 /* GSCXScannerOverlayWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208A23FF381600C8D9F3 /* GSCXScannerOverlayWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420C823FF382700C8D9F3 /* GSCXContinuousScannerResultViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208B23FF381700C8D9F3 /* GSCXContinuousScannerResultViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420C923FF382700C8D9F3 /* GSCXScannerSettingsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208C23FF381700C8D9F3 /* GSCXScannerSettingsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420CA23FF382700C8D9F3 /* GSCXScannerSettingsItem.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208D23FF381700C8D9F3 /* GSCXScannerSettingsItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420CB23FF382700C8D9F3 /* GSCXScannerSettingsTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4208E23FF381700C8D9F3 /* GSCXScannerSettingsTableViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420CC23FF382700C8D9F3 /* GSCXContinuousScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4208F23FF381700C8D9F3 /* GSCXContinuousScanner.m */; };
 		DCA420CD23FF382700C8D9F3 /* GSCXContinuousScannerResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4209023FF381800C8D9F3 /* GSCXContinuousScannerResultViewController.m */; };
-		DCA420CE23FF382700C8D9F3 /* GSCXScannerWindowCoordinator+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209123FF381800C8D9F3 /* GSCXScannerWindowCoordinator+Internal.h */; };
-		DCA420CF23FF382700C8D9F3 /* GSCXScannerSettingsBlockItem.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209223FF381800C8D9F3 /* GSCXScannerSettingsBlockItem.h */; };
+		DCA420CE23FF382700C8D9F3 /* GSCXScannerWindowCoordinator+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209123FF381800C8D9F3 /* GSCXScannerWindowCoordinator+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420CF23FF382700C8D9F3 /* GSCXScannerSettingsBlockItem.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209223FF381800C8D9F3 /* GSCXScannerSettingsBlockItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420D023FF382700C8D9F3 /* GSCXSwizzledMethodNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4209323FF381900C8D9F3 /* GSCXSwizzledMethodNotifier.m */; };
-		DCA420D123FF382700C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209423FF381900C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.h */; };
-		DCA420D223FF382700C8D9F3 /* GSCXSwizzledMethodNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209523FF381900C8D9F3 /* GSCXSwizzledMethodNotifier.h */; };
-		DCA420D323FF382700C8D9F3 /* GSCXContinuousScannerGalleryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209623FF381A00C8D9F3 /* GSCXContinuousScannerGalleryViewController.h */; };
+		DCA420D123FF382700C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209423FF381900C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420D223FF382700C8D9F3 /* GSCXSwizzledMethodNotifier.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209523FF381900C8D9F3 /* GSCXSwizzledMethodNotifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420D323FF382700C8D9F3 /* GSCXContinuousScannerGalleryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209623FF381A00C8D9F3 /* GSCXContinuousScannerGalleryViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420D423FF382700C8D9F3 /* GSCXScannerResultCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4209723FF381A00C8D9F3 /* GSCXScannerResultCarousel.m */; };
 		DCA420D523FF382700C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4209823FF381A00C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.m */; };
-		DCA420D623FF382700C8D9F3 /* GSCXScannerWindowCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209923FF381B00C8D9F3 /* GSCXScannerWindowCoordinator.h */; };
+		DCA420D623FF382700C8D9F3 /* GSCXScannerWindowCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209923FF381B00C8D9F3 /* GSCXScannerWindowCoordinator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420D723FF382700C8D9F3 /* GSCXScannerSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA4209A23FF381B00C8D9F3 /* GSCXScannerSettingsViewController.m */; };
-		DCA420D823FF382700C8D9F3 /* GSCXUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209B23FF381B00C8D9F3 /* GSCXUtils.h */; };
-		DCA420D923FF382700C8D9F3 /* GSCXInstallerOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209C23FF381C00C8D9F3 /* GSCXInstallerOptions.h */; };
-		DCA420DA23FF382700C8D9F3 /* UIApplication+GSCXSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209D23FF381C00C8D9F3 /* UIApplication+GSCXSwizzling.h */; };
-		DCA420DB23FF382700C8D9F3 /* GSCXScannerResultCarouselView.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209E23FF381C00C8D9F3 /* GSCXScannerResultCarouselView.h */; };
-		DCA420DC23FF382700C8D9F3 /* GSCXAppActivityMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209F23FF381C00C8D9F3 /* GSCXAppActivityMonitor.h */; };
+		DCA420D823FF382700C8D9F3 /* GSCXUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209B23FF381B00C8D9F3 /* GSCXUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420D923FF382700C8D9F3 /* GSCXInstallerOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209C23FF381C00C8D9F3 /* GSCXInstallerOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420DA23FF382700C8D9F3 /* UIApplication+GSCXSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209D23FF381C00C8D9F3 /* UIApplication+GSCXSwizzling.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420DB23FF382700C8D9F3 /* GSCXScannerResultCarouselView.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209E23FF381C00C8D9F3 /* GSCXScannerResultCarouselView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420DC23FF382700C8D9F3 /* GSCXAppActivityMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA4209F23FF381C00C8D9F3 /* GSCXAppActivityMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420DD23FF382700C8D9F3 /* UIViewController+GSCXAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420A023FF381D00C8D9F3 /* UIViewController+GSCXAppearance.m */; };
-		DCA420DE23FF382700C8D9F3 /* GSCXMasterScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A123FF381D00C8D9F3 /* GSCXMasterScheduler.h */; };
+		DCA420DE23FF382700C8D9F3 /* GSCXMasterScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A123FF381D00C8D9F3 /* GSCXMasterScheduler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420DF23FF382700C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420A223FF381D00C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.m */; };
-		DCA420E023FF382700C8D9F3 /* NSLayoutConstraint+GSCXUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A323FF381E00C8D9F3 /* NSLayoutConstraint+GSCXUtilities.h */; };
-		DCA420E123FF382700C8D9F3 /* GSCXRingViewArranger.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A423FF381E00C8D9F3 /* GSCXRingViewArranger.h */; };
+		DCA420E023FF382700C8D9F3 /* NSLayoutConstraint+GSCXUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A323FF381E00C8D9F3 /* NSLayoutConstraint+GSCXUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420E123FF382700C8D9F3 /* GSCXRingViewArranger.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A423FF381E00C8D9F3 /* GSCXRingViewArranger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420E223FF382700C8D9F3 /* GSCXAppActivityMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420A523FF381E00C8D9F3 /* GSCXAppActivityMonitor.m */; };
 		DCA420E323FF382700C8D9F3 /* GSCXDefaultSharingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420A623FF381E00C8D9F3 /* GSCXDefaultSharingDelegate.m */; };
 		DCA420E423FF382700C8D9F3 /* GSCXMasterScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420A723FF381F00C8D9F3 /* GSCXMasterScheduler.m */; };
-		DCA420E523FF382700C8D9F3 /* GSCXContinuousScannerScheduling.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A823FF381F00C8D9F3 /* GSCXContinuousScannerScheduling.h */; };
-		DCA420E623FF382700C8D9F3 /* GSCXTouchActivitySource.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A923FF382000C8D9F3 /* GSCXTouchActivitySource.h */; };
+		DCA420E523FF382700C8D9F3 /* GSCXContinuousScannerScheduling.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A823FF381F00C8D9F3 /* GSCXContinuousScannerScheduling.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420E623FF382700C8D9F3 /* GSCXTouchActivitySource.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420A923FF382000C8D9F3 /* GSCXTouchActivitySource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420E723FF382700C8D9F3 /* GSCXScannerSettingsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420AA23FF382000C8D9F3 /* GSCXScannerSettingsTableViewCell.m */; };
 		DCA420E823FF382700C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420AB23FF382000C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.m */; };
 		DCA420E923FF382700C8D9F3 /* GSCXUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420AC23FF382100C8D9F3 /* GSCXUtils.m */; };
@@ -96,21 +136,21 @@
 		DCA420EC23FF382700C8D9F3 /* GSCXScannerResultCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420AF23FF382100C8D9F3 /* GSCXScannerResultCarouselView.m */; };
 		DCA420ED23FF382700C8D9F3 /* GSCXTouchActivitySource.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420B023FF382200C8D9F3 /* GSCXTouchActivitySource.m */; };
 		DCA420EE23FF382700C8D9F3 /* GSCXRingViewArranger.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420B123FF382200C8D9F3 /* GSCXRingViewArranger.m */; };
-		DCA420EF23FF382700C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B223FF382200C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.h */; };
-		DCA420F023FF382700C8D9F3 /* GSCXScannerSettingsItemConfiguring.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B323FF382300C8D9F3 /* GSCXScannerSettingsItemConfiguring.h */; };
+		DCA420EF23FF382700C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B223FF382200C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420F023FF382700C8D9F3 /* GSCXScannerSettingsItemConfiguring.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B323FF382300C8D9F3 /* GSCXScannerSettingsItemConfiguring.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420F123FF382700C8D9F3 /* GSCXScannerSettingsBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420B423FF382300C8D9F3 /* GSCXScannerSettingsBlockItem.m */; };
-		DCA420F223FF382700C8D9F3 /* GSCXSharingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B523FF382300C8D9F3 /* GSCXSharingDelegate.h */; };
-		DCA420F323FF382700C8D9F3 /* GSCXContinuousScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B623FF382400C8D9F3 /* GSCXContinuousScanner.h */; };
+		DCA420F223FF382700C8D9F3 /* GSCXSharingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B523FF382300C8D9F3 /* GSCXSharingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420F323FF382700C8D9F3 /* GSCXContinuousScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B623FF382400C8D9F3 /* GSCXContinuousScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420F423FF382700C8D9F3 /* NSLayoutConstraint+GSCXUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420B723FF382400C8D9F3 /* NSLayoutConstraint+GSCXUtilities.m */; };
-		DCA420F523FF382700C8D9F3 /* GSCXActivitySourceMonitoring.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B823FF382400C8D9F3 /* GSCXActivitySourceMonitoring.h */; };
+		DCA420F523FF382700C8D9F3 /* GSCXActivitySourceMonitoring.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420B823FF382400C8D9F3 /* GSCXActivitySourceMonitoring.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420F623FF382700C8D9F3 /* GSCXContinuousScannerResultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCA420B923FF382500C8D9F3 /* GSCXContinuousScannerResultViewController.xib */; };
-		DCA420F723FF382700C8D9F3 /* UIViewController+GSCXAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BA23FF382500C8D9F3 /* UIViewController+GSCXAppearance.h */; };
+		DCA420F723FF382700C8D9F3 /* UIViewController+GSCXAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BA23FF382500C8D9F3 /* UIViewController+GSCXAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420F823FF382700C8D9F3 /* GSCXContinuousScannerGalleryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCA420BB23FF382500C8D9F3 /* GSCXContinuousScannerGalleryViewController.xib */; };
-		DCA420F923FF382700C8D9F3 /* GSCXContinuousScannerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BC23FF382500C8D9F3 /* GSCXContinuousScannerDelegate.h */; };
+		DCA420F923FF382700C8D9F3 /* GSCXContinuousScannerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BC23FF382500C8D9F3 /* GSCXContinuousScannerDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCA420FA23FF382700C8D9F3 /* GSCXScannerSettingsItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA420BD23FF382600C8D9F3 /* GSCXScannerSettingsItem.m */; };
-		DCA420FB23FF382700C8D9F3 /* GSCXScannerResultCarousel.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BE23FF382600C8D9F3 /* GSCXScannerResultCarousel.h */; };
-		DCA420FC23FF382700C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BF23FF382600C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.h */; };
-		DCA420FD23FF382700C8D9F3 /* GSCXInstallerOptions+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420C023FF382700C8D9F3 /* GSCXInstallerOptions+Internal.h */; };
+		DCA420FB23FF382700C8D9F3 /* GSCXScannerResultCarousel.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BE23FF382600C8D9F3 /* GSCXScannerResultCarousel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420FC23FF382700C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420BF23FF382600C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCA420FD23FF382700C8D9F3 /* GSCXInstallerOptions+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA420C023FF382700C8D9F3 /* GSCXInstallerOptions+Internal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -198,6 +238,46 @@
 		616525DB2208F12E00CBC788 /* GSCXScannerResultTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXScannerResultTableViewController.h; path = Sources/GSCXScannerResultTableViewController.h; sourceTree = SOURCE_ROOT; };
 		616525DC2208F12E00CBC788 /* GSCXWindowOverlayPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXWindowOverlayPair.h; path = Sources/GSCXWindowOverlayPair.h; sourceTree = SOURCE_ROOT; };
 		616526022208F14C00CBC788 /* GTXiLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GTXiLib.xcodeproj; path = ../GTXiLib/GTXiLib.xcodeproj; sourceTree = "<group>"; };
+		DC3551A424AC327C003398A4 /* GSCXColoredView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXColoredView.m; path = Sources/GSCXColoredView.m; sourceTree = SOURCE_ROOT; };
+		DC3551A524AC327C003398A4 /* GSCXColoredView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXColoredView.h; path = Sources/GSCXColoredView.h; sourceTree = SOURCE_ROOT; };
+		DC3551A624AC327C003398A4 /* GSCXAdjustableAccessibilityElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXAdjustableAccessibilityElement.h; path = Sources/GSCXAdjustableAccessibilityElement.h; sourceTree = SOURCE_ROOT; };
+		DC3551A724AC327C003398A4 /* GSCXAdjustableAccessibilityElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXAdjustableAccessibilityElement.m; path = Sources/GSCXAdjustableAccessibilityElement.m; sourceTree = SOURCE_ROOT; };
+		DC63B4372499A14B004084AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DC8E691A249AAB7500AA4A80 /* GSCXScannerIssueExpandableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXScannerIssueExpandableTableViewCell.h; path = Sources/GSCXScannerIssueExpandableTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		DC8E691B249AAB7500AA4A80 /* GSCXScannerIssueExpandableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXScannerIssueExpandableTableViewCell.m; path = Sources/GSCXScannerIssueExpandableTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		DC8E691C249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerListTabBarUtils.m; path = Sources/GSCXContinuousScannerListTabBarUtils.m; sourceTree = SOURCE_ROOT; };
+		DC8E691D249AAB7600AA4A80 /* GSCXContinuousScannerGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerGridViewController.m; path = Sources/GSCXContinuousScannerGridViewController.m; sourceTree = SOURCE_ROOT; };
+		DC8E691E249AAB7600AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXScannerIssueExpandableTableViewDelegate.h; path = Sources/GSCXScannerIssueExpandableTableViewDelegate.h; sourceTree = SOURCE_ROOT; };
+		DC8E691F249AAB7600AA4A80 /* GSCXScanResultsPageConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXScanResultsPageConstants.h; path = Sources/GSCXScanResultsPageConstants.h; sourceTree = SOURCE_ROOT; };
+		DC8E6920249AAB7600AA4A80 /* GSCXScannerIssueTableViewSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXScannerIssueTableViewSection.h; path = Sources/GSCXScannerIssueTableViewSection.h; sourceTree = SOURCE_ROOT; };
+		DC8E6921249AAB7600AA4A80 /* UIView+NSLayoutConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+NSLayoutConstraint.m"; path = "Sources/UIView+NSLayoutConstraint.m"; sourceTree = SOURCE_ROOT; };
+		DC8E6922249AAB7600AA4A80 /* GSCXContinuousScannerGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerGridCell.m; path = Sources/GSCXContinuousScannerGridCell.m; sourceTree = SOURCE_ROOT; };
+		DC8E6923249AAB7600AA4A80 /* GSCXContinuousScannerScreenshotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXContinuousScannerScreenshotViewController.h; path = Sources/GSCXContinuousScannerScreenshotViewController.h; sourceTree = SOURCE_ROOT; };
+		DC8E6924249AAB7600AA4A80 /* GSCXContinuousScannerScreenshotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerScreenshotViewController.m; path = Sources/GSCXContinuousScannerScreenshotViewController.m; sourceTree = SOURCE_ROOT; };
+		DC8E6925249AAB7600AA4A80 /* GSCXScannerIssueTableViewSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXScannerIssueTableViewSection.m; path = Sources/GSCXScannerIssueTableViewSection.m; sourceTree = SOURCE_ROOT; };
+		DC8E6926249AAB7600AA4A80 /* GSCXContinuousScannerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerListViewController.m; path = Sources/GSCXContinuousScannerListViewController.m; sourceTree = SOURCE_ROOT; };
+		DC8E6927249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXContinuousScannerListTabBarViewController.h; path = Sources/GSCXContinuousScannerListTabBarViewController.h; sourceTree = SOURCE_ROOT; };
+		DC8E6928249AAB7600AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXScannerIssueExpandableTableViewDelegate.m; path = Sources/GSCXScannerIssueExpandableTableViewDelegate.m; sourceTree = SOURCE_ROOT; };
+		DC8E6929249AAB7600AA4A80 /* GSCXContinuousScannerGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXContinuousScannerGridViewController.h; path = Sources/GSCXContinuousScannerGridViewController.h; sourceTree = SOURCE_ROOT; };
+		DC8E692A249AAB7600AA4A80 /* GSCXScannerIssueTableViewRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXScannerIssueTableViewRow.h; path = Sources/GSCXScannerIssueTableViewRow.h; sourceTree = SOURCE_ROOT; };
+		DC8E692B249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerListTabBarViewController.m; path = Sources/GSCXContinuousScannerListTabBarViewController.m; sourceTree = SOURCE_ROOT; };
+		DC8E692C249AAB7700AA4A80 /* GSCXContinuousScannerGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GSCXContinuousScannerGridViewController.xib; path = Sources/GSCXContinuousScannerGridViewController.xib; sourceTree = SOURCE_ROOT; };
+		DC8E692D249AAB7700AA4A80 /* GSCXContinuousScannerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXContinuousScannerListViewController.h; path = Sources/GSCXContinuousScannerListViewController.h; sourceTree = SOURCE_ROOT; };
+		DC8E692E249AAB7700AA4A80 /* GSCXContinuousScannerListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GSCXContinuousScannerListViewController.xib; path = Sources/GSCXContinuousScannerListViewController.xib; sourceTree = SOURCE_ROOT; };
+		DC8E692F249AAB7700AA4A80 /* GSCXScannerIssueTableViewRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXScannerIssueTableViewRow.m; path = Sources/GSCXScannerIssueTableViewRow.m; sourceTree = SOURCE_ROOT; };
+		DC8E6930249AAB7700AA4A80 /* GSCXContinuousScannerGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXContinuousScannerGridCell.h; path = Sources/GSCXContinuousScannerGridCell.h; sourceTree = SOURCE_ROOT; };
+		DC8E6931249AAB7700AA4A80 /* GSCXScanResultsPageConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXScanResultsPageConstants.m; path = Sources/GSCXScanResultsPageConstants.m; sourceTree = SOURCE_ROOT; };
+		DC8E6932249AAB7700AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXScannerIssueExpandableTableViewHeader.h; path = Sources/GSCXScannerIssueExpandableTableViewHeader.h; sourceTree = SOURCE_ROOT; };
+		DC8E6933249AAB7700AA4A80 /* UIView+GSCXAppearance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+GSCXAppearance.h"; path = "Sources/UIView+GSCXAppearance.h"; sourceTree = SOURCE_ROOT; };
+		DC8E6934249AAB7700AA4A80 /* UIView+NSLayoutConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+NSLayoutConstraint.h"; path = "Sources/UIView+NSLayoutConstraint.h"; sourceTree = SOURCE_ROOT; };
+		DC8E6935249AAB7700AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXScannerIssueExpandableTableViewHeader.m; path = Sources/GSCXScannerIssueExpandableTableViewHeader.m; sourceTree = SOURCE_ROOT; };
+		DC8E6936249AAB7700AA4A80 /* GSCXImageNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXImageNames.m; path = Sources/GSCXImageNames.m; sourceTree = SOURCE_ROOT; };
+		DC8E6937249AAB7700AA4A80 /* GSCXImageNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXImageNames.h; path = Sources/GSCXImageNames.h; sourceTree = SOURCE_ROOT; };
+		DC8E6938249AAB7700AA4A80 /* GSCXContinuousScannerListTabBarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXContinuousScannerListTabBarItem.h; path = Sources/GSCXContinuousScannerListTabBarItem.h; sourceTree = SOURCE_ROOT; };
+		DC8E6939249AAB7700AA4A80 /* GSCXContinuousScannerScreenshotViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GSCXContinuousScannerScreenshotViewController.xib; path = Sources/GSCXContinuousScannerScreenshotViewController.xib; sourceTree = SOURCE_ROOT; };
+		DC8E693A249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerListTabBarItem.m; path = Sources/GSCXContinuousScannerListTabBarItem.m; sourceTree = SOURCE_ROOT; };
+		DC8E693B249AAB7800AA4A80 /* UIView+GSCXAppearance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+GSCXAppearance.m"; path = "Sources/UIView+GSCXAppearance.m"; sourceTree = SOURCE_ROOT; };
+		DC8E693C249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSCXContinuousScannerListTabBarUtils.h; path = Sources/GSCXContinuousScannerListTabBarUtils.h; sourceTree = SOURCE_ROOT; };
 		DCA4208123FF381500C8D9F3 /* GSCXInstallerOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXInstallerOptions.m; path = Sources/GSCXInstallerOptions.m; sourceTree = SOURCE_ROOT; };
 		DCA4208523FF381500C8D9F3 /* GSCXContinuousScannerGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GSCXContinuousScannerGalleryViewController.m; path = Sources/GSCXContinuousScannerGalleryViewController.m; sourceTree = SOURCE_ROOT; };
 		DCA4208623FF381500C8D9F3 /* GSCXScannerSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GSCXScannerSettingsViewController.xib; path = Sources/GSCXScannerSettingsViewController.xib; sourceTree = SOURCE_ROOT; };
@@ -275,6 +355,7 @@
 		616525A12208F0EE00CBC788 = {
 			isa = PBXGroup;
 			children = (
+				DC63B4372499A14B004084AE /* Assets.xcassets */,
 				616526022208F14C00CBC788 /* GTXiLib.xcodeproj */,
 				616525AD2208F0EE00CBC788 /* GSCXScanner */,
 				616525AC2208F0EE00CBC788 /* Products */,
@@ -292,6 +373,45 @@
 		616525AD2208F0EE00CBC788 /* GSCXScanner */ = {
 			isa = PBXGroup;
 			children = (
+				DC3551A624AC327C003398A4 /* GSCXAdjustableAccessibilityElement.h */,
+				DC3551A724AC327C003398A4 /* GSCXAdjustableAccessibilityElement.m */,
+				DC3551A524AC327C003398A4 /* GSCXColoredView.h */,
+				DC3551A424AC327C003398A4 /* GSCXColoredView.m */,
+				DC8E6930249AAB7700AA4A80 /* GSCXContinuousScannerGridCell.h */,
+				DC8E6922249AAB7600AA4A80 /* GSCXContinuousScannerGridCell.m */,
+				DC8E6929249AAB7600AA4A80 /* GSCXContinuousScannerGridViewController.h */,
+				DC8E691D249AAB7600AA4A80 /* GSCXContinuousScannerGridViewController.m */,
+				DC8E692C249AAB7700AA4A80 /* GSCXContinuousScannerGridViewController.xib */,
+				DC8E6938249AAB7700AA4A80 /* GSCXContinuousScannerListTabBarItem.h */,
+				DC8E693A249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarItem.m */,
+				DC8E693C249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarUtils.h */,
+				DC8E691C249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarUtils.m */,
+				DC8E6927249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarViewController.h */,
+				DC8E692B249AAB7600AA4A80 /* GSCXContinuousScannerListTabBarViewController.m */,
+				DC8E692D249AAB7700AA4A80 /* GSCXContinuousScannerListViewController.h */,
+				DC8E6926249AAB7600AA4A80 /* GSCXContinuousScannerListViewController.m */,
+				DC8E692E249AAB7700AA4A80 /* GSCXContinuousScannerListViewController.xib */,
+				DC8E6923249AAB7600AA4A80 /* GSCXContinuousScannerScreenshotViewController.h */,
+				DC8E6924249AAB7600AA4A80 /* GSCXContinuousScannerScreenshotViewController.m */,
+				DC8E6939249AAB7700AA4A80 /* GSCXContinuousScannerScreenshotViewController.xib */,
+				DC8E6937249AAB7700AA4A80 /* GSCXImageNames.h */,
+				DC8E6936249AAB7700AA4A80 /* GSCXImageNames.m */,
+				DC8E691A249AAB7500AA4A80 /* GSCXScannerIssueExpandableTableViewCell.h */,
+				DC8E691B249AAB7500AA4A80 /* GSCXScannerIssueExpandableTableViewCell.m */,
+				DC8E691E249AAB7600AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.h */,
+				DC8E6928249AAB7600AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.m */,
+				DC8E6932249AAB7700AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.h */,
+				DC8E6935249AAB7700AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.m */,
+				DC8E692A249AAB7600AA4A80 /* GSCXScannerIssueTableViewRow.h */,
+				DC8E692F249AAB7700AA4A80 /* GSCXScannerIssueTableViewRow.m */,
+				DC8E6920249AAB7600AA4A80 /* GSCXScannerIssueTableViewSection.h */,
+				DC8E6925249AAB7600AA4A80 /* GSCXScannerIssueTableViewSection.m */,
+				DC8E691F249AAB7600AA4A80 /* GSCXScanResultsPageConstants.h */,
+				DC8E6931249AAB7700AA4A80 /* GSCXScanResultsPageConstants.m */,
+				DC8E6933249AAB7700AA4A80 /* UIView+GSCXAppearance.h */,
+				DC8E693B249AAB7800AA4A80 /* UIView+GSCXAppearance.m */,
+				DC8E6934249AAB7700AA4A80 /* UIView+NSLayoutConstraint.h */,
+				DC8E6921249AAB7600AA4A80 /* UIView+NSLayoutConstraint.m */,
 				DCA420B823FF382400C8D9F3 /* GSCXActivitySourceMonitoring.h */,
 				DCA4209F23FF381C00C8D9F3 /* GSCXAppActivityMonitor.h */,
 				DCA420A523FF381E00C8D9F3 /* GSCXAppActivityMonitor.m */,
@@ -421,14 +541,21 @@
 			files = (
 				616525FE2208F12E00CBC788 /* GSCXScannerDelegate.h in Headers */,
 				DCA420D823FF382700C8D9F3 /* GSCXUtils.h in Headers */,
+				DC8E6942249AAB7800AA4A80 /* GSCXScanResultsPageConstants.h in Headers */,
 				DCA420EF23FF382700C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.h in Headers */,
 				DCA420C723FF382700C8D9F3 /* GSCXScannerOverlayWindow.h in Headers */,
 				616526002208F12E00CBC788 /* GSCXScannerResultTableViewController.h in Headers */,
+				DC8E695F249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarUtils.h in Headers */,
 				DCA420C923FF382700C8D9F3 /* GSCXScannerSettingsViewController.h in Headers */,
 				616525F22208F12E00CBC788 /* GSCXScannerOverlayViewController.h in Headers */,
+				DC8E695B249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarItem.h in Headers */,
 				616525F82208F12E00CBC788 /* GSCXScannerIssue.h in Headers */,
+				DC8E6955249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.h in Headers */,
+				DC8E694A249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarViewController.h in Headers */,
+				DC8E695A249AAB7800AA4A80 /* GSCXImageNames.h in Headers */,
 				DCA420D623FF382700C8D9F3 /* GSCXScannerWindowCoordinator.h in Headers */,
 				DCA420F223FF382700C8D9F3 /* GSCXSharingDelegate.h in Headers */,
+				DC8E693D249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewCell.h in Headers */,
 				DCA420D923FF382700C8D9F3 /* GSCXInstallerOptions.h in Headers */,
 				616525E72208F12E00CBC788 /* GSCXInstaller.h in Headers */,
 				DCA420DA23FF382700C8D9F3 /* UIApplication+GSCXSwizzling.h in Headers */,
@@ -445,10 +572,13 @@
 				616525E02208F12E00CBC788 /* GSCXScanner.h in Headers */,
 				616525F32208F12E00CBC788 /* GSCXAutoInstaller.h in Headers */,
 				616525F42208F12E00CBC788 /* GSCXScannerResult.h in Headers */,
+				DC8E6941249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.h in Headers */,
+				DC8E694C249AAB7800AA4A80 /* GSCXContinuousScannerGridViewController.h in Headers */,
 				616525FB2208F12E00CBC788 /* GSCXRingView.h in Headers */,
 				DCA420DE23FF382700C8D9F3 /* GSCXMasterScheduler.h in Headers */,
 				DCA420F023FF382700C8D9F3 /* GSCXScannerSettingsItemConfiguring.h in Headers */,
 				616525F72208F12E00CBC788 /* GSCXScannerScreenshotViewController.h in Headers */,
+				DC8E6953249AAB7800AA4A80 /* GSCXContinuousScannerGridCell.h in Headers */,
 				DCA420CE23FF382700C8D9F3 /* GSCXScannerWindowCoordinator+Internal.h in Headers */,
 				DCA420E023FF382700C8D9F3 /* NSLayoutConstraint+GSCXUtilities.h in Headers */,
 				DCA420DC23FF382700C8D9F3 /* GSCXAppActivityMonitor.h in Headers */,
@@ -456,22 +586,30 @@
 				DCA420F923FF382700C8D9F3 /* GSCXContinuousScannerDelegate.h in Headers */,
 				DCA420D123FF382700C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.h in Headers */,
 				DCA420FC23FF382700C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.h in Headers */,
+				DC8E6943249AAB7800AA4A80 /* GSCXScannerIssueTableViewSection.h in Headers */,
 				610B2F9522D508320005CE68 /* GSCXReport.h in Headers */,
 				DCA420F723FF382700C8D9F3 /* UIViewController+GSCXAppearance.h in Headers */,
 				DCA420C623FF382700C8D9F3 /* GSCXResultsWindowCoordinating.h in Headers */,
 				616525DD2208F12E00CBC788 /* GSCXWindowOverlayViewController.h in Headers */,
 				616525E82208F12E00CBC788 /* UIViewController+GSCXTraversal.h in Headers */,
+				DC8E6946249AAB7800AA4A80 /* GSCXContinuousScannerScreenshotViewController.h in Headers */,
 				DCA420C423FF382700C8D9F3 /* GSCXDefaultSharingDelegate.h in Headers */,
 				616526012208F12E00CBC788 /* GSCXWindowOverlayPair.h in Headers */,
 				DCA420C823FF382700C8D9F3 /* GSCXContinuousScannerResultViewController.h in Headers */,
 				616525FD2208F12E00CBC788 /* GSCXScannerResultDetailViewController.h in Headers */,
 				DCA420FD23FF382700C8D9F3 /* GSCXInstallerOptions+Internal.h in Headers */,
+				DC8E6950249AAB7800AA4A80 /* GSCXContinuousScannerListViewController.h in Headers */,
+				DC8E6957249AAB7800AA4A80 /* UIView+NSLayoutConstraint.h in Headers */,
+				DC8E6956249AAB7800AA4A80 /* UIView+GSCXAppearance.h in Headers */,
+				DC3551AA24AC327C003398A4 /* GSCXAdjustableAccessibilityElement.h in Headers */,
 				DCA420CA23FF382700C8D9F3 /* GSCXScannerSettingsItem.h in Headers */,
 				DCA420DB23FF382700C8D9F3 /* GSCXScannerResultCarouselView.h in Headers */,
 				DCA420FB23FF382700C8D9F3 /* GSCXScannerResultCarousel.h in Headers */,
+				DC3551A924AC327C003398A4 /* GSCXColoredView.h in Headers */,
 				DCA420F523FF382700C8D9F3 /* GSCXActivitySourceMonitoring.h in Headers */,
 				DCA420CF23FF382700C8D9F3 /* GSCXScannerSettingsBlockItem.h in Headers */,
 				610B2F9622D508320005CE68 /* GSCXReportContext.h in Headers */,
+				DC8E694D249AAB7800AA4A80 /* GSCXScannerIssueTableViewRow.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,12 +708,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC8E695C249AAB7800AA4A80 /* GSCXContinuousScannerScreenshotViewController.xib in Resources */,
 				DCA420F623FF382700C8D9F3 /* GSCXContinuousScannerResultViewController.xib in Resources */,
 				DCA420F823FF382700C8D9F3 /* GSCXContinuousScannerGalleryViewController.xib in Resources */,
 				616525E12208F12E00CBC788 /* GSCXScannerResultTableViewController.xib in Resources */,
 				616525ED2208F12E00CBC788 /* GSCXScannerOverlayViewController.xib in Resources */,
+				DC8E694F249AAB7800AA4A80 /* GSCXContinuousScannerGridViewController.xib in Resources */,
 				616525E42208F12E00CBC788 /* GSCXScannerResultDetailViewController.xib in Resources */,
 				DCA420C323FF382700C8D9F3 /* GSCXScannerSettingsViewController.xib in Resources */,
+				DC8E6951249AAB7800AA4A80 /* GSCXContinuousScannerListViewController.xib in Resources */,
+				DC63B4382499A14B004084AE /* Assets.xcassets in Resources */,
 				616525E32208F12E00CBC788 /* GSCXScannerScreenshotViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -588,11 +730,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCA420EA23FF382700C8D9F3 /* GSCXScannerWindowCoordinator.m in Sources */,
+				DC8E693E249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewCell.m in Sources */,
 				616525F52208F12E00CBC788 /* GSCXScannerResult.m in Sources */,
 				616525EE2208F12E00CBC788 /* UIViewController+GSCXTraversal.m in Sources */,
 				DCA420F123FF382700C8D9F3 /* GSCXScannerSettingsBlockItem.m in Sources */,
 				616525FF2208F12E00CBC788 /* GSCXScannerResultDetailViewController.m in Sources */,
 				DCA420EB23FF382700C8D9F3 /* GSCXScannerOverlayWindow.m in Sources */,
+				DC8E695E249AAB7800AA4A80 /* UIView+GSCXAppearance.m in Sources */,
 				DCA420D523FF382700C8D9F3 /* GSCXScannerResultCarouselCollectionViewCell.m in Sources */,
 				616525F62208F12E00CBC788 /* GSCXInstaller.m in Sources */,
 				616525FA2208F12E00CBC788 /* GSCXHitForwardingWindow.m in Sources */,
@@ -600,35 +744,51 @@
 				DCA420E223FF382700C8D9F3 /* GSCXAppActivityMonitor.m in Sources */,
 				616525E62208F12E00CBC788 /* GSCXScannerScreenshotViewController.m in Sources */,
 				DCA420CC23FF382700C8D9F3 /* GSCXContinuousScanner.m in Sources */,
+				DC8E6948249AAB7800AA4A80 /* GSCXScannerIssueTableViewSection.m in Sources */,
 				616525F02208F12E00CBC788 /* GSCXCornerConstraints.m in Sources */,
+				DC3551A824AC327C003398A4 /* GSCXColoredView.m in Sources */,
+				DC8E6945249AAB7800AA4A80 /* GSCXContinuousScannerGridCell.m in Sources */,
+				DC8E6949249AAB7800AA4A80 /* GSCXContinuousScannerListViewController.m in Sources */,
 				DCA420C123FF382700C8D9F3 /* GSCXInstallerOptions.m in Sources */,
 				DCA420FA23FF382700C8D9F3 /* GSCXScannerSettingsItem.m in Sources */,
+				DC8E694B249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewDelegate.m in Sources */,
+				DC8E694E249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarViewController.m in Sources */,
 				610B2F9822D508320005CE68 /* GSCXReportContext.m in Sources */,
 				DCA420F423FF382700C8D9F3 /* NSLayoutConstraint+GSCXUtilities.m in Sources */,
 				616525DE2208F12E00CBC788 /* GSCXScannerIssue.m in Sources */,
 				DCA420DF23FF382700C8D9F3 /* GSCXContinuousScannerPeriodicScheduler.m in Sources */,
 				DCA420E423FF382700C8D9F3 /* GSCXMasterScheduler.m in Sources */,
+				DC8E6952249AAB7800AA4A80 /* GSCXScannerIssueTableViewRow.m in Sources */,
 				DCA420D723FF382700C8D9F3 /* GSCXScannerSettingsViewController.m in Sources */,
 				616525E22208F12E00CBC788 /* GSCXAutoInstaller.m in Sources */,
 				DCA420E723FF382700C8D9F3 /* GSCXScannerSettingsTableViewCell.m in Sources */,
 				616525EB2208F12E00CBC788 /* GSCXScannerResultTableViewController.m in Sources */,
 				DCA420C223FF382700C8D9F3 /* GSCXContinuousScannerGalleryViewController.m in Sources */,
+				DC3551AB24AC327C003398A4 /* GSCXAdjustableAccessibilityElement.m in Sources */,
+				DC8E6958249AAB7800AA4A80 /* GSCXScannerIssueExpandableTableViewHeader.m in Sources */,
 				DCA420D023FF382700C8D9F3 /* GSCXSwizzledMethodNotifier.m in Sources */,
 				DCA420EC23FF382700C8D9F3 /* GSCXScannerResultCarouselView.m in Sources */,
 				610B2F9A22D508320005CE68 /* GSCXAnalytics.m in Sources */,
+				DC8E6944249AAB7800AA4A80 /* UIView+NSLayoutConstraint.m in Sources */,
 				DCA420ED23FF382700C8D9F3 /* GSCXTouchActivitySource.m in Sources */,
+				DC8E6947249AAB7800AA4A80 /* GSCXContinuousScannerScreenshotViewController.m in Sources */,
 				616525F92208F12E00CBC788 /* GSCXRingView.m in Sources */,
+				DC8E693F249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarUtils.m in Sources */,
 				616525DF2208F12E00CBC788 /* GSCXScanner.m in Sources */,
 				DCA420CD23FF382700C8D9F3 /* GSCXContinuousScannerResultViewController.m in Sources */,
 				DCA420E823FF382700C8D9F3 /* GSCXContinuousScannerGalleryDetailViewData.m in Sources */,
+				DC8E695D249AAB7800AA4A80 /* GSCXContinuousScannerListTabBarItem.m in Sources */,
 				DCA420E323FF382700C8D9F3 /* GSCXDefaultSharingDelegate.m in Sources */,
 				610B2F9922D508320005CE68 /* GSCXReport.m in Sources */,
 				616525E92208F12E00CBC788 /* GSCXHitForwardingView.m in Sources */,
+				DC8E6954249AAB7800AA4A80 /* GSCXScanResultsPageConstants.m in Sources */,
 				DCA420C523FF382700C8D9F3 /* UIApplication+GSCXSwizzling.m in Sources */,
+				DC8E6940249AAB7800AA4A80 /* GSCXContinuousScannerGridViewController.m in Sources */,
 				616525EC2208F12E00CBC788 /* GSCXWindowOverlayViewController.m in Sources */,
 				DCA420E923FF382700C8D9F3 /* GSCXUtils.m in Sources */,
 				DCA420EE23FF382700C8D9F3 /* GSCXRingViewArranger.m in Sources */,
 				DCA420DD23FF382700C8D9F3 /* UIViewController+GSCXAppearance.m in Sources */,
+				DC8E6959249AAB7800AA4A80 /* GSCXImageNames.m in Sources */,
 				DCA420D423FF382700C8D9F3 /* GSCXScannerResultCarousel.m in Sources */,
 				616525EA2208F12E00CBC788 /* GSCXScannerOverlayViewController.m in Sources */,
 			);

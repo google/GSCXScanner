@@ -28,6 +28,7 @@
 #import "GSCXScannerWindowCoordinator+Internal.h"
 #import "GSCXScannerWindowCoordinator.h"
 #import "GSCXTouchActivitySource.h"
+#import "UIView+GSCXAppearance.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -61,9 +62,10 @@ static const NSTimeInterval kGSCXContinuousScannerInterval = 2.0;
   CGRect frame = [[UIScreen mainScreen] bounds];
   GSCXScannerOverlayWindow *overlayWindow = [[GSCXScannerOverlayWindow alloc] initWithFrame:frame];
   GSCXScannerOverlayViewController *viewController = [[GSCXScannerOverlayViewController alloc]
-           initWithNibName:@"GSCXScannerOverlayViewController"
-                    bundle:[NSBundle bundleForClass:[GSCXScannerOverlayViewController class]]
-      accessibilityEnabled:setupSuccessful || UIAccessibilityIsVoiceOverRunning()];
+                initWithNibName:@"GSCXScannerOverlayViewController"
+                         bundle:[NSBundle bundleForClass:[GSCXScannerOverlayViewController class]]
+           accessibilityEnabled:setupSuccessful || UIAccessibilityIsVoiceOverRunning()
+      isMultiWindowPresentation:options.isMultiWindowPresentation];
   viewController.scanner = [GSCXScanner scannerWithChecks:options.checks
                                                blacklists:options.blacklists];
   viewController.scanner.delegate = options.scannerDelegate;
@@ -85,12 +87,40 @@ static const NSTimeInterval kGSCXContinuousScannerInterval = 2.0;
   overlayWindow.rootViewController = viewController;
   overlayWindow.hidden = NO;
   overlayWindow.continuousScanner = continuousScanner;
+  [overlayWindow gscx_setOverrideUserInterfaceStyleForCurrentApperance];
+  __weak UIWindow *weakOverlayWindow = overlayWindow;
+  __block id observerToken = [[NSNotificationCenter defaultCenter]
+      addObserverForName:UIApplicationDidBecomeActiveNotification
+                  object:nil
+                   queue:nil
+              usingBlock:^(NSNotification *notification) {
+                UIWindow *strongOverlayWindow = weakOverlayWindow;
+                if (strongOverlayWindow == nil) {
+                  // The scanner may have been uninstalled, so the window no longer exists.
+                  [[NSNotificationCenter defaultCenter] removeObserver:observerToken];
+                  return;
+                }
+                [strongOverlayWindow gscx_setOverrideUserInterfaceStyleForCurrentApperance];
+              }];
   [GSCXAnalytics invokeAnalyticsEvent:GSCXAnalyticsEventScannerInstalled count:1];
   return overlayWindow;
 }
 
 + (GSCXScannerOverlayWindow *)installScanner {
   return [GSCXInstaller installScannerWithOptions:[[GSCXInstallerOptions alloc] init]];
+}
+
+#pragma mark - Private
+
+/**
+ * Updates @c overrideUserInterfaceStyle for @c window. If @c window is @c nil, removes the
+ * notification observer represented by @c observerToken.
+ *
+ * @param window The window to update the user interface style of.
+ * @param observerToken An opaque token representing an object listening for a notification.
+ */
++ (void)gscx_setOverrideUserInterfaceStyleForWindow:(nullable UIWindow *)window
+                 removingNotificationWithTokenIfNil:(id)observerToken {
 }
 
 @end

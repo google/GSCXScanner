@@ -25,10 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GSCXScannerResultCarouselCollectionViewCell : UICollectionViewCell
 
 /**
- * A screenshot of the screen when the scan occurred. It is the collection view's data source's
- * responsibility to set this.
+ * Displays a screenshot of the screen when the scan occurred.
  */
-@property(weak, nonatomic) UIView *screenshot;
+@property(strong, nonatomic, readonly) UIImageView *screenshot;
 
 /**
  * A view displayed over the screenshot when this cell is selected.

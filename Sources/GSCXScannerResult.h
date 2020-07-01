@@ -37,31 +37,28 @@ NS_ASSUME_NONNULL_BEGIN
  * A list of all issues found by the GSCXScanner. If no issues were found, issues is
  * an empty array (it is not nil).
  */
-@property(strong, nonatomic, readonly) NSArray<GSCXScannerIssue *> *issues;
+@property(copy, nonatomic, readonly) NSArray<GSCXScannerIssue *> *issues;
 
 /**
- * An view representing the look of the screen as it appeared when the scan was completed.
+ * An image of the screen as it appeared when the scan was completed.
  */
-@property(strong, nonatomic) UIView *_Nullable screenshot;
+@property(strong, nonatomic, readonly) UIImage *screenshot;
 
 /**
- * Initializes a GSCXScannerResult object with list of issues and a screenshot.
+ * Initializes a @c GSCXScannerResult object with list of issues and a screenshot.
+ *
+ * @param issues The accessibility issues found in this scan.
+ * @param screenshot An image of the screen as it appeared during this scan.
  */
 - (instancetype)initWithIssues:(NSArray<GSCXScannerIssue *> *)issues
-                    screenshot:(UIView *_Nullable)screenshot;
+                    screenshot:(UIImage *)screenshot;
 
 /**
- * Constructs a GSCXScannerResult object with list of issues and a screenshot.
- */
-+ (instancetype)resultWithIssues:(NSArray<GSCXScannerIssue *> *)issues
-                      screenshot:(UIView *_Nullable)screenshot;
-
-/**
- * Constructs a GSCXScannerResult object with this instance's issues whose frames contain the given
- * point.
+ * Constructs a @c GSCXScannerResult object with this instance's issues whose frames contain the
+ * given point.
  *
  * @param point A point in screen coordinates to filter frames by.
- * @return A GSCXScannerResult object containing only the issues whose frames contain @c point.
+ * @return A @c GSCXScannerResult object containing only the issues whose frames contain @c point.
  */
 - (instancetype)resultWithIssuesAtPoint:(CGPoint)point;
 

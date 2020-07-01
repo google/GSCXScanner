@@ -32,6 +32,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray<UIView *> *)rootViewsToScan;
 
+@optional
+
+/**
+ * Called when the scanner will begin a continuous scan.
+ *
+ * @param scanner The scanner instance that will begin a continuous scan.
+ */
+- (void)continuousScannerWillStart:(GSCXContinuousScanner *)scanner;
+
 /**
  * Called when a scan occurs.
  *

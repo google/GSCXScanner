@@ -16,7 +16,7 @@
 
 #import "GSCXTestScannerViewController.h"
 
-#import "GSCXTestAppDelegate.h"
+#import "GSCXTestCheckNames.h"
 
 @implementation GSCXTestScannerViewController
 

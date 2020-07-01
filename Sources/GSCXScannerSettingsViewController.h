@@ -27,14 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXTERN NSString *const kGSCXScannerSettingsTableAccessibilityIdentifier;
 
 /**
- * The text of the settings item that toggles continuous scanning.
+ * The text of the settings item that begins a continuous scan.
  */
-FOUNDATION_EXTERN NSString *const kGSCXSettingsContinuousScanSwitchText;
+FOUNDATION_EXTERN NSString *const kGSCXSettingsContinuousScanButtonText;
 
 /**
- * The accessibility identifier of the settings item that toggles continuous scanning.
+ * The accessibility identifier of the settings item that begins a continuous scan.
  */
-FOUNDATION_EXTERN NSString *const kGSCXSettingsContinuousScanSwitchAccessibilityIdentifier;
+FOUNDATION_EXTERN NSString *const kGSCXSettingsContinuousScanButtonAccessibilityIdentifier;
 
 /**
  * The text of the settings item displayed when no issues have been found.

@@ -60,6 +60,27 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
+- (void)addAccessibilityAttributesToRingViews {
+  NSUInteger index = 0;
+  for (GSCXRingView *ringView in self.ringViews) {
+    NSString *accessibilityLabel = self.result.issues[index].accessibilityLabel;
+    NSUInteger count = self.result.issues[index].underlyingIssueCount;
+    NSString *pluralModifier = (count == 1) ? @"" : @"s";
+    if (accessibilityLabel == nil) {
+      ringView.accessibilityLabel =
+          [NSString stringWithFormat:@"%lu issue%@ for element with no accessibility label",
+                                     (unsigned long)count, pluralModifier];
+    } else {
+      ringView.accessibilityLabel =
+          [NSString stringWithFormat:@"%lu issue%@ for element with accessibility label %@",
+                                     (unsigned long)count, pluralModifier, accessibilityLabel];
+    }
+    ringView.accessibilityIdentifier =
+        [GSCXRingViewArranger accessibilityIdentifierForRingViewAtIndex:index];
+    index++;
+  }
+}
+
 - (GSCXScannerResult *)resultWithIssuesAtPoint:(CGPoint)point {
   NSMutableArray<GSCXScannerIssue *> *issues = [NSMutableArray array];
   for (NSUInteger i = 0; i < [self.ringViews count]; i++) {
@@ -79,6 +100,11 @@ NS_ASSUME_NONNULL_BEGIN
   UIGraphicsEndImageContext();
   [self removeRingViewsFromSuperview];
   return image;
+}
+
++ (NSString *)accessibilityIdentifierForRingViewAtIndex:(NSUInteger)index {
+  return [NSString
+      stringWithFormat:@"GSCXRingViewArranger_Ring_%lu", (unsigned long)index];
 }
 
 #pragma mark - Private

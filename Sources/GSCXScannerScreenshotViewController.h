@@ -33,7 +33,7 @@ FOUNDATION_EXTERN NSString *const kGSCXShareReportButtonAccessibilityIdentifier;
  * a detail view containing issue name, description, and resolution. This view controller is
  * considered opaque.
  */
-@interface GSCXScannerScreenshotViewController : UIViewController <UINavigationControllerDelegate>
+@interface GSCXScannerScreenshotViewController : UIViewController
 
 /**
  * The result of scanning a view hierarchy. It is the responsibility of the owner of this view
@@ -58,13 +58,6 @@ FOUNDATION_EXTERN NSString *const kGSCXShareReportButtonAccessibilityIdentifier;
                          bundle:(nullable NSBundle *)nibBundleOrNil
                      scanResult:(GSCXScannerResult *)scanResult
                 sharingDelegate:(id<GSCXSharingDelegate>)sharingDelegate;
-/**
- * Returns the accessibility identifier of the ring view at the given index.
- *
- * @param index The index of the ring view.
- * @return A string representing the accessibility identifier of the corresponding ring view.
- */
-+ (NSString *)accessibilityIdentifierForRingViewAtIndex:(NSInteger)index;
 
 @end
 

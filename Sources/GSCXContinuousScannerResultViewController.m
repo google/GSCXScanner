@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *const kGSCXContinuousScannerResultShareBarButtonTitle = @"Share";
+NSString *const kGSCXContinuousScannerResultShareBarButtonTitle = @"Share";
 
 /**
  * The title of the alert presented when the PDF could not be loaded.
@@ -75,9 +75,11 @@ static NSString *const kGSCXContinuousScannerFailedToLoadReportAlertDismissTitle
     _report = report;
     _sharingDelegate = sharingDelegate;
     __weak __typeof__(self) weakSelf = self;
-    [_report createHTMLReportWithCompletionBlock:^(WKWebView *webView) {
-      [weakSelf gscx_setupWebView:webView];
-    }];
+    [GSCXReport createHTMLReport:_report
+                 completionBlock:^(WKWebView *webView) {
+                   [weakSelf gscx_setupWebView:webView];
+                 }
+                      errorBlock:nil];
   }
   return self;
 }
@@ -125,7 +127,7 @@ static NSString *const kGSCXContinuousScannerFailedToLoadReportAlertDismissTitle
  * Uses @c sharingDelegate to begin sharing the report.
  */
 - (void)gscx_beginSharingReport {
-  [self.sharingDelegate shareReport:self.report inViewController:self];
+  [self.sharingDelegate shareReport:self.report inViewController:self completion:nil];
 }
 
 /**

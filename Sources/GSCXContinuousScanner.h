@@ -62,12 +62,14 @@ NS_ASSUME_NONNULL_BEGIN
                          scheduler:(id<GSCXContinuousScannerScheduling>)scheduler;
 
 /**
- * Begins scheduling scans.
+ * Begins a continuous scan. Any previous continuous scan results are cleared. Crashes with an
+ * assertion if a continuous scan is already in progress.
  */
 - (void)startScanning;
 
 /**
- * Stops scheduling scans.
+ * Stops a continuous scan. Crashes with an assertion if a continuous scan is not currently in
+ * progress.
  */
 - (void)stopScanning;
 

@@ -102,6 +102,34 @@ NS_ASSUME_NONNULL_BEGIN
                                                       vertically:(BOOL)vertically
                                                        activated:(BOOL)activated;
 
+/**
+ * Constrains the anchors of @c view to be equal to the safe area layout guide of @c safeAreaView
+ * based on the boolean flags. One of @c constrainLeading, @c constrainTrailing, @c constrainTop,
+ * and @c constrainBottom must be @c YES or the method crashes with an assertion.
+ *
+ * @param view The view to constrain the anchors of.
+ * @param safeAreaView The view to constrain the anchors of @c view to the safe area layout guide
+ *  of.
+ * @param constrainLeading @c YES if the leading anchors should be constrained equal.
+ * @param constrainTrailing @c YES if the trailing anchors should be constrained equal.
+ * @param constrainTop @c YES if the top anchors should be constrained equal.
+ * @param constrainBottom @c YES if the bottom anchors should be constrained equal.
+ * @param constant The distance between the edges of @c safeAreaView and the constrained edges of
+ *  @c view. A positive value means @c view is smaller than @c safeAreaView (@c view is within
+ *  @c safeAreaView and there is padding between their edges). A negative values means @c view is
+ * larger than @c safeAreaView.
+ * @param activated @c YES if the returned constraints should be activated, @c NO otherwise.
+ * @return The generated constraints.
+ */
++ (NSArray<NSLayoutConstraint *> *)gscx_constrainAnchorsOfView:(UIView *)view
+                                         equalToSafeAreaOfView:(UIView *)safeAreaView
+                                                       leading:(BOOL)constrainLeading
+                                                      trailing:(BOOL)constrainTrailing
+                                                           top:(BOOL)constrainTop
+                                                        bottom:(BOOL)constrainBottom
+                                                      constant:(CGFloat)constant
+                                                     activated:(BOOL)activated;
+
 @end
 
 NS_ASSUME_NONNULL_END

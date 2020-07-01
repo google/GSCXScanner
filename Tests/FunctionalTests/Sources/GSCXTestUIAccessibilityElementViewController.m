@@ -16,7 +16,7 @@
 
 #import "GSCXTestUIAccessibilityElementViewController.h"
 
-#import "GSCXTestAppDelegate.h"
+#import "GSCXTestCheckNames.h"
 
 /**
  * A UIAccessibilityElement containing a unique integer identifying it.

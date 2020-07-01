@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GSCXContinuousScannerScreenshotViewController">
+            <connections>
+                <outlet property="backButton" destination="g91-xy-jfI" id="N5p-WJ-Pkp"/>
+                <outlet property="carouselContainerView" destination="gK6-TR-H0S" id="zPj-wD-02R"/>
+                <outlet property="gridButton" destination="1f5-pX-gGk" id="KmT-LC-RyJ"/>
+                <outlet property="issueCountLabel" destination="8wh-rs-QqE" id="CnT-e3-aog"/>
+                <outlet property="nextButton" destination="izg-GB-dtW" id="RcD-sD-FTv"/>
+                <outlet property="scanNumberLabel" destination="5Jx-qm-9fG" id="nhH-0N-yXI"/>
+                <outlet property="screenshotStackView" destination="W83-UZ-dWw" id="jaf-2K-pIU"/>
+                <outlet property="scrollView" destination="saE-qe-bBk" id="0mR-Dt-YTN"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gK6-TR-H0S">
+                    <rect key="frame" x="0.0" y="668" width="366" height="100"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="W83-UZ-dWw">
+                    <rect key="frame" x="20" y="414" width="374" height="128"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g91-xy-jfI">
+                            <rect key="frame" x="0.0" y="48" width="32" height="32"/>
+                            <state key="normal" image="ic_chevron_left_48pt"/>
+                            <connections>
+                                <action selector="gscx_backResultButtonPressed:" destination="-1" eventType="touchUpInside" id="a1o-aG-XQM"/>
+                            </connections>
+                        </button>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="saE-qe-bBk">
+                            <rect key="frame" x="46" y="0.0" width="282" height="128"/>
+                        </scrollView>
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="izg-GB-dtW">
+                            <rect key="frame" x="342" y="48" width="32" height="32"/>
+                            <state key="normal" image="ic_chevron_right_48pt"/>
+                            <connections>
+                                <action selector="gscx_nextResultButtonPressed:" destination="-1" eventType="touchUpInside" id="vVn-UZ-c4R"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1f5-pX-gGk">
+                    <rect key="frame" x="374" y="696" width="32" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="ic_photo_library_48pt"/>
+                    <connections>
+                        <action selector="gscx_gridButtonPressed:" destination="-1" eventType="touchUpInside" id="hz0-ay-plb"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Jx-qm-9fG">
+                    <rect key="frame" x="8" y="639.5" width="42" height="20.5"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8wh-rs-QqE">
+                    <rect key="frame" x="328" y="264" width="42" height="21"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="8wh-rs-QqE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Jx-qm-9fG" secondAttribute="trailing" constant="8" id="Mcb-z8-6fQ"/>
+                <constraint firstItem="5Jx-qm-9fG" firstAttribute="width" secondItem="8wh-rs-QqE" secondAttribute="width" id="gSe-Oe-EEH"/>
+            </constraints>
+            <point key="canvasLocation" x="137.68115942028987" y="153.34821428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_chevron_left_48pt" width="16" height="16"/>
+        <image name="ic_chevron_right_48pt" width="16" height="16"/>
+        <image name="ic_photo_library_48pt" width="16" height="16"/>
+    </resources>
+</document>

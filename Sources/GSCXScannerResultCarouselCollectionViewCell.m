@@ -16,9 +16,23 @@
 
 #import "GSCXScannerResultCarouselCollectionViewCell.h"
 
+#import "NSLayoutConstraint+GSCXUtilities.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation GSCXScannerResultCarouselCollectionViewCell
+
+- (instancetype)initWithFrame:(CGRect)frame {
+  self = [super initWithFrame:frame];
+  if (self) {
+    _screenshot = [[UIImageView alloc] initWithFrame:frame];
+    _screenshot.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addSubview:_screenshot];
+    [NSLayoutConstraint gscx_constraintsToFillSuperviewWithView:_screenshot activated:YES];
+  }
+  return self;
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

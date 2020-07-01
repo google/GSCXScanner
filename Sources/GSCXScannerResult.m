@@ -32,19 +32,14 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation GSCXScannerResult
 
 - (instancetype)initWithIssues:(NSArray<GSCXScannerIssue *> *)issues
-                    screenshot:(UIView *_Nullable)screenshot {
+                    screenshot:(UIImage *)screenshot {
   self = [super init];
   if (self) {
-    _issues = issues;
+    _issues = [issues copy];
     _screenshot = screenshot;
-    _originalScreenshotFrame = screenshot.frame;
+    _originalScreenshotFrame = CGRectMake(0, 0, screenshot.size.width, screenshot.size.height);
   }
   return self;
-}
-
-+ (instancetype)resultWithIssues:(NSArray<GSCXScannerIssue *> *)issues
-                      screenshot:(UIView *_Nullable)screenshot {
-  return [[GSCXScannerResult alloc] initWithIssues:issues screenshot:screenshot];
 }
 
 - (instancetype)resultWithIssuesAtPoint:(CGPoint)point {
@@ -54,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
       [filteredIssues addObject:issue];
     }
   }
-  return [GSCXScannerResult resultWithIssues:filteredIssues screenshot:self.screenshot];
+  return [[GSCXScannerResult alloc] initWithIssues:filteredIssues screenshot:self.screenshot];
 }
 
 - (NSUInteger)issueCount {
@@ -127,7 +122,8 @@ NS_ASSUME_NONNULL_BEGIN
   }
   [htmlSnippets addObject:@"<hr>"];
   [htmlSnippets addObject:@"<h2>Window Screenshot</h2>"];
-  NSString *screenshotPath = [context pathByAddingImage:[self gscx_screenshotImage]];
+  UIImage *annotatedScreenshot = [self gscx_annotatedScreenshot];
+  NSString *screenshotPath = [context pathByAddingImage:annotatedScreenshot];
   [htmlSnippets addObject:[NSString stringWithFormat:@"<img src=\"%@\" />", screenshotPath]];
   return [htmlSnippets componentsJoinedByString:@"<br/>"];
 }
@@ -176,11 +172,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Private
 
-- (UIImage *)gscx_screenshotImage {
+/**
+ * @return An image highlighting all elements with accessibility issues with ring views.
+ */
+- (UIImage *)gscx_annotatedScreenshot {
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:self];
   CGRect originalCoordinates = [[UIScreen mainScreen] bounds];
-  return [arranger imageByAddingRingViewsToSuperview:self.screenshot
-                                     fromCoordinates:originalCoordinates];
+  UIImageView *superview = [[UIImageView alloc] initWithImage:self.screenshot];
+  return [arranger imageByAddingRingViewsToSuperview:superview fromCoordinates:originalCoordinates];
 }
 
 @end

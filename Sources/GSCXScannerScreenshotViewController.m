@@ -18,13 +18,21 @@
 
 #import "GSCXContinuousScannerGalleryViewController.h"
 #import "GSCXDefaultSharingDelegate.h"
+#import "GSCXImageNames.h"
 #import "GSCXReport.h"
 #import "GSCXRingView.h"
 #import "GSCXRingViewArranger.h"
 #import "GSCXScannerResultTableViewController.h"
+#import "NSLayoutConstraint+GSCXUtilities.h"
+#import "UIViewController+GSCXAppearance.h"
 
 NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
     @"kGSCXShareReportButtonAccessibilityIdentifier";
+
+/**
+ * The padding between the screenshot and the edge of the screen.
+ */
+static const CGFloat kGSCXScannerScreenshotPadding = 0.0;
 
 @interface GSCXScannerScreenshotViewController ()
 
@@ -91,20 +99,9 @@ NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
  */
 - (GSCXScannerResult *)gscx_resultWithIssuesAtPoint:(CGPoint)point;
 
-/**
- * Returns the accessibility label for the ring view at the given index by determining the number
- * of issues associated with the corresponding UI element and the UI element's accessibility label.
- *
- * @param index The index of the ring view. Must be less than @c self.scanResult.issues.count.
- * @return The accessibility label of the ring view at the given index.
- */
-- (NSString *)gscx_accessibilityLabelForRingAtIndex:(NSInteger)index;
-
 @end
 
-@implementation GSCXScannerScreenshotViewController {
-  GSCXReport *_report;
-}
+@implementation GSCXScannerScreenshotViewController
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil
                          bundle:(NSBundle *)nibBundleOrNil
@@ -113,6 +110,7 @@ NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self) {
     _scanResult = scanResult;
+    _ringViewArranger = [[GSCXRingViewArranger alloc] initWithResult:scanResult];
     _sharingDelegate = sharingDelegate;
   }
   return self;
@@ -121,30 +119,21 @@ NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  self.title = [NSString stringWithFormat:@"%ld Issues", (unsigned long)self.scanResult.issueCount];
-  self.screenshot = [self.scanResult.screenshot snapshotViewAfterScreenUpdates:YES];
+  self.screenshot = [[UIImageView alloc] initWithImage:self.scanResult.screenshot];
   [self gscx_addScreenshotToScreen:self.screenshot];
   UIBarButtonItem *shareButton =
-      [[UIBarButtonItem alloc] initWithTitle:@"Share"
+      [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:kGSCXShareIconImageName]
                                        style:UIBarButtonItemStylePlain
                                       target:self
                                       action:@selector(gscx_beginSharingIssues)];
+  shareButton.accessibilityLabel = kGSCXShareIconAccessibilityLabel;
   shareButton.accessibilityIdentifier = kGSCXShareReportButtonAccessibilityIdentifier;
   self.navigationItem.rightBarButtonItem = shareButton;
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
-  if (@available(iOS 12.0, *)) {
-    self.blackBackgroundView.backgroundColor =
-        self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? [UIColor whiteColor]
-                                                                            : [UIColor blackColor];
-  }
-}
-
-- (void)gscx_beginSharingIssues {
-  _report = [[GSCXReport alloc] initWithResults:@[ self.scanResult ]];
-  [_sharingDelegate shareReport:_report inViewController:self];
+  self.blackBackgroundView.backgroundColor = [self gscx_backgroundColorForCurrentAppearance];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -152,18 +141,12 @@ NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
   [self gscx_addRingsToScreenshot:self.screenshot];
 }
 
-+ (NSString *)accessibilityIdentifierForRingViewAtIndex:(NSInteger)index {
-  return [NSString stringWithFormat:@"GSCXScannerScreenshotViewController_Ring_%ld", (long)index];
-}
-
-#pragma mark - UINavigationControllerDelegate
-
-- (UIInterfaceOrientationMask)navigationControllerSupportedInterfaceOrientations:
-    (UINavigationController *)navigationController {
-  return 0;
-}
-
 #pragma mark - Private
+
+- (void)gscx_beginSharingIssues {
+  GSCXReport *report = [[GSCXReport alloc] initWithResults:@[ self.scanResult ]];
+  [self.sharingDelegate shareReport:report inViewController:self completion:nil];
+}
 
 - (IBAction)gscx_tapRecognized:(id)sender {
   CGPoint location = [sender locationInView:self.screenshot];
@@ -185,49 +168,25 @@ NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
 - (void)gscx_addScreenshotToScreen:(UIView *)screenshot {
   screenshot.translatesAutoresizingMaskIntoConstraints = NO;
   screenshot.userInteractionEnabled = NO;
-  CGFloat aspectRatio = screenshot.frame.size.width / screenshot.frame.size.height;
   [self.view addSubview:screenshot];
-  NSArray<NSLayoutConstraint *> *constraints = @[
-    [NSLayoutConstraint constraintWithItem:screenshot
-                                 attribute:NSLayoutAttributeWidth
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:screenshot
-                                 attribute:NSLayoutAttributeHeight
-                                multiplier:aspectRatio
-                                  constant:0.0],
-    [NSLayoutConstraint constraintWithItem:screenshot
-                                 attribute:NSLayoutAttributeTop
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self.topLayoutGuide
-                                 attribute:NSLayoutAttributeBottom
-                                multiplier:1.0
-                                  constant:0.0],
-    [NSLayoutConstraint constraintWithItem:screenshot
-                                 attribute:NSLayoutAttributeBottom
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self.bottomLayoutGuide
-                                 attribute:NSLayoutAttributeBottom
-                                multiplier:1.0
-                                  constant:0.0],
-    [NSLayoutConstraint constraintWithItem:screenshot
-                                 attribute:NSLayoutAttributeCenterX
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self.view
-                                 attribute:NSLayoutAttributeCenterX
-                                multiplier:1.0
-                                  constant:0.0],
-  ];
-  [NSLayoutConstraint activateConstraints:constraints];
+  NSDictionary<NSString *, NSNumber *> *metrics = @{@"padding" : @(kGSCXScannerScreenshotPadding)};
+  NSDictionary<NSString *, id> *views = @{@"screenshot" : self.screenshot};
+  [NSLayoutConstraint gscx_constraintToCurrentAspectRatioWithView:screenshot activated:YES];
+  [NSLayoutConstraint
+      gscx_constraintsWithHorizontalFormat:@"|-(>=padding)-[screenshot]-(>=padding)-|"
+                            verticalFormat:@"|-(>=padding)-[screenshot]-(>=padding)-|"
+                                   options:0
+                                   metrics:metrics
+                                     views:views
+                                 activated:YES];
+  [NSLayoutConstraint gscx_constraintsCenteringView:screenshot
+                                           withView:screenshot.superview
+                                       horizontally:YES
+                                         vertically:YES
+                                          activated:YES];
   [self gscx_addConstraintsToScreenshotSubviews:screenshot];
-
-  [NSLayoutConstraint constraintWithItem:self.blackBackgroundView
-                               attribute:NSLayoutAttributeTop
-                               relatedBy:NSLayoutRelationEqual
-                                  toItem:screenshot
-                               attribute:NSLayoutAttributeTop
-                              multiplier:1.0
-                                constant:0.0]
-      .active = YES;
+  [NSLayoutConstraint gscx_constraintsToFillSuperviewWithView:self.blackBackgroundView
+                                                    activated:YES];
 }
 
 - (void)gscx_addConstraintsToScreenshotSubviews:(UIView *)screenshot {
@@ -252,37 +211,14 @@ NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
 }
 
 - (void)gscx_addRingsToScreenshot:(UIView *)screenshot {
-  if (self.ringViewArranger) {
-    return;
-  }
-  self.ringViewArranger = [[GSCXRingViewArranger alloc] initWithResult:self.scanResult];
+  [self.ringViewArranger removeRingViewsFromSuperview];
   [self.ringViewArranger addRingViewsToSuperview:screenshot
-                                 fromCoordinates:[[UIScreen mainScreen] bounds]];
-  NSInteger index = 0;
-  for (GSCXRingView *ringView in self.ringViewArranger.ringViews) {
-    ringView.accessibilityIdentifier =
-        [GSCXScannerScreenshotViewController accessibilityIdentifierForRingViewAtIndex:index];
-    ringView.accessibilityLabel = [self gscx_accessibilityLabelForRingAtIndex:index];
-    index++;
-  }
+                                 fromCoordinates:self.scanResult.originalScreenshotFrame];
+  [self.ringViewArranger addAccessibilityAttributesToRingViews];
 }
 
 - (GSCXScannerResult *)gscx_resultWithIssuesAtPoint:(CGPoint)point {
   return [self.ringViewArranger resultWithIssuesAtPoint:point];
-}
-
-- (NSString *)gscx_accessibilityLabelForRingAtIndex:(NSInteger)index {
-  NSParameterAssert((NSUInteger)index < self.scanResult.issues.count);
-  NSUInteger count = self.scanResult.issues[(NSUInteger)index].gtxCheckNames.count;
-  NSString *pluralModifier = (count == 1) ? @"" : @"s";
-  NSString *accessibilityLabel = self.scanResult.issues[(NSUInteger)index].accessibilityLabel;
-  if (accessibilityLabel == nil) {
-    return [NSString stringWithFormat:@"%ld issue%@ for element without accessibility label.",
-                                      (unsigned long)count, pluralModifier];
-  } else {
-    return [NSString stringWithFormat:@"%ld issue%@ for element with accessibility label %@",
-                                      (unsigned long)count, pluralModifier, accessibilityLabel];
-  }
 }
 
 @end

@@ -19,6 +19,8 @@
 #import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
+const CGFloat kGSCXMinimumTouchTargetSize = 44.0;
+
 @implementation GSCXUtils
 
 + (NSURL *)uniqueTemporaryDirectoryURL {

@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^GSCXContinuousScannerLoadFailureCallback)(void);
 
 /**
+ * The title of the bar button item that shares scan results.
+ */
+FOUNDATION_EXTERN NSString *const kGSCXContinuousScannerResultShareBarButtonTitle;
+
+/**
  * Displays a report of a continuous scan's results.
  */
 @interface GSCXContinuousScannerResultViewController

@@ -23,12 +23,19 @@
 #import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GSCXReport ()<WKNavigationDelegate>
+@interface GSCXReport () <WKNavigationDelegate>
 
 /**
- * Invoked when an HTML report has been created.
+ * Invoked when an HTML report has been created. @c nil if a report has not begun being generated.
+ * Must be non nil after a report begins being generated.
  */
-@property(strong, nonatomic) GSCXHTMLReportCompletionBlock onComplete;
+@property(copy, nonatomic, nullable) GSCXHTMLReportCompletionBlock onComplete;
+
+/**
+ * Invoked when an HTML report fails to be created. @c nil if a report has not begun being
+ * generated. Must be non nil after a report begins being generated.
+ */
+@property(copy, nonatomic, nullable) GSCXReportErrorBlock onError;
 
 /**
  * Renders the report.
@@ -47,9 +54,18 @@ NS_ASSUME_NONNULL_BEGIN
   return self;
 }
 
-- (void)createHTMLReportWithCompletionBlock:(GSCXHTMLReportCompletionBlock)onComplete {
+/**
+ * Begins generating an HTML report with the given results.
+ *
+ * @param onComplete Invoked when the report is created successfully.
+ * @param onError Invoked if the report fails to be created.
+ */
+- (void)createHTMLReportWithCompletionBlock:(GSCXHTMLReportCompletionBlock)onComplete
+                                 errorBlock:(GSCXReportErrorBlock)onError {
   GTX_ASSERT(onComplete, @"Report generation callback cannot be nil.");
+  GTX_ASSERT(onError, @"Report generation error callback cannot be nil.");
   self.onComplete = onComplete;
+  self.onError = onError;
 
   // Create a HTML file renders the PDF.
   GSCXReportContext *context = [[GSCXReportContext alloc] init];
@@ -67,22 +83,95 @@ NS_ASSUME_NONNULL_BEGIN
   self.helperWebview.navigationDelegate = self;
 
   [_helperWebview loadFileURL:[path URLByAppendingPathComponent:@"index.html"]
-     allowingReadAccessToURL:path];
+      allowingReadAccessToURL:path];
 }
 
-- (void)createPDFReportWithCompletionBlock:(GSCXPDFReportCompletionBlock)onComplete {
-  [self createHTMLReportWithCompletionBlock:^(WKWebView *webView) {
-    NSURL *url = [GSCXReport gscx_getPDFFromWebView:webView];
-    onComplete(url);
-  }];
+/**
+ * Begins generating a PDF report with the given results.
+ *
+ * @param onComplete Invoked when the report is created successfully.
+ * @param onError Invoked if the report fails to be created.
+ */
+- (void)createPDFReportWithCompletionBlock:(GSCXPDFReportCompletionBlock)onComplete
+                                errorBlock:(GSCXReportErrorBlock)onError {
+  [self
+      createHTMLReportWithCompletionBlock:^(WKWebView *webView) {
+        NSURL *url = [GSCXReport gscx_getPDFFromWebView:webView];
+        onComplete(url);
+      }
+                               errorBlock:onError];
 }
 
 #pragma mark - WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView
     didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-  _onComplete(self.helperWebview);
+  self.onComplete(self.helperWebview);
   self.helperWebview = nil;
+}
+
+- (void)webView:(WKWebView *)webView
+    didFailNavigation:(null_unspecified WKNavigation *)navigation
+            withError:(NSError *)error {
+  self.onError(error);
+}
+
+- (void)webView:(WKWebView *)webView
+    didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation
+                       withError:(NSError *)error {
+  self.onError(error);
+}
+
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
+  NSError *error = [NSError errorWithDomain:WKErrorDomain
+                                       code:WKErrorWebContentProcessTerminated
+                                   userInfo:nil];
+  self.onError(error);
+}
+
++ (void)createHTMLReport:(GSCXReport *)report
+         completionBlock:(GSCXHTMLReportCompletionBlock)onComplete
+              errorBlock:(nullable GSCXReportErrorBlock)onError {
+  // Copy the report so the same report object can be used to generate multiple reports, even if
+  // one is already in progress.
+  __block GSCXReport *copiedReport = [[GSCXReport alloc] initWithResults:report.results];
+  [copiedReport
+      createHTMLReportWithCompletionBlock:^(WKWebView *webView) {
+        onComplete(webView);
+        // Capture copiedReport to create an intentional retain cycle. Without this, the GSCXReport
+        // object will be deallocated when createHTMLReportWithCompletionBlock: terminates, because
+        // it begins an asynchronous process on WKWebView. If no other object owns the GSCXReport,
+        // there will be no strong references, and it will be deallocated. The web view's delegate
+        // will then be nil, so the callbacks are not run and the report is never generated.
+        // Creating a retain cycle keeps the report in memory until one of the callbacks runs.
+        // Setting the variable to nil breaks the cycle. If no other objects reference the
+        // GSCXReport object, it will be safely deallocated. Otherwise, the original owner will
+        // maintain ownership.
+        copiedReport = nil;
+      }
+      errorBlock:^(NSError *error) {
+        if (onError) {
+          onError(error);
+        }
+        copiedReport = nil;
+      }];
+}
+
++ (void)createPDFReport:(GSCXReport *)report
+        completionBlock:(GSCXPDFReportCompletionBlock)onComplete
+             errorBlock:(nullable GSCXReportErrorBlock)onError {
+  __block GSCXReport *copiedReport = [[GSCXReport alloc] initWithResults:report.results];
+  [copiedReport
+      createPDFReportWithCompletionBlock:^(NSURL *reportURL) {
+        onComplete(reportURL);
+        copiedReport = nil;
+      }
+      errorBlock:^(NSError *error) {
+        if (onError) {
+          onError(error);
+        }
+        copiedReport = nil;
+      }];
 }
 
 #pragma mark - Private
@@ -116,9 +205,9 @@ NS_ASSUME_NONNULL_BEGIN
   UIViewPrintFormatter *formatter = [webView viewPrintFormatter];
   UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
   [renderer addPrintFormatter:formatter startingAtPageAtIndex:0];
-  // @TODO Move away from pages and render whole report as a single long page to make it easy to
-  // read on screens.
-  CGRect A4PageRect = CGRectMake(0, 0, 595.2, 841.8); // A4, 72 dpi
+  // @TODO Move away from pages and render whole report as a single long page to make
+  // it easy to read on screens.
+  CGRect A4PageRect = CGRectMake(0, 0, 595.2, 841.8);  // A4, 72 dpi
   [renderer setValue:[NSValue valueWithCGRect:A4PageRect] forKey:@"paperRect"];
   [renderer setValue:[NSValue valueWithCGRect:A4PageRect] forKey:@"printableRect"];
 
@@ -133,8 +222,7 @@ NS_ASSUME_NONNULL_BEGIN
   UIGraphicsEndPDFContext();
 
   // Write the file to temp directory.
-  NSURL *temporaryDirectoryURL = [NSURL fileURLWithPath:NSTemporaryDirectory()
-                                            isDirectory:YES];
+  NSURL *temporaryDirectoryURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   NSString *temporaryFilename = [[NSProcessInfo processInfo] globallyUniqueString];
   temporaryFilename = [temporaryFilename stringByAppendingString:@".pdf"];
   NSURL *temporaryFileURL = [temporaryDirectoryURL URLByAppendingPathComponent:temporaryFilename];

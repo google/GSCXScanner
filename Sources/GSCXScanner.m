@@ -47,16 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (GSCXScannerIssue *)gscx_scannerIssueFromError:(NSError *)error;
 
-/**
- * Creates a snapshot view by overlaying snapshots of each view. If snapshotAfterScreenUpdates:
- * returns nil for any view, that view is not included in the screenshot.
- *
- * @param rootViews The views to overlay snapshots of.
- * @return A UIView containing overlaid snapshots of all views for which
- * snapshotAfterScreenUpdates: did not return nil, or nil if no views generated a snapshot.
- */
-- (UIView *_Nullable)gscx_snapshotOfRootViews:(NSArray<UIView *> *)rootViews;
-
 @end
 
 @implementation GSCXScanner
@@ -88,6 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (GSCXScannerResult *)scanRootViews:(NSArray<UIView *> *)rootViews {
+  GTX_ASSERT(rootViews.count > 0, @"rootViews cannot be empty.");
   if ([self.delegate respondsToSelector:@selector(scannerWillBeginScan:)]) {
     [self.delegate scannerWillBeginScan:self];
   }
@@ -99,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
     [GSCXAnalytics invokeAnalyticsEvent:GSCXAnalyticsEventScanPerformed count:1];
   }
   NSArray<GSCXScannerIssue *> *issues = [self gscx_scannerIssuesFromErrors:errors];
-  UIView *_Nullable snapshot = [self gscx_snapshotOfRootViews:rootViews];
+  UIImage *snapshot = [self gscx_snapshotOfRootViews:rootViews];
   _lastScanResult = [[GSCXScannerResult alloc] initWithIssues:issues screenshot:snapshot];
   if ([self.delegate respondsToSelector:@selector(scanner:didFinishScanWithResult:)]) {
     [self.delegate scanner:self didFinishScanWithResult:self.lastScanResult];
@@ -180,23 +171,25 @@ NS_ASSUME_NONNULL_BEGIN
                             elementDescription:elementDescription];
 }
 
-- (UIView *_Nullable)gscx_snapshotOfRootViews:(NSArray<UIView *> *)rootViews {
-  UIView *_Nullable snapshot = nil;
+/**
+ * Creates a snapshot view by overlaying snapshots of each view in @c rootViews.
+ *
+ * @param rootViews The views to overlay snapshots of. Must not be empty. All elements must have the
+ *  same @c bounds. Views are drawn back to front, starting with the first element.
+ * @return A @c UIImage containing overlaid snapshots of all views in @c rootViews.
+ */
+- (UIImage *)gscx_snapshotOfRootViews:(NSArray<UIView *> *)rootViews {
+  GTX_ASSERT(rootViews.count > 0, @"rootViews cannot be empty.");
+  UIGraphicsBeginImageContextWithOptions(rootViews[0].bounds.size, NO, 0.0);
   for (UIView *view in rootViews) {
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0);
-    // Passing YES to afterScreenUpdates resets VoiceOver focus to the first element in the
+    // Passing YES to drawViewHierarchyInRect resets VoiceOver focus to the first element in the
     // accessibility hierarchy. Passing NO does not cause this. This is likely a bug in
     // drawViewHierarchyInRect. A radar has been filed.
     [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    if (snapshot == nil) {
-      snapshot = imageView;
-    } else {
-      [snapshot addSubview:imageView];
-    }
   }
-  return snapshot;
+  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return image;
 }
 
 @end

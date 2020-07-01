@@ -23,47 +23,13 @@
 #import "GSCXScannerWindowCoordinator.h"
 #import "third_party/objective_c/GSCXScanner/Tests/Common/GSCXManualScheduler.h"
 #import "GSCXTestCheck.h"
+#import "GSCXTestCheckNames.h"
+#import "GSCXTestEnvironmentVariables.h"
 #import "GSCXTestSharingDelegate.h"
 #import "GSCXTestViewController.h"
 #import "GSCXUITestViewController.h"
 #import <GTXiLib/GTXiLib.h>
-NSString *const kWindowOverlayTypeKey = @"overlayType";
-
-NSString *const kWindowOverlayTypeTransparent = @"transparent";
-
-NSString *const kWindowOverlayTypeOpaque = @"opaque";
-
-NSString *const kResultsWindowPresentationTypeKey = @"resultsWindowPresentationType";
-
-NSString *const kResultsWindowPresentationTypeSingle = @"single";
-
-NSString *const kResultsWindowPresentationTypeMultiple = @"multiple";
-
-NSString *const kContinuousScannerTimeIntervalKey = @"continuousScannerTimeInterval";
-
-NSString *const kUseTestSharingDelegateKey = @"useTestSharingDelegate";
-
 NSString *const kMainWindowAccessibilityId = @"kMainWindowAccessibilityId";
-
-NSString *const kGSCXTestCheckName1 = @"kGSCXTestCheckName1";
-
-const NSInteger kGSCXTestCheckTag1 = 127;
-
-NSString *const kGSCXTestCheckName2 = @"kGSCXTestCheckName2";
-
-const NSInteger kGSCXTestCheckTag2 = 126;
-
-NSString *const kGSCXTestCheckName3 = @"kGSCXTestCheckName3";
-
-const NSInteger kGSCXTestCheckTag3 = 125;
-
-NSString *const kGSCXTestCheckName4 = @"kGSCXTestCheckName4";
-
-const NSInteger kGSCXTestCheckTag4 = kGSCXTestCheckTag1;
-
-NSString *const kGSCXTestUTF8CheckName5 = @"kGSCXTestUTF8TagCheckName5";
-
-const NSInteger kGSCXTestUTF8CheckTag5 = 124;
 
 @interface GSCXTestAppDelegate ()
 
@@ -83,13 +49,15 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
   NSString *overlayType = [self gscxtest_windowOverlayType];
   NSNumber *schedulingInterval = [self gscxtest_continuousScanTimeInterval];
   BOOL useTestSharingDelegate = [self gscxtest_useTestSharingDelegate];
+  BOOL useCanonicalGTXChecks = [self gscxtest_useCanonicalGTXChecks];
 
   [self gscxtest_installApplicationWindow:overlayType];
-  if ([overlayType isEqualToString:kWindowOverlayTypeTransparent]) {
+  if ([overlayType isEqualToString:kEnvWindowOverlayTypeTransparent]) {
     [self gscxtest_installTransparentOverlay:isMultiWindowPresentation
                           schedulingInterval:schedulingInterval
-                      useTestSharingDelegate:useTestSharingDelegate];
-  } else if ([overlayType isEqualToString:kWindowOverlayTypeOpaque]) {
+                      useTestSharingDelegate:useTestSharingDelegate
+                       useCanonicalGTXChecks:useCanonicalGTXChecks];
+  } else if ([overlayType isEqualToString:kEnvWindowOverlayTypeOpaque]) {
     [self gscxtest_installOpaqueOverlay];
   }
 
@@ -100,14 +68,14 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
 
 - (BOOL)gscxtest_resultsWindowPresentationType {
   NSString *resultsWindowPresentationType =
-      [[[NSProcessInfo processInfo] environment] objectForKey:kResultsWindowPresentationTypeKey];
+      [[[NSProcessInfo processInfo] environment] objectForKey:kEnvResultsWindowPresentationTypeKey];
   if (resultsWindowPresentationType == nil) {
-    resultsWindowPresentationType = kResultsWindowPresentationTypeSingle;
+    resultsWindowPresentationType = kEnvResultsWindowPresentationTypeSingle;
   }
   NSParameterAssert(
       [self gscxtest_isValidResultsWindowPresentationType:resultsWindowPresentationType]);
   BOOL isMultiWindowPresentation = NO;
-  if ([resultsWindowPresentationType isEqualToString:kResultsWindowPresentationTypeMultiple]) {
+  if ([resultsWindowPresentationType isEqualToString:kEnvResultsWindowPresentationTypeMultiple]) {
     isMultiWindowPresentation = YES;
   }
   return isMultiWindowPresentation;
@@ -115,9 +83,9 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
 
 - (NSString *)gscxtest_windowOverlayType {
   NSString *overlayType =
-      [[[NSProcessInfo processInfo] environment] objectForKey:kWindowOverlayTypeKey];
+      [[[NSProcessInfo processInfo] environment] objectForKey:kEnvWindowOverlayTypeKey];
   if (overlayType == nil) {
-    overlayType = kWindowOverlayTypeTransparent;
+    overlayType = kEnvWindowOverlayTypeTransparent;
   }
   NSParameterAssert([self gscxtest_isValidOverlayType:overlayType]);
   return overlayType;
@@ -125,7 +93,7 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
 
 - (NSNumber *)gscxtest_continuousScanTimeInterval {
   NSString *timeInterval =
-      [[[NSProcessInfo processInfo] environment] objectForKey:kContinuousScannerTimeIntervalKey];
+      [[[NSProcessInfo processInfo] environment] objectForKey:kEnvContinuousScannerTimeIntervalKey];
   if (timeInterval) {
     return @([timeInterval doubleValue]);
   } else {
@@ -138,9 +106,10 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
  * value, @c NO otherwise.
  */
 - (BOOL)gscxtest_useTestSharingDelegate {
-  return [[[[NSProcessInfo processInfo] environment] objectForKey:kUseTestSharingDelegateKey]
+  return [[[[NSProcessInfo processInfo] environment] objectForKey:kEnvUseTestSharingDelegateKey]
       boolValue];
 }
+
 /**
  * Determines if the "overlayType" environment variable is set correctly.
  *
@@ -148,8 +117,8 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
  * @return YES if overlayType is "transparent" or "opaque", NO if it is another string or nil.
  */
 - (BOOL)gscxtest_isValidOverlayType:(NSString *)overlayType {
-  return overlayType != nil && ([overlayType isEqualToString:kWindowOverlayTypeTransparent] ||
-                                [overlayType isEqualToString:kWindowOverlayTypeOpaque]);
+  return overlayType != nil && ([overlayType isEqualToString:kEnvWindowOverlayTypeTransparent] ||
+                                [overlayType isEqualToString:kEnvWindowOverlayTypeOpaque]);
 }
 
 /**
@@ -162,8 +131,18 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
  */
 - (BOOL)gscxtest_isValidResultsWindowPresentationType:(NSString *)resultsWindowPresentationType {
   return resultsWindowPresentationType != nil &&
-         ([resultsWindowPresentationType isEqualToString:kResultsWindowPresentationTypeSingle] ||
-          [resultsWindowPresentationType isEqualToString:kResultsWindowPresentationTypeMultiple]);
+         ([resultsWindowPresentationType isEqualToString:kEnvResultsWindowPresentationTypeSingle] ||
+          [resultsWindowPresentationType
+              isEqualToString:kEnvResultsWindowPresentationTypeMultiple]);
+}
+
+/**
+ * @return @c YES if the @c kUseCanonicalGTXChecks environment variable exists and has a truthy
+ * value, @c NO otherwise.
+ */
+- (BOOL)gscxtest_useCanonicalGTXChecks {
+  return [[[[NSProcessInfo processInfo] environment] objectForKey:kEnvUseCanonicalGTXChecksKey]
+      boolValue];
 }
 
 /**
@@ -181,10 +160,10 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
   CGRect screenBounds = [[UIScreen mainScreen] bounds];
   self.window = [[UIWindow alloc] initWithFrame:screenBounds];
   UIViewController *rootViewController = nil;
-  if ([overlayType isEqualToString:kWindowOverlayTypeTransparent]) {
+  if ([overlayType isEqualToString:kEnvWindowOverlayTypeTransparent]) {
     rootViewController = [[GSCXTestViewController alloc] initWithNibName:@"GSCXTestViewController"
                                                                   bundle:nil];
-  } else if ([overlayType isEqualToString:kWindowOverlayTypeOpaque]) {
+  } else if ([overlayType isEqualToString:kEnvWindowOverlayTypeOpaque]) {
     rootViewController =
         [[GSCXUITestViewController alloc] initWithNibName:@"GSCXUITestViewController" bundle:nil];
   }
@@ -200,7 +179,8 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
  */
 - (void)gscxtest_installTransparentOverlay:(BOOL)isMultiWindowPresentation
                         schedulingInterval:(NSNumber *)schedulingInterval
-                    useTestSharingDelegate:(BOOL)useTestSharingDelegate {
+                    useTestSharingDelegate:(BOOL)useTestSharingDelegate
+                     useCanonicalGTXChecks:(BOOL)useCanonicalGTXChecks {
   NSArray<id<GTXChecking>> *checks = @[
     [GSCXTestCheck checkWithName:kGSCXTestCheckName1 tag:kGSCXTestCheckTag1],
     [GSCXTestCheck checkWithName:kGSCXTestCheckName2 tag:kGSCXTestCheckTag2],
@@ -208,6 +188,9 @@ const NSInteger kGSCXTestUTF8CheckTag5 = 124;
     [GSCXTestCheck checkWithName:kGSCXTestCheckName4 tag:kGSCXTestCheckTag4],
     [GSCXTestCheck UTF8CheckWithName:kGSCXTestUTF8CheckName5 tag:kGSCXTestUTF8CheckTag5],
   ];
+  if (useCanonicalGTXChecks) {
+    checks = [checks arrayByAddingObjectsFromArray:[GTXChecksCollection allGTXChecks]];
+  }
   NSArray<id<GSCXContinuousScannerScheduling>> *schedulers = nil;
   if (schedulingInterval) {
     NSTimeInterval timeInterval = [schedulingInterval doubleValue];

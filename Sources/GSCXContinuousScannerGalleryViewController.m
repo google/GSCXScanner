@@ -19,15 +19,14 @@
 #import "GSCXContinuousScannerGalleryDetailViewData.h"
 #import "GSCXRingViewArranger.h"
 #import "GSCXScannerScreenshotViewController.h"
+#import "NSLayoutConstraint+GSCXUtilities.h"
+#import "UIView+NSLayoutConstraint.h"
 #import "UIViewController+GSCXAppearance.h"
 
 NSString *const kGSCXContinuousScannerGalleryDetailViewAccessibilityIdentifier =
     @"kGSCXContinuousScannerGalleryDetailViewAccessibilityIdentifier";
 
-/**
- * Maximum zoom scale the screenshot can have. The minimum zoom is the reciprocal of this value.
- */
-static const CGFloat kGSCXContinuousScannerGalleryZoomScale = 10.0;
+const CGFloat kGSCXContinuousScannerGalleryZoomScale = 10.0;
 
 /**
  * The alpha value of the page indicators for noncurrent pages. This is the same as the default
@@ -45,7 +44,7 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
 /**
  * A copy of the scan result's screenshot, so modifying it does not modify the original screenshot.
  */
-@property(strong, nonatomic) UIView *screenshot;
+@property(strong, nonatomic) UIImageView *screenshot;
 
 /**
  * Highlights all elements with accessibility issues in the screenshot.
@@ -72,6 +71,23 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
  */
 @property(strong, nonatomic) NSArray<GSCXContinuousScannerGalleryDetailViewData *> *detailViews;
 
+/**
+ * The index to focus when the view appears on screen. In some cases, the size of the view is
+ * different when initialized and when displayed on screen (such as on iPad when the modal is not
+ * full screen). In this case, the screenshot and detail scroll views are not centered properly.
+ * Focusing it in @c viewWillAppear solves this, but this should only occur if the view controller
+ * is not currently visible. Defaults to @c nil.
+ */
+@property(strong, nonatomic, nullable) NSNumber *indexToFocusOnAppear;
+
+/**
+ * @c YES if the view controller is visible, @c NO otherwise. This ensures focusing on specific
+ * views can be deferred until the view controller is visible, if needed. The view controller is
+ * considered visible from when @c viewWillAppear is called until @c viewDidDisappear is called.
+ * Default is @c NO because the view controller is created before it appears on screen.
+ */
+@property(assign, nonatomic, getter=isViewControllerVisible) BOOL viewControllerVisible;
+
 @end
 
 @implementation GSCXContinuousScannerGalleryViewController
@@ -88,52 +104,59 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  // Can't set self.view.backgroundColor because it would be the opposite color of the navigation
-  // bar. Since the navigation bar is partially transparent, this reduces contrast of the navigation
-  // bar items to an unacceptable level. At some point we may override the navigation bar style
-  // (so it appears light in dark mode and vice versa) to match the rest of the overlay UI, at which
-  // point it will be safe to set the view's background.
-  self.screenshot = [self.result.screenshot snapshotViewAfterScreenUpdates:YES];
-  self.ringViewArranger = [[GSCXRingViewArranger alloc] initWithResult:self.result];
-  [self.ringViewArranger addRingViewsToSuperview:self.screenshot
-                                 fromCoordinates:self.screenshot.bounds];
-  for (NSUInteger i = 0; i < [self.ringViewArranger.ringViews count]; i++) {
-    self.ringViewArranger.ringViews[i].accessibilityIdentifier =
-        [GSCXScannerScreenshotViewController accessibilityIdentifierForRingViewAtIndex:i];
-  }
-  self.screenshotScrollView.scrollEnabled = NO;
-  self.screenshotScrollView.contentSize = self.result.screenshot.bounds.size;
-  [self.screenshotScrollView addSubview:self.screenshot];
-  self.screenshotScrollView.minimumZoomScale = 1.0 / kGSCXContinuousScannerGalleryZoomScale;
-  self.screenshotScrollView.maximumZoomScale = kGSCXContinuousScannerGalleryZoomScale;
-  self.screenshotScrollView.delegate = self;
-  self.detailScrollView.pagingEnabled = YES;
-  self.detailScrollView.delegate = self;
-  self.detailScrollView.showsHorizontalScrollIndicator = NO;
-  self.detailScrollView.accessibilityIdentifier =
-      kGSCXContinuousScannerGalleryDetailViewAccessibilityIdentifier;
-  self.pageControl.numberOfPages = [self.result.issues count];
-  self.pageControl.currentPageIndicatorTintColor = [self gscx_textColorForCurrentAppearance];
-  self.pageControl.pageIndicatorTintColor = [[self gscx_textColorForCurrentAppearance]
-      colorWithAlphaComponent:kGSCXContinuousScannerPageIndicatorAlpha];
-  [self.pageControl addTarget:self
-                       action:@selector(gscx_pageControlValueChanged:)
-             forControlEvents:UIControlEventValueChanged];
+  self.view.backgroundColor = [self gscx_backgroundColorForCurrentAppearance];
+  [self gscx_initializeScreenshot];
+  [self gscx_initializeScreenshotScrollView];
+  [self gscx_initializeDetailScrollView];
+  [self gscx_initializeScrollViewConstraints];
+  [self gscx_initializePageControl];
   [self gscx_initializeDetailViews];
+}
+
+- (void)viewWillLayoutSubviews {
+  [super viewWillLayoutSubviews];
+  if (self.indexToFocusOnAppear != nil) {
+    [self focusIssueAtIndex:[self.indexToFocusOnAppear integerValue] animated:NO];
+    self.indexToFocusOnAppear = nil;
+  }
 }
 
 - (void)viewDidLayoutSubviews {
   [super viewDidLayoutSubviews];
-  self.screenshotScrollView.contentSize = self.screenshot.frame.size;
+  CGFloat viewWidth = self.view.bounds.size.width;
+  if (@available(iOS 11.0, *)) {
+    viewWidth = self.view.safeAreaLayoutGuide.layoutFrame.size.width;
+  }
   self.detailScrollView.contentSize =
-      CGSizeMake(self.view.bounds.size.width * [self.result.issues count],
-                 self.detailScrollView.frame.size.height);
+      CGSizeMake(viewWidth * [self.result.issues count], self.detailScrollView.frame.size.height);
   for (GSCXContinuousScannerGalleryDetailViewData *detailView in self.detailViews) {
     [detailView didLayoutSubviews];
   }
+  [self gscx_centerScreenshotForIssueAtIndex:self.pageControl.currentPage animated:NO];
+  [self gscx_displayDetailsForIssueAtIndex:self.pageControl.currentPage animated:NO];
+  // Content insets let the scroll view zoom and center ring views correctly, even if the ring views
+  // are on the edge of the screenshot or need to be zoomed out to see.
+  CGSize contentSize = self.screenshotScrollView.contentSize;
+  self.screenshotScrollView.contentInset =
+      UIEdgeInsetsMake(contentSize.height / 2.0, contentSize.width / 2.0, contentSize.height / 2.0,
+                       contentSize.width / 2.0);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  self.viewControllerVisible = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+  [super viewDidDisappear:animated];
+  self.viewControllerVisible = NO;
 }
 
 - (void)focusIssueAtIndex:(NSInteger)index animated:(BOOL)animated {
+  if (!self.isViewControllerVisible) {
+    self.indexToFocusOnAppear = @(index);
+    return;
+  }
   [self loadViewIfNeeded];
   [self.view layoutIfNeeded];
   [self.pageControl setCurrentPage:index];
@@ -157,6 +180,128 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
 }
 
 #pragma mark - Private
+
+/**
+ * Initializes @c screenshot based on @c result. Sets constraints and adds ring views to highlight
+ * accessibility issues.
+ */
+- (void)gscx_initializeScreenshot {
+  self.screenshot = [[UIImageView alloc] initWithImage:self.result.screenshot];
+  self.ringViewArranger = [[GSCXRingViewArranger alloc] initWithResult:self.result];
+  [self.ringViewArranger addRingViewsToSuperview:self.screenshot
+                                 fromCoordinates:self.result.originalScreenshotFrame];
+  for (NSUInteger i = 0; i < [self.ringViewArranger.ringViews count]; i++) {
+    self.ringViewArranger.ringViews[i].accessibilityIdentifier =
+        [GSCXRingViewArranger accessibilityIdentifierForRingViewAtIndex:i];
+  }
+  self.screenshot.translatesAutoresizingMaskIntoConstraints = NO;
+  [self.screenshotScrollView addSubview:self.screenshot];
+  CGFloat aspectRatio = self.result.screenshot.size.width / self.result.screenshot.size.height;
+  [NSLayoutConstraint gscx_constraintWithView:self.screenshot
+                                  aspectRatio:aspectRatio
+                                    activated:YES];
+  [NSLayoutConstraint gscx_constraintsToFillSuperviewWithView:self.screenshot activated:YES];
+}
+
+/**
+ * Initializes @c screenshotScrollView. Configures zooming behavior.
+ */
+- (void)gscx_initializeScreenshotScrollView {
+  self.screenshotScrollView.backgroundColor = [self gscx_backgroundColorForCurrentAppearance];
+  self.screenshotScrollView.scrollEnabled = NO;
+  self.screenshotScrollView.minimumZoomScale = 1.0 / kGSCXContinuousScannerGalleryZoomScale;
+  self.screenshotScrollView.maximumZoomScale = kGSCXContinuousScannerGalleryZoomScale;
+  self.screenshotScrollView.delegate = self;
+}
+
+/**
+ * Initializes @c detailScrollView based on @c result. Configures paging behavior.
+ */
+- (void)gscx_initializeDetailScrollView {
+  self.detailScrollView.backgroundColor = [self gscx_backgroundColorForCurrentAppearance];
+  self.detailScrollView.pagingEnabled = YES;
+  self.detailScrollView.delegate = self;
+  self.detailScrollView.showsHorizontalScrollIndicator = NO;
+  self.detailScrollView.accessibilityIdentifier =
+      kGSCXContinuousScannerGalleryDetailViewAccessibilityIdentifier;
+  if (@available(iOS 11.0, *)) {
+    // Safe areas cannot be used in the Storyboard because it fails compilation pre-iOS 11. However,
+    // the scroll view still adjusts content insets as if they exist, which incorrectly positions
+    // subviews. Never adjusting the content inset fixes this.
+    self.detailScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+  }
+}
+
+/**
+ * Adds constraints to @c detailScrollView and @c screenshotScrollView.
+ */
+- (void)gscx_initializeScrollViewConstraints {
+  self.screenshotScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  self.detailScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+  NSArray<UIScrollView *> *horizontallyConstrainedScrollViews =
+      @[ self.screenshotScrollView, self.detailScrollView ];
+  // The visual constraint format does not support the safe area, so all constraints that may
+  // involve it must use the explicit API.
+  //
+  // Both scroll views are constrained to both horizontal edges. They are constrained to different
+  // vertical edges.
+  for (UIScrollView *scrollView in horizontallyConstrainedScrollViews) {
+    [NSLayoutConstraint gscx_constrainAnchorsOfView:scrollView
+                              equalToSafeAreaOfView:self.view
+                                            leading:YES
+                                           trailing:YES
+                                                top:NO
+                                             bottom:NO
+                                           constant:0.0
+                                          activated:YES];
+  }
+  [NSLayoutConstraint gscx_constrainAnchorsOfView:self.screenshotScrollView
+                            equalToSafeAreaOfView:self.view
+                                          leading:NO
+                                         trailing:NO
+                                              top:YES
+                                           bottom:NO
+                                         constant:0.0
+                                        activated:YES];
+  [NSLayoutConstraint gscx_constrainAnchorsOfView:self.detailScrollView
+                            equalToSafeAreaOfView:self.view
+                                          leading:NO
+                                         trailing:NO
+                                              top:NO
+                                           bottom:YES
+                                         constant:0.0
+                                        activated:YES];
+  NSDictionary<NSString *, id> *views = @{
+    @"screenshotScrollView" : self.screenshotScrollView,
+    @"detailScrollView" : self.detailScrollView,
+  };
+  [NSLayoutConstraint
+      gscx_constraintsWithHorizontalFormat:nil
+                            verticalFormat:
+                                @"[screenshotScrollView(==detailScrollView)][detailScrollView]"
+                                   options:0
+                                   metrics:nil
+                                     views:views
+                                 activated:YES];
+  [NSLayoutConstraint gscx_constraintsCenteringView:self.screenshotScrollView
+                                           withView:self.view.gscx_safeAreaLayoutGuide
+                                       horizontally:YES
+                                         vertically:NO
+                                          activated:YES];
+}
+
+/**
+ * Initializes @c pageControl based on @c result.
+ */
+- (void)gscx_initializePageControl {
+  self.pageControl.numberOfPages = self.result.issues.count;
+  self.pageControl.currentPageIndicatorTintColor = [self gscx_textColorForCurrentAppearance];
+  self.pageControl.pageIndicatorTintColor = [[self gscx_textColorForCurrentAppearance]
+      colorWithAlphaComponent:kGSCXContinuousScannerPageIndicatorAlpha];
+  [self.pageControl addTarget:self
+                       action:@selector(gscx_pageControlValueChanged:)
+             forControlEvents:UIControlEventValueChanged];
+}
 
 /**
  * Initializes the detail views for each element with accessibility issues.

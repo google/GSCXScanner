@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GSCXRingViewArrangerTests : XCTestCase
 
 /**
+ * A blank image passed to @c GSCXScannerResult initializers.
+ */
+@property(strong, nonatomic) UIImage *dummyImage;
+
+/**
  * Asserts that @c rect1 and @c rect2 are equal. Fails the test if not.
  *
  * @param rect1 The first rect to compare.
@@ -42,15 +47,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation GSCXRingViewArrangerTests
 
+- (void)setUp {
+  [super setUp];
+  self.dummyImage = [[UIImage alloc] init];
+}
+
 - (void)testRingViewsCanBeAddedForOneIssueNoTransform {
-  GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ] screenshot:nil];
+  GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)
+                                       accessibilityLabel:@"ax label"];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
   [arranger addRingViewsToSuperview:superview fromCoordinates:coordinates];
   XCTAssertEqual([arranger.ringViews count], 1);
   XCTAssertEqualObjects(superview.subviews, arranger.ringViews);
+  XCTAssertEqualObjects(arranger.ringViews[0].accessibilityLabel, nil);
+  [arranger addAccessibilityAttributesToRingViews];
+  XCTAssertEqualObjects(arranger.ringViews[0].accessibilityLabel,
+                        @"1 issue for element with accessibility label ax label");
   // Ring views add a 2-point outline to each side of the frame. The origin will be two points less
   // and the size will be 4 points more.
   [self gscxtest_assertRect:arranger.ringViews[0].frame equalToRect:CGRectMake(3, 18, 44, 44)];
@@ -75,17 +91,30 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesNoTransform {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
+  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)
+                                        accessibilityLabel:@"ax label 1"];
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(2, 21, 96, 2)];
+  GSCXScannerIssue *issue3 =
+      [self gscxtest_issueContainingMultipleIssuesWithFrame:CGRectMake(2, 21, 96, 2)
+                                         accessibilityLabel:nil];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
   [arranger addRingViewsToSuperview:superview fromCoordinates:coordinates];
   XCTAssertEqual([arranger.ringViews count], 3);
   XCTAssertEqualObjects(superview.subviews, arranger.ringViews);
+  XCTAssertEqualObjects(arranger.ringViews[0].accessibilityLabel, nil);
+  XCTAssertEqualObjects(arranger.ringViews[1].accessibilityLabel, nil);
+  XCTAssertEqualObjects(arranger.ringViews[2].accessibilityLabel, nil);
+  [arranger addAccessibilityAttributesToRingViews];
+  XCTAssertEqualObjects(arranger.ringViews[0].accessibilityLabel,
+                        @"1 issue for element with accessibility label ax label 1");
+  XCTAssertEqualObjects(arranger.ringViews[1].accessibilityLabel,
+                        @"1 issue for element with no accessibility label");
+  XCTAssertEqualObjects(arranger.ringViews[2].accessibilityLabel,
+                        @"2 issues for element with no accessibility label");
   // Ring views add a 2-point outline to each side of the frame. The origin will be two points less
   // and the size will be 4 points more.
   [self gscxtest_assertRect:arranger.ringViews[0].frame equalToRect:CGRectMake(3, 18, 44, 44)];
@@ -98,7 +127,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)testRingViewsCanBeAddedForOneIssueScaleTransformLarger {
   GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ] screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 200, 200);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -123,7 +153,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(2, 88, 97, 2)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 200, 200);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -142,7 +172,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)testRingViewsCanBeAddedForOneIssueScaleTransformSmaller {
   GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(28, 24, 32, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ] screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -171,7 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(28, 30, 40, 32)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(4, 100, 192, 4)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -190,7 +221,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)testRingViewsCanBeAddedForOneIssueOffsetTransformLarger {
   GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ] screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
+                                                             screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -217,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(2, 77, 96, 2)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -238,7 +270,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)testRingViewsCanBeAddedForOneIssueOffsetTransformSmaller {
   GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(110, 120, 30, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ] screenshot:nil];
+  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -263,7 +296,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(120, 110, 40, 30)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(102, 121, 96, 2)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -285,7 +318,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(24, 28, 40, 32)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(104, 104, 92, 4)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -317,7 +350,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(4, 10, 92, 2)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -349,7 +382,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(124, 128, 40, 32)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(124, 142, 92, 4)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -378,7 +411,7 @@ NS_ASSUME_NONNULL_BEGIN
   GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(120, 110, 40, 30)];
   GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(104, 110, 92, 2)];
   GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:nil];
+                                                             screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 200, 200);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -405,19 +438,54 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Private
 
 /**
- * Constructs a @c GSCXScannerIssue instance with @c frame for @c frameInScreeBounds and default
- * values for the other parameters
+ * Constructs a @c GSCXScannerIssue instance with @c frame for @c frameInScreenBounds and default
+ * values for the other parameters.
  *
  * @param frame The value for the @c frameInScreeBounds parameter.
  * @return A @c GSCXScannerIssue instance.
  */
 - (GSCXScannerIssue *)gscxtest_issueWithFrame:(CGRect)frame {
+  return [self gscxtest_issueWithFrame:frame accessibilityLabel:nil];
+}
+
+/**
+ * Constructs a @c GSCXScannerIssue instance with @c frame for @c frameInScreenBounds,
+ * @c accessibilityLabel for @c accessibilityLabel, and default values for the other parameters.
+ *
+ * @param frame The value for the @c frameInScreenBounds parameter.
+ * @param accessibilityLabel Optional. The value for the @c accessibilityLabel parameter.
+ * @return A @c GSCXScannerIssue instance.
+ */
+- (GSCXScannerIssue *)gscxtest_issueWithFrame:(CGRect)frame
+                           accessibilityLabel:(nullable NSString *)accessibilityLabel {
   return [[GSCXScannerIssue alloc] initWithCheckNames:@[ @"Check" ]
                                     checkDescriptions:@[ @"Description" ]
                                        elementAddress:1
                                          elementClass:[UIView class]
                                   frameInScreenBounds:frame
-                                   accessibilityLabel:nil
+                                   accessibilityLabel:accessibilityLabel
+                              accessibilityIdentifier:nil
+                                   elementDescription:@"Element Description"];
+}
+
+/**
+ * Constructs a @c GSCXScannerIssue instance with @c frame for @c frameInScreeBounds,
+ * @c accessibilityLabel for @c accessibilityLabel, and default values for the other parameters. The
+ * issue contains multiple underlying issues.
+ *
+ * @param frame The value for the @c frameInScreenBounds parameter.
+ * @param accessibilityLabel Optional. The value for the @c accessibilityLabel parameter.
+ * @return A @c GSCXScannerIssue instance.
+ */
+- (GSCXScannerIssue *)gscxtest_issueContainingMultipleIssuesWithFrame:(CGRect)frame
+                                                   accessibilityLabel:
+                                                       (nullable NSString *)accessibilityLabel {
+  return [[GSCXScannerIssue alloc] initWithCheckNames:@[ @"Check 1", @"Check 2" ]
+                                    checkDescriptions:@[ @"Description 1", @"Check 2" ]
+                                       elementAddress:1
+                                         elementClass:[UIView class]
+                                  frameInScreenBounds:frame
+                                   accessibilityLabel:accessibilityLabel
                               accessibilityIdentifier:nil
                                    elementDescription:@"Element Description"];
 }

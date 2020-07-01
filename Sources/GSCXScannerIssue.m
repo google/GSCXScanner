@@ -70,8 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
                  accessibilityLabel:(nullable NSString *)accessibilityLabel
             accessibilityIdentifier:(nullable NSString *)accessibilityIdentifier
                  elementDescription:(NSString *)elementDescription {
-  // @TODO Instead of passing in @c elementDescription, pass in an element and define a description
-  // method on it. Ditto above as well.
+  // @TODO Instead of passing in @c elementDescription, pass in an element and define a
+  // description method on it. Ditto above as well.
   return [[GSCXScannerIssue alloc] initWithCheckNames:gtxCheckNames
                                     checkDescriptions:gtxCheckDescriptions
                                        elementAddress:elementAddress
@@ -111,13 +111,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSString *)htmlDescription {
-  NSMutableArray *htmlSnippets  = [[NSMutableArray alloc] init];
+  NSMutableArray *htmlSnippets = [[NSMutableArray alloc] init];
   NSString *elementDesc = [NSString stringWithFormat:@"<h2>%@</h2>", self.elementDescription];
   [htmlSnippets addObject:elementDesc];
   [htmlSnippets addObject:@"<ul>"];
   for (NSUInteger i = 0; i < _gtxCheckNames.count; i++) {
-    [htmlSnippets addObject:[NSString stringWithFormat:@"<li><b>%@</b>: %@</li>",
-                                                       _gtxCheckNames[i],
+    [htmlSnippets addObject:[NSString stringWithFormat:@"<li><b>%@</b>: %@</li>", _gtxCheckNames[i],
                                                        _gtxCheckDescriptions[i]]];
   }
   [htmlSnippets addObject:@"</ul>"];

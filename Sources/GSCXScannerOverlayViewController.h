@@ -113,11 +113,14 @@ FOUNDATION_EXTERN const CGFloat kGSCXSettingsCornerRadius;
  * @param nibName The name of the xib file to load from (without the ".xib" extension).
  * @param bundle The bundle the xib file is located in, or nil if it's in the main bundle.
  * @param accessibilityEnabled YES if accessibility is enabled, NO otherwise.
+ * @param isMultiWindowPresentation @c YES if the scanner UI should allow multiple results windows
+ * to be presented, @c NO otherwise.
  * @return An initialized GSCXScannerOverlayViewController object.
  */
 - (instancetype)initWithNibName:(nullable NSString *)nibName
                          bundle:(nullable NSBundle *)bundle
-           accessibilityEnabled:(BOOL)accessibilityEnabled NS_DESIGNATED_INITIALIZER;
+           accessibilityEnabled:(BOOL)accessibilityEnabled
+      isMultiWindowPresentation:(BOOL)isMultiWindowPresentation NS_DESIGNATED_INITIALIZER;
 
 @end
 

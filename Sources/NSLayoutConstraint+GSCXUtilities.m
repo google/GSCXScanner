@@ -15,6 +15,7 @@
 //
 
 #import "NSLayoutConstraint+GSCXUtilities.h"
+#import "UIView+NSLayoutConstraint.h"
 #import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
@@ -111,6 +112,43 @@ NS_ASSUME_NONNULL_BEGIN
                                                         attribute:NSLayoutAttributeCenterY
                                                        multiplier:1.0
                                                          constant:0.0]];
+  }
+  if (activated) {
+    [NSLayoutConstraint activateConstraints:constraints];
+  }
+  return constraints;
+}
+
++ (NSArray<NSLayoutConstraint *> *)gscx_constrainAnchorsOfView:(UIView *)view
+                                         equalToSafeAreaOfView:(UIView *)safeAreaView
+                                                       leading:(BOOL)constrainLeading
+                                                      trailing:(BOOL)constrainTrailing
+                                                           top:(BOOL)constrainTop
+                                                        bottom:(BOOL)constrainBottom
+                                                      constant:(CGFloat)constant
+                                                     activated:(BOOL)activated {
+  GTX_ASSERT(constrainLeading || constrainTrailing || constrainTop || constrainBottom,
+             @"One of the anchors must be YES");
+  NSMutableArray<NSLayoutConstraint *> *constraints = [[NSMutableArray alloc] init];
+  const BOOL constraintFlags[4] = {constrainLeading, constrainTrailing, constrainTop,
+                                   constrainBottom};
+  const NSLayoutAttribute constraintAttributes[4] = {NSLayoutAttributeLeading,
+                                                     NSLayoutAttributeTrailing,
+                                                     NSLayoutAttributeTop, NSLayoutAttributeBottom};
+  // Because the order of items in constraintWithItem doesn't change, the leading and top constants
+  // must be negative and the trailing and bottom constants must be positive.
+  const CGFloat constantSigns[4] = {-1.0, 1.0, -1.0, 1.0};
+  for (NSInteger i = 0; i < 4; i++) {
+    if (constraintFlags[i]) {
+      [constraints
+          addObject:[NSLayoutConstraint constraintWithItem:safeAreaView.gscx_safeAreaLayoutGuide
+                                                 attribute:constraintAttributes[i]
+                                                 relatedBy:NSLayoutRelationEqual
+                                                    toItem:view
+                                                 attribute:constraintAttributes[i]
+                                                multiplier:1.0
+                                                  constant:constant * constantSigns[i]]];
+    }
   }
   if (activated) {
     [NSLayoutConstraint activateConstraints:constraints];

@@ -16,7 +16,7 @@
 
 #import "GSCXTestReportViewController.h"
 
-#import "GSCXTestAppDelegate.h"
+#import "GSCXTestCheckNames.h"
 
 @implementation GSCXTestReportViewController
 

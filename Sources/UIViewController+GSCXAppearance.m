@@ -19,32 +19,50 @@
 @implementation UIViewController (GSCXAppearance)
 
 - (UIColor *)gscx_textColorForCurrentAppearance {
-  // In light mode, the scanner's user interface is dark to provide contrast, and vice versa. So the
-  // text needs to be white in light mode and black in dark mode.
-  if (@available(iOS 12.0, *)) {
-    if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-      return [UIColor blackColor];
-    }
+#if defined(__IPHONE_13_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0)
+  if (@available(iOS 13.0, *)) {
+    // In iOS 13, the overlay's window overrideUserInterfaceStyle is set, which propagates to all
+    // child view controllers. The default colors can be used.
+    return [UIColor labelColor];
   }
+#endif
+  // In iOS 12 and before, dark mode doesn't exist. The APIs exist in iOS 12, but there is no way
+  // to set them. So the overlay should always use dark mode, because the application always uses
+  // light mode.
   return [UIColor whiteColor];
 }
 
 - (UIColor *)gscx_backgroundColorForCurrentAppearance {
-  if (@available(iOS 12.0, *)) {
-    if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-      return [UIColor whiteColor];
-    }
+#if defined(__IPHONE_13_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0)
+  if (@available(iOS 13.0, *)) {
+    return [UIColor systemBackgroundColor];
   }
+#endif
   return [UIColor blackColor];
 }
 
 - (UIBlurEffectStyle)gscx_blurEffectStyleForCurrentAppearance {
-  if (@available(iOS 12.0, *)) {
-    if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+#if defined(__IPHONE_13_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0)
+  if (@available(iOS 13.0, *)) {
+    // Only light mode existed before iOS 13. The API existed on iOS 12, but it is impossible to
+    // change it. Both the application and overlay windows would return UIUserInterfaceStyleLight.
+    if (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
       return UIBlurEffectStyleExtraLight;
     }
   }
-  // Only light mode existed before iOS 13. Dark is the high contrast style for light mode.
+#endif
   return UIBlurEffectStyleDark;
 }
+
+- (void)gscx_setOverrideUserInterfaceStyleForCurrentApperance {
+#if defined(__IPHONE_13_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0)
+  if (@available(iOS 13.0, *)) {
+    self.overrideUserInterfaceStyle =
+        (UIScreen.mainScreen.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+            ? UIUserInterfaceStyleLight
+            : UIUserInterfaceStyleDark;
+  }
+#endif
+}
+
 @end

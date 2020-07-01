@@ -53,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
   GTX_ASSERT(!self.isMonitoring, @"Cannot start monitoring while already monitoring.");
   GTX_ASSERT(onStateChanged, @"State changed callback must not be nil.");
   self.onStateChanged = onStateChanged;
+  self.state = GSCXActivityStateFree;
   __weak __typeof__(self) weakSelf = self;
   [[GSCXSwizzledMethodNotifier sharedInstance] addSendEventObserver:self
                                                           withBlock:^(UIEvent *_Nonnull event) {

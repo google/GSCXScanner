@@ -258,18 +258,28 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   XCTAssertEqual([self.scanResults[0] issueCount], 1);
 }
 
-- (void)testContinuousScannerPerformsScanWhenRestartingScanning {
+- (void)testContinuousScannerClearsAndPerformsScanWhenRestartingScanning {
   self.rootViewsToScan = @[ self.rootViewWithIssues ];
   [self.scanner startScanning];
+  XCTAssertEqual(self.scanResults.count, 0);
   [self.scheduler triggerScheduleScanEvent];
+  // A scan event occurred while the continuous scanner is scheduling. A scan should occur.
+  XCTAssertEqual(self.scanResults.count, 1);
+  XCTAssertEqual(self.scanner.issueCount, 1);
+  XCTAssertEqual([self.scanResults[0] issueCount], 1);
   [self.scanner stopScanning];
   [self.scheduler triggerScheduleScanEvent];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  XCTAssertEqual(self.scanResults.count, 2);
-  XCTAssertEqual(self.scanner.issueCount, 2);
+  // A scan event occurred while the continuous scanner is not scheduling. No scan should occur.
+  XCTAssertEqual(self.scanResults.count, 1);
+  XCTAssertEqual(self.scanner.issueCount, 1);
   XCTAssertEqual([self.scanResults[0] issueCount], 1);
-  XCTAssertEqual([self.scanResults[1] issueCount], 1);
+  [self.scanner startScanning];
+  // Starting scanning should clear out the previous scan results.
+  XCTAssertEqual(self.scanResults.count, 0);
+  [self.scheduler triggerScheduleScanEvent];
+  XCTAssertEqual(self.scanResults.count, 1);
+  XCTAssertEqual(self.scanner.issueCount, 1);
+  XCTAssertEqual([self.scanResults[0] issueCount], 1);
 }
 
 - (void)testContinuousScannerPerformsScanMultipleElementsWithMultipleIssues {
@@ -294,15 +304,6 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   XCTAssertEqual([self.scanResults[0] issueCount], 2);
   XCTAssertEqual([self.scanResults[1] issueCount], 0);
   XCTAssertEqual([self.scanResults[2] issueCount], 4);
-}
-
-- (void)testContinuousScannerUniqueIssuesEmpty {
-  self.rootViewsToScan = @[];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = @[];
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
 }
 
 - (void)testContinuousScannerUniqueIssuesOneResultEmpty {
@@ -386,6 +387,10 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
 }
 
 #pragma mark - GSCXContinuousScannerDelegate
+
+- (void)continuousScannerWillStart:(GSCXContinuousScanner *)scanner {
+  self.scanResults = @[];
+}
 
 - (void)continuousScanner:(GSCXContinuousScanner *)scanner
     didPerformScanWithResult:(GSCXScannerResult *)result {

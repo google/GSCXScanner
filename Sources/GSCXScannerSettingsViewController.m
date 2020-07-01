@@ -22,13 +22,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// TODO: Localize these strings and load them from an external resource instead of
+// hardcoding them.
+
 NSString *const kGSCXScannerSettingsTableAccessibilityIdentifier =
     @"kGSCXScannerSettingsTableAccessibilityIdentifier";
 
-NSString *const kGSCXSettingsContinuousScanSwitchText = @"Continuous Scanning";
+NSString *const kGSCXSettingsContinuousScanButtonText = @"Start Continuous Scanning";
 
-NSString *const kGSCXSettingsContinuousScanSwitchAccessibilityIdentifier =
-    @"kGSCXSettingsContinuousScanSwitchAccessibilityIdentifier";
+NSString *const kGSCXSettingsContinuousScanButtonAccessibilityIdentifier =
+    @"kGSCXSettingsContinuousScanButtonAccessibilityIdentifier";
 
 NSString *const kGSCXSettingsNoIssuesFoundText = @"Continuous Scan Report Empty.";
 
@@ -254,7 +257,21 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
   cell.textLabel.textColor = [self gscx_textColorForCurrentAppearance];
   [cell.button setTitleColor:[self gscx_textColorForCurrentAppearance]
                     forState:UIControlStateNormal];
+  cell.button.titleLabel.adjustsFontSizeToFitWidth = YES;
+  cell.button.titleLabel.adjustsFontForContentSizeCategory = YES;
   [self.settingsItems[(NSUInteger)indexPath.row] configureTableViewCell:cell];
+  NSMutableAttributedString *attributedTitle;
+  if (cell.button.titleLabel.attributedText != nil) {
+    attributedTitle = [[NSMutableAttributedString alloc]
+        initWithAttributedString:cell.button.titleLabel.attributedText];
+  } else {
+    attributedTitle =
+        [[NSMutableAttributedString alloc] initWithString:cell.button.titleLabel.text];
+  }
+  [attributedTitle addAttribute:NSForegroundColorAttributeName
+                          value:[self gscx_textColorForCurrentAppearance]
+                          range:NSMakeRange(0, attributedTitle.string.length)];
+  [cell.button setAttributedTitle:attributedTitle forState:UIControlStateNormal];
   [cell setNeedsUpdateConstraints];
   [cell removeGestureRecognizer:self.switchTapGestureRecognizer];
   if ([cell.accessoryView isKindOfClass:[UISwitch class]]) {

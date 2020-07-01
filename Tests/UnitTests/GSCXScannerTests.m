@@ -89,8 +89,8 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   GSCXScanner *scanner = [GSCXScanner scanner];
   [scanner registerCheck:self.dummyCheck];
   scanner.delegate = self;
-  __block BOOL scannerWillBeginScanWasCalled;
-  __block BOOL scannerDidFinishScanWithResultWasCalled;
+  __block BOOL scannerWillBeginScanWasCalled = NO;
+  __block BOOL scannerDidFinishScanWithResultWasCalled = NO;
   __weak GSCXScannerTests *weakSelf = self;
   self.scannerWillBeginScanBlock = ^(GSCXScanner *scanner) {
     // Shadow self with a local variable self because XCTAssert macros use self, which causes a

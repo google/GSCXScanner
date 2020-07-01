@@ -36,7 +36,15 @@ typedef void (^GSCXHTMLReportCompletionBlock)(WKWebView *webView);
 typedef void (^GSCXPDFReportCompletionBlock)(NSURL *reportUrl);
 
 /**
- * Class responsible for generating reports and showing UI for sharing it.
+ * Invoked when a @c GSCXReport instance fails to create a report.
+ *
+ * @param error The error that occurred.
+ */
+typedef void (^GSCXReportErrorBlock)(NSError *error);
+
+/**
+ * Class responsible for generating reports and showing UI for sharing it. Construct a @c GSCXReport
+ * instance to store the issues. Use the factory methods to begin asynchronously generating reports.
  */
 @interface GSCXReport : NSObject
 
@@ -54,18 +62,26 @@ typedef void (^GSCXPDFReportCompletionBlock)(NSURL *reportUrl);
 - (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results;
 
 /**
- * Creates an HTML report describing the issues found in all scans.
+ * Creates an HTML report describing the issues found in @c report.
  *
+ * @param report Contains the issues to generate a report from.
  * @param onComplete Invoked when the report has been created.
+ * @param onError Invoked when the report fails to be created. Optional.
  */
-- (void)createHTMLReportWithCompletionBlock:(GSCXHTMLReportCompletionBlock)onComplete;
++ (void)createHTMLReport:(GSCXReport *)report
+         completionBlock:(GSCXHTMLReportCompletionBlock)onComplete
+              errorBlock:(nullable GSCXReportErrorBlock)onError;
 
 /**
- * Creates a PDF report describing the issues found in all scans.
+ * Creates a PDF report describing the issues found in @c report.
  *
+ * @param report Contains the issues to generate a report from.
  * @param onComplete Invoked when the report has been created.
+ * @param onError Invoked when the report fails to be created. Optional.
  */
-- (void)createPDFReportWithCompletionBlock:(GSCXPDFReportCompletionBlock)onComplete;
++ (void)createPDFReport:(GSCXReport *)report
+        completionBlock:(GSCXPDFReportCompletionBlock)onComplete
+             errorBlock:(nullable GSCXReportErrorBlock)onError;
 
 @end
 

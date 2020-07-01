@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
  * value of this method.
  *
  * @param rootViews An array of views to check for accessibility issues. Checks the given views
- * and all subviews.
+ * and all subviews. Must not be empty.
  * @return A GSCXScannerResult object containing all the issues found in the scan.
  */
 - (GSCXScannerResult *)scanRootViews:(NSArray<UIView *> *)rootViews;

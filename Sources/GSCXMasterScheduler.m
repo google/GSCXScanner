@@ -85,6 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startSchedulingWithCallback:(GSCXContinuousScannerSchedulingBlock)callback {
   GTX_ASSERT(!self.isScheduling, @"Cannot start scheduling while already scheduling.");
   self.callback = callback;
+  self.activityState = GSCXActivityStateFree;
   [self.monitor startMonitoring];
   __weak __typeof__(self) weakSelf = self;
   for (id<GSCXContinuousScannerScheduling> scheduler in self.schedulers) {

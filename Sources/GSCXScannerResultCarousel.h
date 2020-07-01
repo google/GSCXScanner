@@ -16,6 +16,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "GSCXAdjustableAccessibilityElement.h"
 #import "GSCXScannerResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -40,6 +41,14 @@ typedef void (^GSCXScannerResultCarouselBlock)(NSUInteger index, GSCXScannerResu
 @property(strong, nonatomic) UICollectionView *carouselView;
 
 /**
+ * The accessibility information for @c carouselView. Exposes the correct semantics to all
+ * accessibility features. For example, Switch Control does not focus on @c carouselView when using
+ * it directly. It will focus on @c carouselAccessibilityElement, so that is used to perform
+ * interactions correctly.
+ */
+@property(strong, nonatomic) GSCXAdjustableAccessibilityElement *carouselAccessibilityElement;
+
+/**
  * Initializes a @c GSCXScannerResultCarousel with the given results to display and selection
  * callback.
  *
@@ -58,6 +67,20 @@ typedef void (^GSCXScannerResultCarouselBlock)(NSUInteger index, GSCXScannerResu
  * @param animated @c YES if the transition should be animated, @c NO otherwise.
  */
 - (void)focusResultAtIndex:(NSUInteger)index animated:(BOOL)animated;
+
+/**
+ * Lays out carousel elements that are not automatically set by AutoLayout. It is the responsibility
+ * of this object's owner to call @c layout in either @c layoutSubviews or @c viewDidLayoutSubviews.
+ */
+- (void)layoutSubviews;
+
+/**
+ * Returns the accessibility identifier for the cell at the given index.
+ *
+ * @param index The index of the cell.
+ * @return The accessibility identifier for the cell at @c index.
+ */
++ (NSString *)accessibilityIdentifierForCellAtIndex:(NSInteger)index;
 
 @end
 

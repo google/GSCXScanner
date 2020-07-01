@@ -14,10 +14,13 @@
 // limitations under the License.
 //
 
+#import "GSCXReport.h"
+
 #import <XCTest/XCTest.h>
 
-#import "GSCXReport.h"
 #import "GSCXReportContext.h"
+#import "GSCXScannerIssue.h"
+#import "GSCXScannerResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

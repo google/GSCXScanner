@@ -46,6 +46,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (UIBlurEffectStyle)gscx_blurEffectStyleForCurrentAppearance;
 
+/**
+ * Sets the value of @c overrideUserInterfaceStyle for overlay view controllers for the current
+ * appearance. Before iOS 13, apperance doesn't exist, so this is a no-op.
+ */
+- (void)gscx_setOverrideUserInterfaceStyleForCurrentApperance;
+
 @end
 
 NS_ASSUME_NONNULL_END

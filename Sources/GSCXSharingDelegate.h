@@ -21,19 +21,30 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * Invoked when a @c GSCXSharingDelegate instance finishes its share action.
+ */
+typedef void (^GSCXSharingDelegateCompletionBlock)(void);
+
+/**
  * Determines how a @c GSCXReport instance should be shared with an external service. This instance
  * is responsible for determining what "share" means.
  */
 @protocol GSCXSharingDelegate <NSObject>
 
 /**
- * Implements the share action for @c report.
+ * Implements the share action for @c report. @c shareReport should not be called again until the
+ * share action completes. Does nothing if a share action is currently in progress.
  *
  * @param report The report to be shared.
  * @param viewController The currently visible view controller. This instance can use
  * @c viewController to display results or share sheet.
+ * @param completionBlock Optional. Invoked when the share action has finished.
+ * @return @c YES if the share action successfully started, @c NO if the share action could not be
+ * started becasue another action was already in progress.
  */
-- (void)shareReport:(GSCXReport *)report inViewController:(UIViewController *__weak)viewController;
+- (BOOL)shareReport:(GSCXReport *)report
+    inViewController:(UIViewController *__weak)viewController
+          completion:(nullable GSCXSharingDelegateCompletionBlock)completionBlock;
 
 @end
 
