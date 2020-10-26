@@ -125,7 +125,7 @@ static const CGFloat kGSCXScannerScreenshotPadding = 0.0;
       [NSBundle bundleForClass:[GSCXScannerScreenshotViewController class]];
   UIImage *shareImage = [UIImage imageNamed:kGSCXShareIconImageName
                                    inBundle:shareImageBundle
-                          withConfiguration:nil];
+              compatibleWithTraitCollection:nil];
   UIBarButtonItem *shareButton =
       [[UIBarButtonItem alloc] initWithImage:shareImage
                                        style:UIBarButtonItemStylePlain
