@@ -4,19 +4,19 @@ Google Scanner for A11y abbreviated GSCX is a developer assistant, as an
 objective-C library it sits in an iOS app's process scanning it for issues to
 catch them before the developer even writes a test for them. The scanner comes
 built-in with checks for catching accessibility issues and supports an
-extensible plugin framework for adding your own checks.
+extensible plugin framework for adding your checks.
 
 ## Getting Started
 
-To install the scanner into your app create a copy of your app target and
+To install the scanner into your app create a copy of you app target and
 add `GSCXScanner` library as a dependency to it.
 
 Launch this new app target and your will notice a "Perform Scan" button overlaid
-on top of the app. Tap it and Scanner will scan you app and tell you if any
+on top of the app. Tap it and Scanner will scan your app and tell you if any
 issues are found.
 
-**WARNING** You must not add this dependency directly to you app target but
-only to a copy of it so as to ensure you never ship your app with accessibility
+**WARNING** You must not add this dependency directly to your app target but
+only to a copy of it so as to ensure you never ship your app with an accessibility
 scanner installed on it.
 
 One additional step needed will be to provide [`GTXiLib`](https://github.com/google/GTXiLib)
@@ -63,9 +63,9 @@ foo_root_dir/
 ### 3. Add `GSCXScanner.framework` to your App
 
 Add `GSCXScanner.xcodeproj` as a dependency for your app:
-Either open you app's Xcode project and drag and drop the `GSCXScanner` Xcode
+Either open your app's Xcode project and drag and drop the `GSCXScanner` Xcode
 project file into the project navigator or choose
-`File > Add Files` and select `GSCXScanner.xcodeproj`. Always choose
+`File > Add Files` and select `GSCXScanner.xcodeproj`. Always choose to
 `add folder references` to prevent Xcode from making a copy of the project.
 
 Under `Build Phases` of your app, add `GSCXScanner.framework` under both
@@ -81,7 +81,7 @@ bottom-left of the screen.
 ## Plugins
 
 Scanner is extendable, to customize scanner use `GSCXScannerLib` instead
-to the default scanner framework to avoid auto installing it on your app. and
+of the default scanner framework to avoid auto installing it on your app. and
 then customize it using the APIs in `GSCXInstaller` class.
 
 ## Discuss
