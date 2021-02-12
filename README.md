@@ -71,6 +71,13 @@ project file into the project navigator or choose
 Under `Build Phases` of your app, add `GSCXScanner.framework` under both
 `Target Dependencies` and `Link Binary With Libraries`.
 
+Note that `GSCXScanner` depends on `GTXiLib`, which depends on Protobuf. If
+you're manually adding `GSCXScanner.xcodeproj` to your project, follow the steps
+at [Protobuf-C++](https://github.com/protocolbuffers/protobuf/tree/master/src)
+to build and install the proto library. Don't forget to add the correct flags
+to your Xcode Project settings. If you're building with Cocoapods, this step
+is unnecessary. The `GTXiLib` CocoaPod includes `Protobuf-C++` for you.
+
 ### 4. Launch your app to scan its UI
 
 Launch your app and the GSCXScanner UI will appear overlaid on top of the app's
