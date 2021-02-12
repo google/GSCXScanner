@@ -20,18 +20,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-const CGFloat kGSCXRingViewDefaultInnerWidth = 2.0f;
-const CGFloat kGSCXRingViewDefaultOuterWidth = 4.0f;
+const CGFloat kGSCXRingViewDefaultWidth = 4.0f;
 
 @implementation GSCXRingView
 
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    _innerColor = [UIColor blackColor];
-    _outerColor = [UIColor yellowColor];
-    _innerWidth = kGSCXRingViewDefaultInnerWidth;
-    _outerWidth = kGSCXRingViewDefaultOuterWidth;
+    _ringColor = [GSCXRingView defaultColor];
+    _ringWidth = kGSCXRingViewDefaultWidth;
     self.backgroundColor = [UIColor clearColor];
     self.isAccessibilityElement = YES;
   }
@@ -39,44 +36,44 @@ const CGFloat kGSCXRingViewDefaultOuterWidth = 4.0f;
 }
 
 + (instancetype)ringViewAroundFocusRect:(CGRect)focusRect {
-  return [GSCXRingView ringViewAroundFocusRect:focusRect
-                                    innerWidth:kGSCXRingViewDefaultInnerWidth
-                                    outerWidth:kGSCXRingViewDefaultOuterWidth];
+  return [GSCXRingView ringViewAroundFocusRect:focusRect ringWidth:kGSCXRingViewDefaultWidth];
 }
 
-+ (instancetype)ringViewAroundFocusRect:(CGRect)focusRect
-                             innerWidth:(CGFloat)innerWidth
-                             outerWidth:(CGFloat)outerWidth {
-  NSParameterAssert(innerWidth < outerWidth);
-  CGFloat width = MAX(CGRectGetWidth(focusRect) + outerWidth, kGSCXMinimumTouchTargetSize);
-  CGFloat height = MAX(CGRectGetHeight(focusRect) + outerWidth, kGSCXMinimumTouchTargetSize);
++ (instancetype)ringViewAroundFocusRect:(CGRect)focusRect ringWidth:(CGFloat)ringWidth {
+  CGFloat width = MAX(CGRectGetWidth(focusRect) + ringWidth, kGSCXMinimumTouchTargetSize);
+  CGFloat height = MAX(CGRectGetHeight(focusRect) + ringWidth, kGSCXMinimumTouchTargetSize);
   CGRect ringFrame = CGRectMake(CGRectGetMidX(focusRect) - width / 2.0,
                                 CGRectGetMidY(focusRect) - height / 2.0, width, height);
   GSCXRingView *ringView = [[GSCXRingView alloc] initWithFrame:ringFrame];
-  [ringView setInnerWidth:innerWidth outerWidth:outerWidth];
+  ringView.ringWidth = ringWidth;
   return ringView;
 }
 
-- (void)setInnerWidth:(CGFloat)innerWidth outerWidth:(CGFloat)outerWidth {
-  NSParameterAssert(innerWidth < outerWidth);
-  _innerWidth = innerWidth;
-  _outerWidth = outerWidth;
+- (void)setRingWidth:(CGFloat)ringWidth {
+  _ringWidth = ringWidth;
+  [self setNeedsDisplay];
+}
+
+- (void)setRingColor:(UIColor *)ringColor {
+  _ringColor = ringColor;
+  [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect {
-  CGContextRef context = UIGraphicsGetCurrentContext();
-  CGFloat cornerRadius = self.outerWidth / 2.0f;
+  // Inset by half the ring width on each side, because stroking a path fills half of the line width
+  // on one side of the line and half on the other. Without the inset, the stroke would be halfway
+  // outside the bounds of the ring view and be clipped.
+  CGFloat cornerRadius = self.ringWidth / 2.0f;
   UIBezierPath *path =
       [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, cornerRadius, cornerRadius)
                                  cornerRadius:cornerRadius];
-
-  CGContextSetStrokeColorWithColor(context, [self.outerColor CGColor]);
-  path.lineWidth = self.outerWidth;
+  path.lineWidth = self.ringWidth;
+  [self.ringColor setStroke];
   [path stroke];
+}
 
-  CGContextSetStrokeColorWithColor(context, [self.innerColor CGColor]);
-  path.lineWidth = self.innerWidth;
-  [path stroke];
++ (UIColor *)defaultColor {
+  return [UIColor colorWithRed:239.0 / 255.0 green:109.0 / 255.0 blue:0.0 alpha:1.0];
 }
 
 @end

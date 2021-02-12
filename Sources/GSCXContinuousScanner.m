@@ -85,22 +85,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSUInteger)issueCount {
   NSUInteger count = 0;
-  for (GSCXScannerResult *result in self.scanResults) {
-    count += result.issueCount;
+  for (GTXHierarchyResultCollection *result in self.scanResults) {
+    count += [result checkResultCount];
   }
   return count;
-}
-
-- (NSArray<GSCXScannerIssue *> *)uniqueIssues {
-  NSMutableArray<GSCXScannerIssue *> *issues = [NSMutableArray array];
-  for (GSCXScannerResult *result in self.scanResults) {
-    [issues addObjectsFromArray:result.issues];
-  }
-  return [GSCXScannerIssue arrayByDedupingArray:issues];
-}
-
-- (NSArray<GSCXScannerResult *> *)uniqueScanResults {
-  return [GSCXScannerResult resultsArrayByDedupingResultsArray:self.scanResults];
 }
 
 #pragma mark - Private
@@ -112,7 +100,8 @@ NS_ASSUME_NONNULL_BEGIN
  * always returned.
  */
 - (BOOL)gscx_performScan {
-  GSCXScannerResult *result = [self.scanner scanRootViews:[self.delegate rootViewsToScan]];
+  GTXHierarchyResultCollection *result =
+      [self.scanner scanRootViews:[self.delegate rootViewsToScan]];
   _scanResults = [_scanResults arrayByAddingObject:result];
   if ([self.delegate respondsToSelector:@selector(continuousScanner:didPerformScanWithResult:)]) {
     [self.delegate continuousScanner:self didPerformScanWithResult:result];

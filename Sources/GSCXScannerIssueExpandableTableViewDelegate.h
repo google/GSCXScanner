@@ -16,9 +16,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GSCXScannerIssue.h"
 #import "GSCXScannerIssueTableViewSection.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -35,11 +34,11 @@ FOUNDATION_EXTERN NSString *const kGSCXScannerIssueExpandableTableViewHeaderReus
  * Invoked when the user taps a row in a table view managed by a
  * @c GSCXScannerIssueExpandableTableViewDelegate instance.
  *
- * @param result The result containing the issue associated with the tapped row.
- * @param issueIndex The index of the issue in @c result associated with the tapped row.
+ * @param result The result containing the element associated with the tapped row.
+ * @param issueIndex The index of the element in @c result associated with the tapped row.
  */
-typedef void (^GSCXScannerIssueExpandableTableViewDelegateSelectionBlock)(GSCXScannerResult *result,
-                                                                          NSInteger issueIndex);
+typedef void (^GSCXScannerIssueExpandableTableViewDelegateSelectionBlock)(
+    GTXHierarchyResultCollection *result, NSInteger issueIndex);
 
 /**
  * Displays a list of sections, each containing rows representing one or more accessibility issues.

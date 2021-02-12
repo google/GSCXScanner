@@ -181,7 +181,7 @@ static NSString *const kGSCXScannerIssueExpandableTableViewDelegateIncorrectHead
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   GSCXScannerIssueTableViewRow *row = self.sections[indexPath.section].rows[indexPath.row];
-  self.selectionBlock(row.originalResult, row.originalIssueIndex);
+  self.selectionBlock(row.originalResult, row.originalElementIndex);
 }
 
 - (void)tableView:(UITableView *)tableView

@@ -16,8 +16,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -46,12 +45,12 @@ FOUNDATION_EXTERN const CGFloat kGSCXContinuousScannerGalleryZoomScale;
  *
  * @param nibName The name of the xib file to load from (without the ".xib" extension).
  * @param bundle The bundle the xib file is located in, or nil if it's in the main bundle.
- * @param result The @c GSCXScannerResult object to display.
+ * @param result The @c GTXHierarchyResultCollection object to display.
  * @return An initialized @c GSCXContinuousScannerGalleryViewController object.
  */
 - (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
                          bundle:(nullable NSBundle *)nibBundleOrNil
-                         result:(GSCXScannerResult *)result;
+                         result:(GTXHierarchyResultCollection *)result;
 
 /**
  * Focuses the screenshot and detail views on the accessibility issue at the given index. If this

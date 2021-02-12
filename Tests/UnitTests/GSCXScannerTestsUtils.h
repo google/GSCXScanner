@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GSCXScannerIssue.h"
+#import "GSCXScannerIssueTableViewRow.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,16 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GSCXScannerTestsUtils : NSObject
 
 /**
- * Determines if each issue in @c firstArray equals an element in @c secondArray. Does not
- * require the elements be in the same order. Issues must satisfy @c hasEqualElementAsIssue: and
- * have the same GTX checks and descriptions.
- *
- * @param firstArray An array of issues to compare.
- * @param secondArray An array of issues to compare.
- * @return @c YES if the issues in both arrays are equal, @c NO otherwise.
+ * @return A new row with all valid properties and suggestions. Represents a UI element with a
+ * single check result.
  */
-+ (BOOL)issues:(NSArray<GSCXScannerIssue *> *)firstArray
-    equalIssuesUnordered:(NSArray<GSCXScannerIssue *> *)secondArray;
++ (GSCXScannerIssueTableViewRow *)newRow;
 
 @end
 

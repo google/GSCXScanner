@@ -19,8 +19,6 @@
 #import <XCTest/XCTest.h>
 
 #import "GSCXReportContext.h"
-#import "GSCXScannerIssue.h"
-#import "GSCXScannerResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

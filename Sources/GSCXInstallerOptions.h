@@ -35,10 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonatomic) NSArray<id<GTXChecking>> *checks;
 
 /**
- * An array of blacklists the scanner uses to skip accessibility elements. Defaults to an empty
+ * An array of excludeLists the scanner uses to skip accessibility elements. Defaults to an empty
  * array.
  */
-@property(strong, nonatomic) NSArray<id<GTXBlacklisting>> *blacklists;
+@property(strong, nonatomic) NSArray<id<GTXExcludeListing>> *excludeLists;
 
 /**
  * The delegate of the @c GSCXScanner. Optional. Defaults to @c nil.

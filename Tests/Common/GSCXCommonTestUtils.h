@@ -1,5 +1,5 @@
 //
-// Copyright 2018 Google Inc.
+// Copyright 2020 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,16 +14,19 @@
 // limitations under the License.
 //
 
-#import "GSCXHitForwardingWindow.h"
+#import <Foundation/Foundation.h>
 
-@implementation GSCXHitForwardingWindow : UIWindow
+#import <GTXiLib/GTXiLib.h>
+NS_ASSUME_NONNULL_BEGIN
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-  UIView *hitView = [super hitTest:point withEvent:event];
-  if (hitView == self) {
-    return nil;
-  }
-  return hitView;
-}
+@interface GSCXCommonTestUtils : NSObject
+
+/**
+ * @return A new @c GTXHierarchyResultCollection instance with valid but dummy values for all
+ * properties. Contains 1 element result containing 1 check result.
+ */
++ (GTXHierarchyResultCollection *)newHierarchyResultCollection;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -67,7 +67,7 @@ static const NSTimeInterval kGSCXContinuousScannerInterval = 2.0;
            accessibilityEnabled:setupSuccessful || UIAccessibilityIsVoiceOverRunning()
       isMultiWindowPresentation:options.isMultiWindowPresentation];
   viewController.scanner = [GSCXScanner scannerWithChecks:options.checks
-                                               blacklists:options.blacklists];
+                                             excludeLists:options.excludeLists];
   viewController.scanner.delegate = options.scannerDelegate;
 
   GSCXContinuousScanner *continuousScanner =

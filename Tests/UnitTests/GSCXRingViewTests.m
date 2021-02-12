@@ -76,43 +76,8 @@ static const CGFloat kRingViewTestsComparisonAccuracy = 0.00001;
 
 - (void)testRingViewAroundFrameWithCustomValuesCreatesCorrectFrame {
   GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 20.0, 30.0)
-                                                      innerWidth:8.0
-                                                      outerWidth:16.0];
+                                                       ringWidth:16.0];
   [self gscxtest_assertRect:ringView.frame equalsRect:CGRectMake(-2.0, 4.0, 44.0, 46.0)];
-}
-
-- (void)testRingViewAroundFrameInnerWidthGreaterThanOuterWidthFailsAssertion {
-  XCTAssertThrows([GSCXRingView ringViewAroundFocusRect:CGRectMake(10.0, 12.0, 20.0, 30.0)
-                                             innerWidth:16.0
-                                             outerWidth:8.0]);
-}
-
-- (void)testSetInnerWidthOuterWidthSucceedsInnerWidthIsSmallerThanOuterWidth {
-  GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:CGRectZero];
-  [ringView setInnerWidth:1.0 outerWidth:8.0];
-  XCTAssertEqualWithAccuracy(ringView.innerWidth, 1.0, kRingViewTestsComparisonAccuracy);
-  XCTAssertEqualWithAccuracy(ringView.outerWidth, 8.0, kRingViewTestsComparisonAccuracy);
-}
-
-- (void)testSetInnerWidthOuterWidthSucceedsInnerWidthIsLargerThanOldOuterWidth {
-  GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:CGRectZero];
-  [ringView setInnerWidth:1.0 outerWidth:8.0];
-  [ringView setInnerWidth:16.0 outerWidth:32.0];
-  XCTAssertEqualWithAccuracy(ringView.innerWidth, 16.0, kRingViewTestsComparisonAccuracy);
-  XCTAssertEqualWithAccuracy(ringView.outerWidth, 32.0, kRingViewTestsComparisonAccuracy);
-}
-
-- (void)testSetInnerWidthOuterWidthSucceedsOuterWidthIsSmallerThanOldInnerWidth {
-  GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:CGRectZero];
-  [ringView setInnerWidth:1.0 outerWidth:8.0];
-  [ringView setInnerWidth:0.25 outerWidth:0.5];
-  XCTAssertEqualWithAccuracy(ringView.innerWidth, 0.25, kRingViewTestsComparisonAccuracy);
-  XCTAssertEqualWithAccuracy(ringView.outerWidth, 0.5, kRingViewTestsComparisonAccuracy);
-}
-
-- (void)testSetInnerWidthOuterWidthFailsOuterWidthIsSmallerThanInnerWidth {
-  GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:CGRectZero];
-  XCTAssertThrows([ringView setInnerWidth:8.0 outerWidth:4.0]);
 }
 
 #pragma mark - Private

@@ -1,5 +1,5 @@
 //
-// Copyright 2018 Google Inc.
+// Copyright 2020 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,38 +14,45 @@
 // limitations under the License.
 //
 
-#import "GSCXScannerTestCase.h"
-
-#import <XCTest/XCTest.h>
+#import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/ContinuousScannerTests/GSCXContinuousScannerTestCase.h"
 
 #import "third_party/objective_c/EarlGreyV2/TestLib/EarlGreyImpl/EarlGrey.h"
 #import "GSCXTestEnvironmentVariables.h"
 #import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/Utils/GSCXScannerTestUtils.h"
 
-@implementation GSCXScannerTestCase {
-  XCUIApplication *_application;
-}
+@interface GSCXContinuousScannerTestCase ()
+
+/**
+ * The application driving the tests.
+ */
+@property(strong, nonatomic) XCUIApplication *application;
+
+@end
+
+@implementation GSCXContinuousScannerTestCase
 
 - (void)setUp {
   [super setUp];
 
-  // Do not block on network requests so GTXiLib Google Analytics calls do not cause timeouts.
   [[GREYConfiguration sharedConfiguration] setValue:@[ kGSCXDoNotBlockNetworkRegex ]
                                        forConfigKey:kGREYConfigKeyBlockedURLRegex];
-
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    _application = [[XCUIApplication alloc] init];
-    _application.launchEnvironment = @{kEnvUseTestSharingDelegateKey : @"YES"};
-    [_application launch];
-  });
+  // Launch a new application for each test case because the continuous scanner has global state.
+  // Scans from previous test cases would propagate to later test cases unless a new application is
+  // launched for each test case.
+  self.application = [[XCUIApplication alloc] init];
+  self.application.launchEnvironment = @{kEnvUseTestSharingDelegateKey : @"YES"};
+  [self.application launch];
 }
 
-// Cleans up after each test case is run. Navigates to the original app screen so other test cases
-// start from a valid state.
 - (void)tearDown {
-  [GSCXScannerTestUtils navigateToRootPage];
+  if ([self shouldTerminateOnTeardown]) {
+    [self.application terminate];
+  }
   [super tearDown];
+}
+
+- (BOOL)shouldTerminateOnTeardown {
+  return NO;
 }
 
 @end

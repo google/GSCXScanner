@@ -17,8 +17,7 @@
 #import <UIKit/UIKit.h>
 
 #import "GSCXRingView.h"
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -30,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The result of a scan.
  */
-@property(strong, nonatomic, readonly) GSCXScannerResult *result;
+@property(strong, nonatomic, readonly) GTXHierarchyResultCollection *result;
 
 /**
  * An array of @c GSCXRingView instances highlighting elements corresponding to the issues in @c
@@ -46,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param result A scan result containing issues to highlight.
  * @return An intialized instance of @c GSCXRingViewArranger.
  */
-- (instancetype)initWithResult:(GSCXScannerResult *)result;
+- (instancetype)initWithResult:(GTXHierarchyResultCollection *)result;
 
 /**
  * Initializes the ring views and adds them as subviews of @c superview.
@@ -73,10 +72,10 @@ NS_ASSUME_NONNULL_BEGIN
  * Returns a new result containing only issues found at @c point from the new coordinate space.
  *
  * @param point The point at which to find issues in the new coordinate space.
- * @return A @c GSCXScannerResult instance only containing issues underneath @c point when
- * transformed to the new coordinate space.
+ * @return A @c GTXHierarchyResultCollection instance only containing issues underneath @c point
+ * when transformed to the new coordinate space.
  */
-- (GSCXScannerResult *)resultWithIssuesAtPoint:(CGPoint)point;
+- (GTXHierarchyResultCollection *)resultWithIssuesAtPoint:(CGPoint)point;
 
 /**
  * Creates an image by capturing a view hierarchy after highlighting views

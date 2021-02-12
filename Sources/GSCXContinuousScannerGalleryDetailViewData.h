@@ -19,8 +19,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * Encapsulates information on a @c GSCXScannerIssue instance. This object's owner is responsible
- * for constraining @c containerView and @c stackView to the desired sizes.
+ * Encapsulates information on a @c GTXElementResultCollection instance. This object's owner is
+ * responsible for constraining @c containerView and @c stackView to the desired sizes.
  */
 @interface GSCXContinuousScannerGalleryDetailViewData : NSObject
 
@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Adds @c title and @c contents to the bottom of @c stackView.
  */
-- (void)addIssueWithTitle:(NSString *)title contents:(NSString *)contents;
+- (void)addCheckWithTitle:(NSString *)title contents:(NSString *)contents;
 
 /**
  * Updates the content size of @c containerView based on @c stackView. The owner is responsible for

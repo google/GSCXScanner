@@ -17,9 +17,8 @@
 #import <UIKit/UIKit.h>
 
 #import "GSCXRingView.h"
-#import "GSCXScannerResult.h"
 #import "GSCXSharingDelegate.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -34,12 +33,6 @@ FOUNDATION_EXTERN NSString *const kGSCXShareReportButtonAccessibilityIdentifier;
  * considered opaque.
  */
 @interface GSCXScannerScreenshotViewController : UIViewController
-
-/**
- * The result of scanning a view hierarchy. It is the responsibility of the owner of this view
- * controller to set this property before viewDidLoad is called.
- */
-@property(strong, nonatomic) GSCXScannerResult *scanResult;
 
 - (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
                          bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
@@ -56,7 +49,7 @@ FOUNDATION_EXTERN NSString *const kGSCXShareReportButtonAccessibilityIdentifier;
  */
 - (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
                          bundle:(nullable NSBundle *)nibBundleOrNil
-                     scanResult:(GSCXScannerResult *)scanResult
+                     scanResult:(GTXHierarchyResultCollection *)scanResult
                 sharingDelegate:(id<GSCXSharingDelegate>)sharingDelegate;
 
 @end

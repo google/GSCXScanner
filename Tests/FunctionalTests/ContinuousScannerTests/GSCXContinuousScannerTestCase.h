@@ -1,5 +1,5 @@
 //
-// Copyright 2018 Google Inc.
+// Copyright 2020 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,21 @@
 // limitations under the License.
 //
 
-#import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+/*
+ * Encapsulates shared behavior for continuous scanner test cases.
+ */
+@interface GSCXContinuousScannerTestCase : XCTestCase
 
 /**
- *  A window that forwards touch events to UI elements that lie behind this window. Touch events on
- *  intractable subviews of this window are handled normally. They are not forwarded.
+ * @return @c YES if the application should be terminated in tearDown, @c NO otherwise. Defaults to
+ * @c NO.
  */
-@interface GSCXHitForwardingWindow : UIWindow
+- (BOOL)shouldTerminateOnTeardown;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -22,7 +22,6 @@
 #import "GSCXReport.h"
 #import "GSCXRingView.h"
 #import "GSCXRingViewArranger.h"
-#import "GSCXScannerResultTableViewController.h"
 #import "NSLayoutConstraint+GSCXUtilities.h"
 #import "UIViewController+GSCXAppearance.h"
 
@@ -35,6 +34,11 @@ NSString *const kGSCXShareReportButtonAccessibilityIdentifier =
 static const CGFloat kGSCXScannerScreenshotPadding = 0.0;
 
 @interface GSCXScannerScreenshotViewController ()
+
+/**
+ * The result of scanning a view hierarchy.
+ */
+@property(strong, nonatomic) GTXHierarchyResultCollection *scanResult;
 
 /**
  * A view that adds black bars to the side of the screenshot. The controller's view cannot be made
@@ -88,24 +92,13 @@ static const CGFloat kGSCXScannerScreenshotPadding = 0.0;
  */
 - (void)gscx_addRingsToScreenshot:(UIView *)screenshot;
 
-/**
- * Returns a GSCXScannerResult instance with only the issues at the given point, after converting
- * it to the correct coordinate system. @c point should be in @c scanResult.screenshot's
- * coordinates.
- *
- * @param point The point UI elements must contain for their issues to be included in the result.
- * @return A GSCXScannerResult object containing only issues whose frames contain the given point
- * when converted to screen coordinates.
- */
-- (GSCXScannerResult *)gscx_resultWithIssuesAtPoint:(CGPoint)point;
-
 @end
 
 @implementation GSCXScannerScreenshotViewController
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil
                          bundle:(NSBundle *)nibBundleOrNil
-                     scanResult:(GSCXScannerResult *)scanResult
+                     scanResult:(GTXHierarchyResultCollection *)scanResult
                 sharingDelegate:(id<GSCXSharingDelegate>)sharingDelegate {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self) {
@@ -217,13 +210,13 @@ static const CGFloat kGSCXScannerScreenshotPadding = 0.0;
 
 - (void)gscx_addRingsToScreenshot:(UIView *)screenshot {
   [self.ringViewArranger removeRingViewsFromSuperview];
-  [self.ringViewArranger addRingViewsToSuperview:screenshot
-                                 fromCoordinates:self.scanResult.originalScreenshotFrame];
+  CGRect originalCoordinates = CGRectMake(0, 0, self.scanResult.screenshot.size.width,
+                                          self.scanResult.screenshot.size.height);
+  [self.ringViewArranger addRingViewsToSuperview:screenshot fromCoordinates:originalCoordinates];
   [self.ringViewArranger addAccessibilityAttributesToRingViews];
-}
-
-- (GSCXScannerResult *)gscx_resultWithIssuesAtPoint:(CGPoint)point {
-  return [self.ringViewArranger resultWithIssuesAtPoint:point];
+  for (GSCXRingView *ringView in self.ringViewArranger.ringViews) {
+    ringView.accessibilityTraits |= UIAccessibilityTraitButton;
+  }
 }
 
 @end

@@ -27,6 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, readonly) id gscx_safeAreaLayoutGuide;
 
+/**
+ * Returns the safe area insets. On pre-iOS 11, before the safe area existed, returns
+ * UIEdgeInsetsZero. TODO: Remove when iOS 10 support is dropped.
+ */
+@property(nonatomic, readonly) UIEdgeInsets gscx_safeAreaInsets;
+
 @end
 
 NS_ASSUME_NONNULL_END

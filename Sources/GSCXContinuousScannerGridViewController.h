@@ -16,9 +16,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GSCXScannerResult.h"
 #import "GSCXScannerResultCarousel.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -35,8 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @param selectionBlock Invoked when the user selects a scan result in the grid.
  * @return An initialized @c GSCXContinuousScannerGridViewController instance.
  */
-- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results
-                 selectionBlock:(GSCXScannerResultCarouselBlock)selectionBlock;
+- (instancetype)initWithResults:(NSArray<GTXHierarchyResultCollection *> *)results
+                 selectionBlock:(GSCXCarouselBlock)selectionBlock;
 
 /**
  * Returns the accessibility identifier for the grid cell at @c index.

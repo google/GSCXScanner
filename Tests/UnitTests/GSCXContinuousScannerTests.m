@@ -65,22 +65,6 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
 @property(strong, nonatomic) NSArray<UIView *> *rootViewsToScan;
 
 /**
- * An array of issues found in the view hierarchy with root @c rootViewWithIssues.
- */
-@property(strong, nonatomic) NSArray<GSCXScannerIssue *> *issuesWithRootView;
-
-/**
- * An array of issues found in the view hierarchy with root @c alternateRootViewWithIssues.
- */
-@property(strong, nonatomic) NSArray<GSCXScannerIssue *> *issuesWithAlternateRootView;
-
-/**
- * An array of issues found in the view hierarchies with roots @c rootViewWithIssues and
- * @c alternateRootViewWithIssues.
- */
-@property(strong, nonatomic) NSArray<GSCXScannerIssue *> *issuesWithRootViewAndAlternateRootView;
-
-/**
  * The underlying scanner used to scan views for accessiblity issues. The only registered check is a
  * @c GSCXTestCheck instance.
  */
@@ -96,7 +80,7 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
  * An array of scan results. When constructing a continuous scanner object, set this test case as
  * the delegate. When scans are performed, the results are appended to this list.
  */
-@property(strong, nonatomic) NSArray<GSCXScannerResult *> *scanResults;
+@property(strong, nonatomic) NSArray<GTXHierarchyResultCollection *> *scanResults;
 
 /**
  * The continuous scanner object under test.
@@ -141,49 +125,9 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   self.rootViewsToScan = @[];
 }
 
-- (void)setUpIssues {
-  // GTX adds additional information to the description after running checks. This happens
-  // internally, so there is no way to access this change. Thus, we have to duplicate it here and
-  // hardcode the extra text. This makes the tests brittle. Changes in GTX could break these tests.
-  NSString *testDescription = [NSString
-      stringWithFormat:@"Check \"%@\" failed, %@", kGSCXTestCheckName, kGSCXTestCheckDescription];
-  self.issuesWithRootView = @[ [GSCXScannerIssue
-          issueWithCheckNames:@[ kGSCXTestCheckName ]
-            checkDescriptions:@[ testDescription ]
-               elementAddress:0
-                 elementClass:[UIView class]
-          frameInScreenBounds:CGRectZero
-           accessibilityLabel:nil
-      accessibilityIdentifier:kGSCXContinuousScannerTestAccessibilityIdentifier1] ];
-  self.issuesWithAlternateRootView = @[ [GSCXScannerIssue
-          issueWithCheckNames:@[ kGSCXTestCheckName ]
-            checkDescriptions:@[ testDescription ]
-               elementAddress:0
-                 elementClass:[UIView class]
-          frameInScreenBounds:CGRectZero
-           accessibilityLabel:nil
-      accessibilityIdentifier:kGSCXContinuousScannerTestAccessibilityIdentifier2] ];
-  self.issuesWithRootViewAndAlternateRootView = @[
-    [GSCXScannerIssue issueWithCheckNames:@[ kGSCXTestCheckName ]
-                        checkDescriptions:@[ testDescription ]
-                           elementAddress:0
-                             elementClass:[UIView class]
-                      frameInScreenBounds:CGRectZero
-                       accessibilityLabel:nil
-                  accessibilityIdentifier:kGSCXContinuousScannerTestAccessibilityIdentifier1],
-    [GSCXScannerIssue issueWithCheckNames:@[ kGSCXTestCheckName ]
-                        checkDescriptions:@[ testDescription ]
-                           elementAddress:0
-                             elementClass:[UIView class]
-                      frameInScreenBounds:CGRectZero
-                       accessibilityLabel:nil
-                  accessibilityIdentifier:kGSCXContinuousScannerTestAccessibilityIdentifier2]
-  ];
-}
-
 - (void)setUpScanner {
   id<GTXChecking> dummyCheck = [GSCXTestCheck testCheck];
-  self.manualScanner = [GSCXScanner scannerWithChecks:@[ dummyCheck ] blacklists:@[]];
+  self.manualScanner = [GSCXScanner scannerWithChecks:@[ dummyCheck ] excludeLists:@[]];
   self.scheduler = [[GSCXManualScheduler alloc] init];
   self.scanResults = @[];
   self.scanner = [GSCXContinuousScanner scannerWithScanner:self.manualScanner
@@ -195,7 +139,6 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [super setUp];
 
   [self setUpRootViews];
-  [self setUpIssues];
   [self setUpScanner];
 }
 
@@ -206,8 +149,8 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scanner startScanning];
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 1);
-  XCTAssertEqual([self.scanResults[0] issueCount], 1);
+  XCTAssertEqual([self.scanner issueCount], 1);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 1);
 }
 
 - (void)testContinuousScannerPerformsScanWhenScanningMultipleRootViews {
@@ -215,8 +158,8 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scanner startScanning];
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 2);
-  XCTAssertEqual([self.scanResults[0] issueCount], 2);
+  XCTAssertEqual([self.scanner issueCount], 2);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 2);
 }
 
 - (void)testContinuousScannerPerformsScanWhenScanningNoIssues {
@@ -224,8 +167,8 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scanner startScanning];
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 0);
-  XCTAssertEqual([self.scanResults[0] issueCount], 0);
+  XCTAssertEqual([self.scanner issueCount], 0);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 0);
 }
 
 - (void)testContinuousScannerPerformsScanWhenScanningOneWithIssuesOneWithoutIssues {
@@ -234,7 +177,7 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 1);
   XCTAssertEqual(self.scanner.issueCount, 1);
-  XCTAssertEqual([self.scanResults[0] issueCount], 1);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 1);
 }
 
 - (void)testContinuousScannerPerformsScanWhenScanningManyWithIssuesOneWithoutIssues {
@@ -243,8 +186,8 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scanner startScanning];
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 2);
-  XCTAssertEqual([self.scanResults[0] issueCount], 2);
+  XCTAssertEqual([self.scanner issueCount], 2);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 2);
 }
 
 - (void)testContinuousScannerPerformsScanWhenScanningNotWhenStoppedScanning {
@@ -254,8 +197,8 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scanner stopScanning];
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 1);
-  XCTAssertEqual([self.scanResults[0] issueCount], 1);
+  XCTAssertEqual([self.scanner issueCount], 1);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 1);
 }
 
 - (void)testContinuousScannerClearsAndPerformsScanWhenRestartingScanning {
@@ -265,27 +208,28 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scheduler triggerScheduleScanEvent];
   // A scan event occurred while the continuous scanner is scheduling. A scan should occur.
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 1);
-  XCTAssertEqual([self.scanResults[0] issueCount], 1);
+  XCTAssertEqual([self.scanner issueCount], 1);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 1);
   [self.scanner stopScanning];
   [self.scheduler triggerScheduleScanEvent];
   // A scan event occurred while the continuous scanner is not scheduling. No scan should occur.
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 1);
-  XCTAssertEqual([self.scanResults[0] issueCount], 1);
+  XCTAssertEqual([self.scanner issueCount], 1);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 1);
   [self.scanner startScanning];
   // Starting scanning should clear out the previous scan results.
   XCTAssertEqual(self.scanResults.count, 0);
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 1);
-  XCTAssertEqual(self.scanner.issueCount, 1);
-  XCTAssertEqual([self.scanResults[0] issueCount], 1);
+  XCTAssertEqual([self.scanner issueCount], 1);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 1);
 }
 
 - (void)testContinuousScannerPerformsScanMultipleElementsWithMultipleIssues {
   id<GTXChecking> dummyCheck1 = [GSCXTestCheck testCheck];
   id<GTXChecking> dummyCheck2 = [GSCXTestCheck duplicateTestCheck];
-  self.manualScanner = [GSCXScanner scannerWithChecks:@[ dummyCheck1, dummyCheck2 ] blacklists:@[]];
+  self.manualScanner = [GSCXScanner scannerWithChecks:@[ dummyCheck1, dummyCheck2 ]
+                                         excludeLists:@[]];
   self.scheduler = [[GSCXManualScheduler alloc] init];
   self.scanResults = @[];
   self.scanner = [GSCXContinuousScanner scannerWithScanner:self.manualScanner
@@ -301,89 +245,9 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
   [self.scheduler triggerScheduleScanEvent];
   XCTAssertEqual(self.scanResults.count, 3);
   XCTAssertEqual(self.scanner.issueCount, 6);
-  XCTAssertEqual([self.scanResults[0] issueCount], 2);
-  XCTAssertEqual([self.scanResults[1] issueCount], 0);
-  XCTAssertEqual([self.scanResults[2] issueCount], 4);
-}
-
-- (void)testContinuousScannerUniqueIssuesOneResultEmpty {
-  self.rootViewsToScan = @[ self.rootViewWithoutIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = @[];
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
-}
-
-- (void)testContinuousScannerUniqueIssuesManyResultsEmpty {
-  self.rootViewsToScan = @[ self.rootViewWithoutIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = @[];
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
-}
-
-- (void)testContinuousScannerUniqueIssuesOneResultOneIssue {
-  self.rootViewsToScan = @[ self.rootViewWithIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = self.issuesWithRootView;
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
-}
-
-- (void)testContinuousScannerUniqueIssuesOneResultMultipleIssues {
-  self.rootViewsToScan =
-      @[ self.rootViewWithIssues, self.rootViewWithoutIssues, self.alternateRootViewWithIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = self.issuesWithRootViewAndAlternateRootView;
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
-}
-
-- (void)testContinuousScannerUniqueIssuesMultipleResultsOneIssuePerResultSame {
-  self.rootViewsToScan = @[ self.rootViewWithIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = self.issuesWithRootView;
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
-}
-
-- (void)testContinuousScannerUniqueIssuesMultipleResultsOneIssuePerResultDifferent {
-  self.rootViewsToScan = @[ self.rootViewWithIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  self.rootViewsToScan = @[ self.alternateRootViewWithIssues ];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = self.issuesWithRootViewAndAlternateRootView;
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
-}
-
-- (void)testContinuousScannerUniqueIssuesMultipleResultsMultipleIssuePerResultSame {
-  self.rootViewsToScan = @[ self.rootViewWithIssues, self.alternateRootViewWithIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = self.issuesWithRootViewAndAlternateRootView;
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
-}
-
-- (void)testContinuousScannerUniqueIssuesMultipleResultsMultipleIssuesPerResultDifferent {
-  self.rootViewsToScan = @[ self.rootViewWithIssues, self.rootViewWithIssues ];
-  [self.scanner startScanning];
-  [self.scheduler triggerScheduleScanEvent];
-  self.rootViewsToScan = @[ self.alternateRootViewWithIssues, self.alternateRootViewWithIssues ];
-  [self.scheduler triggerScheduleScanEvent];
-  NSArray<GSCXScannerIssue *> *result = [self.scanner uniqueIssues];
-  NSArray<GSCXScannerIssue *> *expected = self.issuesWithRootViewAndAlternateRootView;
-  XCTAssert([GSCXScannerTestsUtils issues:result equalIssuesUnordered:expected]);
+  XCTAssertEqual([self.scanResults[0] checkResultCount], 2);
+  XCTAssertEqual([self.scanResults[1] checkResultCount], 0);
+  XCTAssertEqual([self.scanResults[2] checkResultCount], 4);
 }
 
 #pragma mark - GSCXContinuousScannerDelegate
@@ -393,7 +257,7 @@ static NSString *const kGSCXContinuousScannerTestAccessibilityIdentifier2 =
 }
 
 - (void)continuousScanner:(GSCXContinuousScanner *)scanner
-    didPerformScanWithResult:(GSCXScannerResult *)result {
+    didPerformScanWithResult:(GTXHierarchyResultCollection *)result {
   self.scanResults = [self.scanResults arrayByAddingObject:result];
 }
 

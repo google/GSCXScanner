@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import "GSCXScannerResultCarousel.h"
+#import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/ContinuousScannerTests/GSCXContinuousScannerTestCase.h"
 
 #import <XCTest/XCTest.h>
 
@@ -40,24 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GSCXContinuousScannerScreenshotViewControllerTests : XCTestCase
-
-/**
- * Runs the test harness app.
- */
-@property(strong, nonatomic) XCUIApplication *application;
-
+@interface GSCXContinuousScannerScreenshotViewControllerTests : GSCXContinuousScannerTestCase
 @end
 
 @implementation GSCXContinuousScannerScreenshotViewControllerTests
-
-- (void)setUp {
-  [super setUp];
-
-  self.application = [[XCUIApplication alloc] init];
-  self.application.launchEnvironment = @{kEnvUseTestSharingDelegateKey : @"YES"};
-  [self.application launch];
-}
 
 - (void)testScreenshotViewPresentsScanResults {
   [GSCXScannerTestUtils openPage:[GSCXTestScannerViewController class]];

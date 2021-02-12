@@ -19,8 +19,7 @@
 #import "GSCXContinuousScannerDelegate.h"
 #import "GSCXContinuousScannerScheduling.h"
 #import "GSCXScanner.h"
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -33,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The results of scans, from first occurring (least recent) to last occuring (most recent).
  */
-@property(strong, nonatomic, readonly) NSArray<GSCXScannerResult *> *scanResults;
+@property(strong, nonatomic, readonly) NSArray<GTXHierarchyResultCollection *> *scanResults;
 
 /**
  * Initializes a @c GSCXContinuousScanner instance.
@@ -83,17 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
  * scans.
  */
 - (NSUInteger)issueCount;
-
-/**
- * @return All unique issues found across all scans.
- */
-- (NSArray<GSCXScannerIssue *> *)uniqueIssues;
-
-/**
- * @return All scan results with duplicate issues removed. If a result only contained duplicate
- * issues, it is removed from the returned array.
- */
-- (NSArray<GSCXScannerResult *> *)uniqueScanResults;
 
 @end
 

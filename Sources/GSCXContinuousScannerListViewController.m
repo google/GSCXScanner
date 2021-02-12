@@ -51,7 +51,7 @@ NSString *const kGSCXContinuousScannerListTableViewAccessibilityIdentifier =
     __weak __typeof__(self) weakSelf = self;
     _tableViewDelegate = [[GSCXScannerIssueExpandableTableViewDelegate alloc]
         initWithSections:sections
-          selectionBlock:^(GSCXScannerResult *result, NSInteger issueIndex) {
+          selectionBlock:^(GTXHierarchyResultCollection *result, NSInteger issueIndex) {
             [weakSelf gscx_presentGalleryViewWithResult:result issueIndex:issueIndex];
           }];
   }
@@ -84,7 +84,7 @@ NSString *const kGSCXContinuousScannerListTableViewAccessibilityIdentifier =
  * @param result The scan result to display in the gallery view.
  * @param issueIndex The index of the issue in @c result to focus in the gallery view.
  */
-- (void)gscx_presentGalleryViewWithResult:(GSCXScannerResult *)result
+- (void)gscx_presentGalleryViewWithResult:(GTXHierarchyResultCollection *)result
                                issueIndex:(NSInteger)issueIndex {
   GSCXContinuousScannerGalleryViewController *galleryView =
       [[GSCXContinuousScannerGalleryViewController alloc]

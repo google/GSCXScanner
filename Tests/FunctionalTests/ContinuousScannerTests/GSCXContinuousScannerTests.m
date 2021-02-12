@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+#import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/ContinuousScannerTests/GSCXContinuousScannerTestCase.h"
+
 #import <XCTest/XCTest.h>
 
 #import "third_party/objective_c/EarlGreyV2/TestLib/EarlGreyImpl/EarlGrey.h"
@@ -25,30 +27,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GSCXContinuousScannerTests : XCTestCase
-
-/**
- * Runs the test harness app.
- */
-@property(strong, nonatomic) XCUIApplication *application;
-
+@interface GSCXContinuousScannerTests : GSCXContinuousScannerTestCase
 @end
 
 @implementation GSCXContinuousScannerTests
-
-- (void)setUp {
-  [super setUp];
-  // Launch a new application for each test case because the continuous scanner has global state.
-  // Scans from previous test cases would propagate to later test cases unless a new application is
-  // launched for each test case.
-  self.application = [[XCUIApplication alloc] init];
-  [self.application launch];
-}
-
-- (void)tearDown {
-  [self.application terminate];
-  [super tearDown];
-}
 
 - (void)testContinuousScanningSwitchIsReachable {
   [GSCXScannerTestUtils assertContinuousScanButtonIsInteractable:NO];

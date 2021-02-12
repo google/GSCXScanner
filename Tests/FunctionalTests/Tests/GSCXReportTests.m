@@ -18,17 +18,18 @@
 
 #import <XCTest/XCTest.h>
 
+#import "third_party/objective_c/GSCXScanner/Tests/Common/GSCXCommonTestUtils.h"
 #import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/Utils/GSCXWebKitWarmer.h"
 #import <GTXiLib/GTXiLib.h>
 /**
  * The number of seconds to wait for the web view processes to load before any tests are run.
  */
-static const NSTimeInterval kGSCXReportWarmUpTimeout = 20.0;
+static const NSTimeInterval kGSCXReportWarmUpTimeout = 60.0;
 
 /**
  * The number of seconds to wait for reports to be generated before failing the test.
  */
-static const NSTimeInterval kGSCXReportTestsTimeout = 20.0;
+static const NSTimeInterval kGSCXReportTestsTimeout = 60.0;
 
 /**
  * This is a unit test case, but it needs to run in the integration test suite. @c WKWebView loads
@@ -54,17 +55,7 @@ static const NSTimeInterval kGSCXReportTestsTimeout = 20.0;
 
 - (void)setUp {
   [super setUp];
-  UIImage *screenshot = [[UIImage alloc] init];
-  GSCXScannerIssue *issue = [[GSCXScannerIssue alloc] initWithCheckNames:@[ @"Check 1" ]
-                                                       checkDescriptions:@[ @"Description 1" ]
-                                                          elementAddress:0
-                                                            elementClass:[UIView class]
-                                                     frameInScreenBounds:CGRectZero
-                                                      accessibilityLabel:nil
-                                                 accessibilityIdentifier:nil
-                                                      elementDescription:@"Element 1"];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
-                                                             screenshot:screenshot];
+  GTXHierarchyResultCollection *result = [GSCXCommonTestUtils newHierarchyResultCollection];
   self.report = [[GSCXReport alloc] initWithResults:@[ result ]];
 }
 

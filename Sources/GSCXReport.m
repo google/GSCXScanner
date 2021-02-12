@@ -20,6 +20,7 @@
 
 #import "GSCXReportContext.h"
 #import "GSCXUtils.h"
+#import "GTXHierarchyResultCollection+GSCXReport.h"
 #import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation GSCXReport
 
-- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results {
+- (instancetype)initWithResults:(NSArray<GTXHierarchyResultCollection *> *)results {
   self = [super init];
   if (self) {
     _results = results;
@@ -70,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
   // Create a HTML file renders the PDF.
   GSCXReportContext *context = [[GSCXReportContext alloc] init];
   NSMutableArray<NSString *> *htmlSnippets = [NSMutableArray array];
-  for (GSCXScannerResult *result in self.results) {
+  for (GTXHierarchyResultCollection *result in self.results) {
     [htmlSnippets addObject:[result htmlDescription:context]];
   }
   NSString *html = [htmlSnippets componentsJoinedByString:@""];
@@ -186,6 +187,7 @@ NS_ASSUME_NONNULL_BEGIN
   // Add an index.html which will be the home page with the given HTML.
   NSURL *indexURL = [temporaryDirectoryURL URLByAppendingPathComponent:@"index.html"];
   BOOL success = [[html dataUsingEncoding:NSUTF8StringEncoding] writeToURL:indexURL atomically:YES];
+  (void)success;
   GTX_ASSERT(success, @"Could not write HTML data to file: %@", indexURL);
 
   // Add all the images into the temp directory

@@ -20,6 +20,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * The period between scheduler invocations.
+ */
+const NSTimeInterval kGSCXPeriod = 0.6;
+
+/**
+ * The timestamp of the first scheduler invocation with period @c kGSCXPeriod.
+ */
+const NSTimeInterval kGSCXFirstTickTimestamp = kGSCXPeriod;
+
+/**
+ * A timestamp between the first and second scheduler invocations with period @c kGSCXPeriod.
+ */
+const NSTimeInterval kGSCXAfterFirstTickTimestamp = kGSCXFirstTickTimestamp + kGSCXPeriod / 2.0;
+
+/**
+ * The timestamp of the second scheduler invocation with period @c kGSCXPeriod.
+ */
+const NSTimeInterval kGSCXSecondTickTimestamp = kGSCXFirstTickTimestamp + kGSCXPeriod;
+
+/**
+ * A timestamp between the second and third scheduler invocations with period @c kGSCXPeriod.
+ */
+const NSTimeInterval kGSCXAfterSecondTickTimestamp = kGSCXSecondTickTimestamp + kGSCXPeriod / 2.0;
+
 @interface GSCXContinuousScannerPeriodicSchedulerTests : XCTestCase
 
 /**
@@ -66,9 +91,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)testScanIsScheduledOnceWhenStarted {
   GSCXContinuousScannerPeriodicScheduler *scheduler =
-      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:0.2];
+      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:kGSCXPeriod];
   [scheduler startSchedulingWithCallback:[self schedulingBlockExpectingNumberOfCalls:1]];
-  [self waitForExpectationsWithTimeout:0.3
+  [self waitForExpectationsWithTimeout:kGSCXAfterFirstTickTimestamp
                                handler:^(NSError *error) {
                                  XCTAssertEqual(self.scheduledCount, 1);
                                }];
@@ -76,9 +101,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)testScanIsScheduledManyWhenStarted {
   GSCXContinuousScannerPeriodicScheduler *scheduler =
-      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:0.2];
+      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:kGSCXPeriod];
   [scheduler startSchedulingWithCallback:[self schedulingBlockExpectingNumberOfCalls:2]];
-  [self waitForExpectationsWithTimeout:0.5
+  [self waitForExpectationsWithTimeout:kGSCXAfterSecondTickTimestamp
                                handler:^(NSError *error) {
                                  XCTAssertEqual(self.scheduledCount, 2);
                                }];
@@ -86,35 +111,39 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)testScanIsNotScheduledWhenSchedulingIsStopped {
   GSCXContinuousScannerPeriodicScheduler *scheduler =
-      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:0.2];
+      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:kGSCXPeriod];
   [scheduler startSchedulingWithCallback:[self schedulingBlockExpectingNumberOfCalls:1]];
-  [NSTimer scheduledTimerWithTimeInterval:0.3
+  [NSTimer scheduledTimerWithTimeInterval:kGSCXAfterFirstTickTimestamp
                                   repeats:NO
                                     block:^(NSTimer *timer) {
                                       [scheduler stopScheduling];
                                     }];
-  [self waitForExpectationsWithTimeout:0.5
+  [self waitForExpectationsWithTimeout:kGSCXAfterSecondTickTimestamp
                                handler:^(NSError *error) {
                                  XCTAssertEqual(self.scheduledCount, 1);
                                }];
 }
 
 - (void)testScanResumesSchedulingWhenStoppedAndStarted {
+  // A timestamp between the first and second scheduler invocations after the scheduler was stopped
+  // and restarted.
+  NSTimeInterval afterFirstTickAfterRestartingTimestamp =
+      kGSCXAfterSecondTickTimestamp + kGSCXPeriod * 1.5;
   GSCXContinuousScannerPeriodicScheduler *scheduler =
-      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:0.2];
+      [GSCXContinuousScannerPeriodicScheduler schedulerWithTimeInterval:kGSCXPeriod];
   GSCXContinuousScannerSchedulingBlock block = [self schedulingBlockExpectingNumberOfCalls:2];
   [scheduler startSchedulingWithCallback:block];
-  [NSTimer scheduledTimerWithTimeInterval:0.3
+  [NSTimer scheduledTimerWithTimeInterval:kGSCXAfterFirstTickTimestamp
                                   repeats:NO
                                     block:^(NSTimer *timer) {
                                       [scheduler stopScheduling];
                                     }];
-  [NSTimer scheduledTimerWithTimeInterval:0.5
+  [NSTimer scheduledTimerWithTimeInterval:kGSCXAfterSecondTickTimestamp
                                   repeats:NO
                                     block:^(NSTimer *timer) {
                                       [scheduler startSchedulingWithCallback:block];
                                     }];
-  [self waitForExpectationsWithTimeout:0.8
+  [self waitForExpectationsWithTimeout:afterFirstTickAfterRestartingTimestamp
                                handler:^(NSError *error) {
                                  XCTAssertEqual(self.scheduledCount, 2);
                                }];

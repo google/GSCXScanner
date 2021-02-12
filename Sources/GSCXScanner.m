@@ -30,22 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonatomic) NSMutableDictionary<NSString *, id<GTXChecking>> *checks;
 
 /**
- * The blacklists used by @c _toolkit to skip elements. Must be stored here so the toolkit can be
- * re-instantiated when blacklists are added or removed.
+ * The excludeLists used by @c _toolkit to skip elements. Must be stored here so the toolkit can be
+ * re-instantiated when excludeLists are added or removed.
  */
-@property(strong, nonatomic) NSMutableSet<id<GTXBlacklisting>> *blacklists;
-
-/**
- * Iterates over an array of NSError objects received from GTXToolKit calls and constructs
- * GSCXScannerIssue instances from them. Returns a GSCXScannerResult containing an array of
- * GSCXScannerIssue objects. rootView is the view the scan was initiated on.
- */
-- (NSArray<GSCXScannerIssue *> *)gscx_scannerIssuesFromErrors:(NSArray<NSError *> *)errors;
-
-/**
- * Constructs a GSCXScannerIssue object from an NSError object.
- */
-- (GSCXScannerIssue *)gscx_scannerIssueFromError:(NSError *)error;
+@property(strong, nonatomic) NSMutableSet<id<GTXExcludeListing>> *excludeLists;
 
 @end
 
@@ -56,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (self) {
     _toolkit = [GTXToolKit toolkitWithNoChecks];
     _checks = [[NSMutableDictionary alloc] init];
-    _blacklists = [[NSMutableSet alloc] init];
+    _excludeLists = [[NSMutableSet alloc] init];
   }
   return self;
 }
@@ -66,18 +54,18 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (instancetype)scannerWithChecks:(NSArray<id<GTXChecking>> *)checks
-                       blacklists:(NSArray<id<GTXBlacklisting>> *)blacklists {
+                     excludeLists:(NSArray<id<GTXExcludeListing>> *)excludeLists {
   GSCXScanner *scanner = [GSCXScanner scanner];
   for (id<GTXChecking> check in checks) {
     [scanner registerCheck:check];
   }
-  for (id<GTXBlacklisting> blacklist in blacklists) {
-    [scanner registerBlacklist:blacklist];
+  for (id<GTXExcludeListing> excludeList in excludeLists) {
+    [scanner registerExcludeList:excludeList];
   }
   return scanner;
 }
 
-- (GSCXScannerResult *)scanRootViews:(NSArray<UIView *> *)rootViews {
+- (GTXHierarchyResultCollection *)scanRootViews:(NSArray<UIView *> *)rootViews {
   GTX_ASSERT(rootViews.count > 0, @"rootViews cannot be empty.");
   if ([self.delegate respondsToSelector:@selector(scannerWillBeginScan:)]) {
     [self.delegate scannerWillBeginScan:self];
@@ -89,9 +77,8 @@ NS_ASSUME_NONNULL_BEGIN
   } else {
     [GSCXAnalytics invokeAnalyticsEvent:GSCXAnalyticsEventScanPerformed count:1];
   }
-  NSArray<GSCXScannerIssue *> *issues = [self gscx_scannerIssuesFromErrors:errors];
-  UIImage *snapshot = [self gscx_snapshotOfRootViews:rootViews];
-  _lastScanResult = [[GSCXScannerResult alloc] initWithIssues:issues screenshot:snapshot];
+  _lastScanResult = [[GTXHierarchyResultCollection alloc] initWithErrors:gtxResult.errorsFound
+                                                               rootViews:rootViews];
   if ([self.delegate respondsToSelector:@selector(scanner:didFinishScanWithResult:)]) {
     [self.delegate scanner:self didFinishScanWithResult:self.lastScanResult];
   }
@@ -108,88 +95,31 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscx_reinitializeToolkit];
 }
 
-- (void)registerBlacklist:(id<GTXBlacklisting>)blacklist {
-  [_toolkit registerBlacklist:blacklist];
-  [self.blacklists addObject:blacklist];
+- (void)registerExcludeList:(id<GTXExcludeListing>)excludeList {
+  [_toolkit registerExcludeList:excludeList];
+  [self.excludeLists addObject:excludeList];
 }
 
-- (void)deregisterBlacklist:(id<GTXBlacklisting>)blacklist {
-  [self.blacklists removeObject:blacklist];
+- (void)deregisterExcludeList:(id<GTXExcludeListing>)excludeList {
+  [self.excludeLists removeObject:excludeList];
   [self gscx_reinitializeToolkit];
 }
 
 #pragma mark - Private
 
 /**
- * Constructs a new @c GSCXToolKit instance with the current checks and blacklists. @c _toolkit is
- * guaranteed to have all the checks and blacklists registered when it is assigned.
+ * Constructs a new @c GSCXToolKit instance with the current checks and excludeLists. @c _toolkit is
+ * guaranteed to have all the checks and excludeLists registered when it is assigned.
  */
 - (void)gscx_reinitializeToolkit {
   GTXToolKit *toolkit = [GTXToolKit toolkitWithNoChecks];
   for (NSString *name in self.checks) {
     [toolkit registerCheck:self.checks[name]];
   }
-  for (id<GTXBlacklisting> blacklist in self.blacklists) {
-    [toolkit registerBlacklist:blacklist];
+  for (id<GTXExcludeListing> excludeList in self.excludeLists) {
+    [toolkit registerExcludeList:excludeList];
   }
   _toolkit = toolkit;
-}
-
-- (NSArray<GSCXScannerIssue *> *)gscx_scannerIssuesFromErrors:(NSArray<NSError *> *)errors {
-  NSMutableArray<GSCXScannerIssue *> *issues = [[NSMutableArray alloc] init];
-  for (NSError *error in errors) {
-    [issues addObject:[self gscx_scannerIssueFromError:error]];
-  }
-  return issues;
-}
-
-- (GSCXScannerIssue *)gscx_scannerIssueFromError:(NSError *)error {
-  NSArray<NSError *> *underlyingErrors = [error.userInfo objectForKey:kGTXErrorUnderlyingErrorsKey];
-  GTX_ASSERT(underlyingErrors, @"underlyingErrors cannot be nil.");
-  NSMutableArray<NSString *> *gtxCheckNames = [[NSMutableArray alloc] init];
-  NSMutableArray<NSString *> *gtxCheckDescriptions = [[NSMutableArray alloc] init];
-  for (NSError *underlyingError in underlyingErrors) {
-    NSDictionary *userInfo = underlyingError.userInfo;
-    NSString *checkName = [userInfo objectForKey:kGTXErrorCheckNameKey];
-    NSString *checkDescription = [userInfo objectForKey:NSLocalizedDescriptionKey];
-    GTX_ASSERT(userInfo, @"userInfo cannot be nil.");
-    GTX_ASSERT(checkName, @"checkName cannot be nil.");
-    GTX_ASSERT(checkDescription, @"checkDescription cannot be nil.");
-    [gtxCheckNames addObject:checkName];
-    [gtxCheckDescriptions addObject:checkDescription];
-  }
-  UIView *element = [error.userInfo objectForKey:kGTXErrorFailingElementKey];
-  GTX_ASSERT(element, @"element cannot be nil.");
-  NSString *elementDescription = [NSString stringWithFormat:@"%@ %p", element.class, element];
-  return [GSCXScannerIssue issueWithCheckNames:gtxCheckNames
-                             checkDescriptions:gtxCheckDescriptions
-                                elementAddress:(NSUInteger)element
-                                  elementClass:[element class]
-                           frameInScreenBounds:element.accessibilityFrame
-                            accessibilityLabel:element.accessibilityLabel
-                       accessibilityIdentifier:element.accessibilityIdentifier
-                            elementDescription:elementDescription];
-}
-
-/**
- * Creates a snapshot view by overlaying snapshots of each view in @c rootViews.
- *
- * @param rootViews The views to overlay snapshots of. Must not be empty. All elements must have the
- *  same @c bounds. Views are drawn back to front, starting with the first element.
- * @return A @c UIImage containing overlaid snapshots of all views in @c rootViews.
- */
-- (UIImage *)gscx_snapshotOfRootViews:(NSArray<UIView *> *)rootViews {
-  GTX_ASSERT(rootViews.count > 0, @"rootViews cannot be empty.");
-  UIGraphicsBeginImageContextWithOptions(rootViews[0].bounds.size, NO, 0.0);
-  for (UIView *view in rootViews) {
-    // Passing YES to drawViewHierarchyInRect resets VoiceOver focus to the first element in the
-    // accessibility hierarchy. Passing NO does not cause this. This is likely a bug in
-    // drawViewHierarchyInRect. A radar has been filed.
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
-  }
-  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
-  return image;
 }
 
 @end

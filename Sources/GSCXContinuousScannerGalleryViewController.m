@@ -39,7 +39,7 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
 /**
  * The displayed scan result.
  */
-@property(strong, nonatomic) GSCXScannerResult *result;
+@property(strong, nonatomic) GTXHierarchyResultCollection *result;
 
 /**
  * A copy of the scan result's screenshot, so modifying it does not modify the original screenshot.
@@ -94,7 +94,7 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil
                          bundle:(NSBundle *)nibBundleOrNil
-                         result:(GSCXScannerResult *)result {
+                         result:(GTXHierarchyResultCollection *)result {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self != nil) {
     _result = result;
@@ -127,8 +127,8 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
   if (@available(iOS 11.0, *)) {
     viewWidth = self.view.safeAreaLayoutGuide.layoutFrame.size.width;
   }
-  self.detailScrollView.contentSize =
-      CGSizeMake(viewWidth * [self.result.issues count], self.detailScrollView.frame.size.height);
+  self.detailScrollView.contentSize = CGSizeMake(viewWidth * self.result.elementResults.count,
+                                                 self.detailScrollView.frame.size.height);
   for (GSCXContinuousScannerGalleryDetailViewData *detailView in self.detailViews) {
     [detailView didLayoutSubviews];
   }
@@ -187,13 +187,12 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
  */
 - (void)gscx_initializeScreenshot {
   self.screenshot = [[UIImageView alloc] initWithImage:self.result.screenshot];
+  CGRect originalCoordinates =
+      CGRectMake(0, 0, self.result.screenshot.size.width, self.result.screenshot.size.height);
   self.ringViewArranger = [[GSCXRingViewArranger alloc] initWithResult:self.result];
   [self.ringViewArranger addRingViewsToSuperview:self.screenshot
-                                 fromCoordinates:self.result.originalScreenshotFrame];
-  for (NSUInteger i = 0; i < [self.ringViewArranger.ringViews count]; i++) {
-    self.ringViewArranger.ringViews[i].accessibilityIdentifier =
-        [GSCXRingViewArranger accessibilityIdentifierForRingViewAtIndex:i];
-  }
+                                 fromCoordinates:originalCoordinates];
+  [self.ringViewArranger addAccessibilityAttributesToRingViews];
   self.screenshot.translatesAutoresizingMaskIntoConstraints = NO;
   [self.screenshotScrollView addSubview:self.screenshot];
   CGFloat aspectRatio = self.result.screenshot.size.width / self.result.screenshot.size.height;
@@ -294,7 +293,7 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
  * Initializes @c pageControl based on @c result.
  */
 - (void)gscx_initializePageControl {
-  self.pageControl.numberOfPages = self.result.issues.count;
+  self.pageControl.numberOfPages = self.result.elementResults.count;
   self.pageControl.currentPageIndicatorTintColor = [self gscx_textColorForCurrentAppearance];
   self.pageControl.pageIndicatorTintColor = [[self gscx_textColorForCurrentAppearance]
       colorWithAlphaComponent:kGSCXContinuousScannerPageIndicatorAlpha];
@@ -310,13 +309,13 @@ static const CGFloat kGSCXContinuousScannerPageIndicatorAlpha = 0.2;
   NSMutableArray<GSCXContinuousScannerGalleryDetailViewData *> *detailViews =
       [NSMutableArray array];
   UIView *previousView = self.detailScrollView;
-  for (GSCXScannerIssue *issue in self.result.issues) {
+  for (GTXElementResultCollection *elementResult in self.result.elementResults) {
     GSCXContinuousScannerGalleryDetailViewData *detailView =
         [[GSCXContinuousScannerGalleryDetailViewData alloc] init];
     detailView.backgroundColor = [self gscx_backgroundColorForCurrentAppearance];
     detailView.textColor = [self gscx_textColorForCurrentAppearance];
-    for (NSUInteger i = 0; i < issue.underlyingIssueCount; i++) {
-      [detailView addIssueWithTitle:issue.gtxCheckNames[i] contents:issue.gtxCheckDescriptions[i]];
+    for (GTXCheckResult *checkResult in elementResult.checkResults) {
+      [detailView addCheckWithTitle:checkResult.checkName contents:checkResult.errorDescription];
     }
     [self.detailScrollView addSubview:detailView.containerView];
     [detailViews addObject:detailView];

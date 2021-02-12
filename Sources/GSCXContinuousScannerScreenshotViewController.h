@@ -16,9 +16,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GSCXScannerResult.h"
 #import "GSCXSharingDelegate.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -73,7 +72,7 @@ FOUNDATION_EXTERN NSString *const kGSCXContinuousScannerScreenshotListByCheckTab
  * @param sharingDelegate Delegate for configuring the sharing process.
  * @return An initialized @c GSCXContinuousScannerScreenshotViewController object.
  */
-- (instancetype)initWithScannerResults:(NSArray<GSCXScannerResult *> *)scannerResults
+- (instancetype)initWithScannerResults:(NSArray<GTXHierarchyResultCollection *> *)scannerResults
                        sharingDelegate:(id<GSCXSharingDelegate>)sharingDelegate;
 
 /**

@@ -17,8 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -51,7 +50,7 @@ typedef void (^GSCXReportErrorBlock)(NSError *error);
 /**
  * The results found across all scans.
  */
-@property(strong, nonatomic, readonly) NSArray<GSCXScannerResult *> *results;
+@property(strong, nonatomic, readonly) NSArray<GTXHierarchyResultCollection *> *results;
 
 /**
  * Initializes a @c GSCXReport instance displaying the given scan results.
@@ -59,7 +58,7 @@ typedef void (^GSCXReportErrorBlock)(NSError *error);
  * @param results The results to display in the report.
  * @return An initialized @c GSCXReport instance.
  */
-- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results;
+- (instancetype)initWithResults:(NSArray<GTXHierarchyResultCollection *> *)results;
 
 /**
  * Creates an HTML report describing the issues found in @c report.

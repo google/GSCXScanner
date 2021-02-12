@@ -1,5 +1,5 @@
 //
-// Copyright 2018 Google Inc.
+// Copyright 2020 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
 // limitations under the License.
 //
 
-#import "GSCXWindowOverlayPair.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIViewController (GSCXTraversal)
+/**
+ * Methods to serialize a @c GTXElementResultCollection instance when exporting a report.
+ */
+@interface GTXElementResultCollection (GSCXReport)
 
 /**
- *  Traverses backward through the view controller hierarchy to find the first view
- *  controller of type GSCXWindowOverlayViewController whose windowOverlayPair is not
- *  nil. Takes into account UINavigationController, UITabViewController,
- *  UISplitViewController, and any presented view controllers. If no such view
- *  controller can be found, returns nil.
+ * @return An HTML description of this element and the checks it failed.
  */
-- (GSCXWindowOverlayPair* _Nullable)windowOverlayPairAncestor;
+- (NSString *)htmlDescription;
 
 @end
 

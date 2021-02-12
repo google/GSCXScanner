@@ -19,6 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "GSCXContinuousScannerScreenshotViewController.h"
+#import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/ContinuousScannerTests/GSCXContinuousScannerTestCase.h"
 #import "GSCXTestScannerViewController.h"
 #import "GSCXTestUIAccessibilityElementViewController.h"
 #import "GSCXTestViewController.h"
@@ -26,15 +27,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GSCXContinuousScannerListTabBarViewControllerTests : XCTestCase
+@interface GSCXContinuousScannerListTabBarViewControllerTests : GSCXContinuousScannerTestCase
 @end
 
 @implementation GSCXContinuousScannerListTabBarViewControllerTests
-
-- (void)setUp {
-  [super setUp];
-  [[[XCUIApplication alloc] init] launch];
-}
 
 - (void)testCanSwitchBetweenGroupingMethodsWithTabsOneScan {
   [GSCXScannerTestUtils openPage:[GSCXTestScannerViewController class]];

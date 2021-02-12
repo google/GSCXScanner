@@ -19,28 +19,16 @@
 #import <XCTest/XCTest.h>
 
 #import "GSCXContinuousScannerScreenshotViewController.h"
+#import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/ContinuousScannerTests/GSCXContinuousScannerTestCase.h"
 #import "GSCXTestScannerViewController.h"
 #import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/Utils/GSCXScannerTestUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GSCXContinuousScannerGridViewControllerTests : XCTestCase
-
-/**
- * Runs the test harness app.
- */
-@property(strong, nonatomic) XCUIApplication *application;
-
+@interface GSCXContinuousScannerGridViewControllerTests : GSCXContinuousScannerTestCase
 @end
 
 @implementation GSCXContinuousScannerGridViewControllerTests
-
-- (void)setUp {
-  [super setUp];
-
-  self.application = [[XCUIApplication alloc] init];
-  [self.application launch];
-}
 
 - (void)testGridViewContainsMultipleCellsForMultipleScans {
   [GSCXScannerTestUtils openPage:[GSCXTestScannerViewController class]];

@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GSCXRingViewArrangerTests : XCTestCase
 
 /**
- * A blank image passed to @c GSCXScannerResult initializers.
+ * A blank image passed to @c GTXHierarchyResultCollection initializers.
  */
 @property(strong, nonatomic) UIImage *dummyImage;
 
@@ -53,10 +53,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)testRingViewsCanBeAddedForOneIssueNoTransform {
-  GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)
-                                       accessibilityLabel:@"ax label"];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element =
+      [self gscxtest_elementResultWithFrame:CGRectMake(10, 20, 30, 40)
+                         accessibilityLabel:@"ax label"
+                                 checkCount:1];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -72,33 +75,43 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:arranger.ringViews[0].frame equalToRect:CGRectMake(3, 18, 44, 44)];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[0].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(20, 30)];
-  XCTAssertEqual([resultAtPoint1.issues count], 1);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(20, 30)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 1);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element);
 
   // Assert that points just outside the ring are not considered inside.
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(2, 17)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(2, 17)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 
-  GSCXScannerResult *resultAtPoint3 = [arranger resultWithIssuesAtPoint:CGPointMake(48, 17)];
-  XCTAssertEqual([resultAtPoint3.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint3 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(48, 17)];
+  XCTAssertEqual(resultAtPoint3.elementResults.count, 0);
 
-  GSCXScannerResult *resultAtPoint4 = [arranger resultWithIssuesAtPoint:CGPointMake(2, 61)];
-  XCTAssertEqual([resultAtPoint4.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint4 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(2, 61)];
+  XCTAssertEqual(resultAtPoint4.elementResults.count, 0);
 
-  GSCXScannerResult *resultAtPoint5 = [arranger resultWithIssuesAtPoint:CGPointMake(48, 61)];
-  XCTAssertEqual([resultAtPoint5.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint5 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(48, 61)];
+  XCTAssertEqual(resultAtPoint5.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesNoTransform {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)
-                                        accessibilityLabel:@"ax label 1"];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
-  GSCXScannerIssue *issue3 =
-      [self gscxtest_issueContainingMultipleIssuesWithFrame:CGRectMake(2, 21, 96, 2)
-                                         accessibilityLabel:nil];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(10, 20, 30, 40)
+                         accessibilityLabel:@"ax label 1"
+                                 checkCount:1];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(20, 10, 40, 30)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(2, 21, 96, 2)
+                         accessibilityLabel:nil
+                                 checkCount:2];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -126,9 +139,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)testRingViewsCanBeAddedForOneIssueScaleTransformLarger {
-  GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element =
+      [self gscxtest_elementResultWithFrame:CGRectMake(10, 20, 30, 40)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 200, 200);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -140,20 +155,26 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:arranger.ringViews[0].frame equalToRect:CGRectMake(18, 38, 64, 84)];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[0].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(20, 40)];
-  XCTAssertEqual([resultAtPoint1.issues count], 1);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(20, 40)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 1);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element);
 
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(15, 40)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(15, 40)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesScaleTransformLarger {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(2, 88, 97, 2)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(10, 20, 30, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(20, 10, 40, 30)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(2, 88, 97, 2)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 200, 200);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -171,9 +192,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)testRingViewsCanBeAddedForOneIssueScaleTransformSmaller {
-  GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(28, 24, 32, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element =
+      [self gscxtest_elementResultWithFrame:CGRectMake(28, 24, 32, 40)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -185,24 +208,31 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:arranger.ringViews[0].frame equalToRect:CGRectMake(0, 0, 44, 44)];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[0].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(5, 10)];
-  XCTAssertEqual([resultAtPoint1.issues count], 1);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(5, 10)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 1);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element);
 
   // Outside the transformed view's frame, but inside the expanded ring view's.
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(25, 35)];
-  XCTAssertEqual([resultAtPoint2.issues count], 1);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(25, 35)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 1);
 
-  GSCXScannerResult *resultAtPoint3 = [arranger resultWithIssuesAtPoint:CGPointMake(45, 45)];
-  XCTAssertEqual([resultAtPoint3.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint3 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(45, 45)];
+  XCTAssertEqual(resultAtPoint3.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesScaleTransformSmaller {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(28, 24, 32, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(28, 30, 40, 32)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(4, 100, 192, 4)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(28, 24, 32, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(28, 30, 40, 32)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(4, 100, 192, 4)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -220,9 +250,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)testRingViewsCanBeAddedForOneIssueOffsetTransformLarger {
-  GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element =
+      [self gscxtest_elementResultWithFrame:CGRectMake(10, 20, 30, 40)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element ]
+                                                        screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -236,20 +268,26 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:CGRectMake(100, 100, 100, 100)
                containsRect:arranger.ringViews[0].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(110, 120)];
-  XCTAssertEqual([resultAtPoint1.issues count], 1);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(110, 120)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 1);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element);
 
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(15, 40)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(15, 40)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesOffsetTransformLarger {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(2, 77, 96, 2)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(10, 20, 30, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(20, 10, 40, 30)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(2, 77, 96, 2)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -269,9 +307,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)testRingViewsCanBeAddedForOneIssueOffsetTransformSmaller {
-  GSCXScannerIssue *issue = [self gscxtest_issueWithFrame:CGRectMake(110, 120, 30, 40)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element =
+      [self gscxtest_elementResultWithFrame:CGRectMake(110, 120, 30, 40)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -283,20 +323,26 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:arranger.ringViews[0].frame equalToRect:CGRectMake(3, 18, 44, 44)];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[0].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(10, 20)];
-  XCTAssertEqual([resultAtPoint1.issues count], 1);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(10, 20)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 1);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element);
 
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(120, 130)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(120, 130)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesOffsetTransformSmaller {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(110, 120, 30, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(120, 110, 40, 30)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(102, 121, 96, 2)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(110, 120, 30, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(120, 110, 40, 30)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(102, 121, 96, 2)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -314,11 +360,15 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesOffsetLargerScaleSmaller {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(28, 24, 32, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(24, 28, 40, 32)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(104, 104, 92, 4)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(28, 24, 32, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(24, 28, 40, 32)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(104, 104, 92, 4)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -336,21 +386,27 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[1].frame];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[2].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(110, 110)];
-  XCTAssertEqual([resultAtPoint1.issues count], 2);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue1);
-  XCTAssertEqual(resultAtPoint1.issues[1], issue2);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(110, 110)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 2);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element1);
+  XCTAssertEqual(resultAtPoint1.elementResults[1], element2);
 
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(15, 25)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(15, 25)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesOffsetLargerScaleLarger {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(10, 20, 30, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(20, 10, 40, 30)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(4, 10, 92, 2)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(10, 20, 30, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(20, 10, 40, 30)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(4, 10, 92, 2)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   // Use a scroll view to create a view whose bounds do not have origin {0, 0}.
   UIScrollView *superview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
   superview.contentSize = CGSizeMake(1000, 1000);
@@ -368,21 +424,27 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[1].frame];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[2].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(140, 145)];
-  XCTAssertEqual([resultAtPoint1.issues count], 2);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue1);
-  XCTAssertEqual(resultAtPoint1.issues[1], issue2);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(140, 145)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 2);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element1);
+  XCTAssertEqual(resultAtPoint1.elementResults[1], element2);
 
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(15, 25)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(15, 25)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesOffsetSmallerScaleSmaller {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(128, 124, 32, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(124, 128, 40, 32)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(124, 142, 92, 4)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(128, 124, 32, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(124, 128, 40, 32)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(124, 142, 92, 4)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 100, 100);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -397,21 +459,27 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[1].frame];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[2].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(5, 10)];
-  XCTAssertEqual([resultAtPoint1.issues count], 2);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue1);
-  XCTAssertEqual(resultAtPoint1.issues[1], issue2);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(5, 10)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 2);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element1);
+  XCTAssertEqual(resultAtPoint1.elementResults[1], element2);
 
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(125, 125)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(125, 125)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 }
 
 - (void)testRingViewsCanBeAddedForMultipleIssuesOffsetSmallerScaleLarger {
-  GSCXScannerIssue *issue1 = [self gscxtest_issueWithFrame:CGRectMake(110, 120, 30, 40)];
-  GSCXScannerIssue *issue2 = [self gscxtest_issueWithFrame:CGRectMake(120, 110, 40, 30)];
-  GSCXScannerIssue *issue3 = [self gscxtest_issueWithFrame:CGRectMake(104, 110, 92, 2)];
-  GSCXScannerResult *result = [[GSCXScannerResult alloc] initWithIssues:@[ issue1, issue2, issue3 ]
-                                                             screenshot:self.dummyImage];
+  GTXElementResultCollection *element1 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(110, 120, 30, 40)];
+  GTXElementResultCollection *element2 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(120, 110, 40, 30)];
+  GTXElementResultCollection *element3 =
+      [self gscxtest_elementResultWithFrame:CGRectMake(104, 110, 92, 2)];
+  GTXHierarchyResultCollection *result =
+      [[GTXHierarchyResultCollection alloc] initWithElementResults:@[ element1, element2, element3 ]
+                                                        screenshot:self.dummyImage];
   CGRect coordinates = CGRectMake(0, 0, 200, 200);
   UIView *superview = [[UIView alloc] initWithFrame:coordinates];
   GSCXRingViewArranger *arranger = [[GSCXRingViewArranger alloc] initWithResult:result];
@@ -426,68 +494,60 @@ NS_ASSUME_NONNULL_BEGIN
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[1].frame];
   [self gscxtest_assertRect:coordinates containsRect:arranger.ringViews[2].frame];
 
-  GSCXScannerResult *resultAtPoint1 = [arranger resultWithIssuesAtPoint:CGPointMake(40, 45)];
-  XCTAssertEqual([resultAtPoint1.issues count], 2);
-  XCTAssertEqual(resultAtPoint1.issues[0], issue1);
-  XCTAssertEqual(resultAtPoint1.issues[1], issue2);
+  GTXHierarchyResultCollection *resultAtPoint1 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(40, 45)];
+  XCTAssertEqual(resultAtPoint1.elementResults.count, 2);
+  XCTAssertEqual(resultAtPoint1.elementResults[0], element1);
+  XCTAssertEqual(resultAtPoint1.elementResults[1], element2);
 
-  GSCXScannerResult *resultAtPoint2 = [arranger resultWithIssuesAtPoint:CGPointMake(105, 105)];
-  XCTAssertEqual([resultAtPoint2.issues count], 0);
+  GTXHierarchyResultCollection *resultAtPoint2 =
+      [arranger resultWithIssuesAtPoint:CGPointMake(105, 105)];
+  XCTAssertEqual(resultAtPoint2.elementResults.count, 0);
 }
 
 #pragma mark - Private
 
 /**
- * Constructs a @c GSCXScannerIssue instance with @c frame for @c frameInScreenBounds and default
- * values for the other parameters.
+ * Constructs a @c GTXElementResultCollection instance with @c frame for @c accessibilityFrame and
+ * default values for the other parameters on @c elementReference.
  *
- * @param frame The value for the @c frameInScreeBounds parameter.
- * @return A @c GSCXScannerIssue instance.
+ * @param frame The value for @c accessibilityFrame.
+ * @return A @c GTXElementResultCollection instance.
  */
-- (GSCXScannerIssue *)gscxtest_issueWithFrame:(CGRect)frame {
-  return [self gscxtest_issueWithFrame:frame accessibilityLabel:nil];
+- (GTXElementResultCollection *)gscxtest_elementResultWithFrame:(CGRect)frame {
+  return [self gscxtest_elementResultWithFrame:frame accessibilityLabel:nil checkCount:1];
 }
 
 /**
- * Constructs a @c GSCXScannerIssue instance with @c frame for @c frameInScreenBounds,
- * @c accessibilityLabel for @c accessibilityLabel, and default values for the other parameters.
+ * Constructs a @c GTXElementResultCollection instance with  @c frame for @c accessibilityFrame
+ * @c accessibilityLabel for @c accessibilityLabel, and default values for the other parameters on
+ * @c elementReference.
  *
- * @param frame The value for the @c frameInScreenBounds parameter.
+ * @param frame The value for the @c accessibilityFrame.
  * @param accessibilityLabel Optional. The value for the @c accessibilityLabel parameter.
- * @return A @c GSCXScannerIssue instance.
+ * @param checkCount The number of checks
+ * @return A @c GTXElementResultCollection instance.
  */
-- (GSCXScannerIssue *)gscxtest_issueWithFrame:(CGRect)frame
-                           accessibilityLabel:(nullable NSString *)accessibilityLabel {
-  return [[GSCXScannerIssue alloc] initWithCheckNames:@[ @"Check" ]
-                                    checkDescriptions:@[ @"Description" ]
-                                       elementAddress:1
-                                         elementClass:[UIView class]
-                                  frameInScreenBounds:frame
-                                   accessibilityLabel:accessibilityLabel
-                              accessibilityIdentifier:nil
-                                   elementDescription:@"Element Description"];
-}
-
-/**
- * Constructs a @c GSCXScannerIssue instance with @c frame for @c frameInScreeBounds,
- * @c accessibilityLabel for @c accessibilityLabel, and default values for the other parameters. The
- * issue contains multiple underlying issues.
- *
- * @param frame The value for the @c frameInScreenBounds parameter.
- * @param accessibilityLabel Optional. The value for the @c accessibilityLabel parameter.
- * @return A @c GSCXScannerIssue instance.
- */
-- (GSCXScannerIssue *)gscxtest_issueContainingMultipleIssuesWithFrame:(CGRect)frame
-                                                   accessibilityLabel:
-                                                       (nullable NSString *)accessibilityLabel {
-  return [[GSCXScannerIssue alloc] initWithCheckNames:@[ @"Check 1", @"Check 2" ]
-                                    checkDescriptions:@[ @"Description 1", @"Check 2" ]
-                                       elementAddress:1
-                                         elementClass:[UIView class]
-                                  frameInScreenBounds:frame
-                                   accessibilityLabel:accessibilityLabel
-                              accessibilityIdentifier:nil
-                                   elementDescription:@"Element Description"];
+- (GTXElementResultCollection *)gscxtest_elementResultWithFrame:(CGRect)frame
+                                             accessibilityLabel:
+                                                 (nullable NSString *)accessibilityLabel
+                                                     checkCount:(NSUInteger)checkCount {
+  NSMutableArray<GTXCheckResult *> *checkResults = [[NSMutableArray alloc] init];
+  for (NSUInteger i = 0; i < checkCount; i++) {
+    NSString *name = [NSString stringWithFormat:@"Check %lu", (unsigned long)i];
+    NSString *description = [NSString stringWithFormat:@"Description %lu", (unsigned long)i];
+    [checkResults addObject:[[GTXCheckResult alloc] initWithCheckName:name
+                                                     errorDescription:description]];
+  }
+  GTXElementReference *elementReference =
+      [[GTXElementReference alloc] initWithElementAddress:1
+                                             elementClass:[UIView class]
+                                       accessibilityLabel:accessibilityLabel
+                                  accessibilityIdentifier:nil
+                                       accessibilityFrame:frame
+                                       elementDescription:@"Element Description"];
+  return [[GTXElementResultCollection alloc] initWithElement:elementReference
+                                                checkResults:checkResults];
 }
 
 - (void)gscxtest_assertRect:(CGRect)rect1 equalToRect:(CGRect)rect2 {

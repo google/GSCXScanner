@@ -189,7 +189,8 @@ NSString *const kMainWindowAccessibilityId = @"kMainWindowAccessibilityId";
     [GSCXTestCheck UTF8CheckWithName:kGSCXTestUTF8CheckName5 tag:kGSCXTestUTF8CheckTag5],
   ];
   if (useCanonicalGTXChecks) {
-    checks = [checks arrayByAddingObjectsFromArray:[GTXChecksCollection allGTXChecks]];
+    checks = [checks arrayByAddingObjectsFromArray:[GTXChecksCollection
+                                                       allGTXChecksForVersion:GTXVersionLatest]];
   }
   NSArray<id<GSCXContinuousScannerScheduling>> *schedulers = nil;
   if (schedulingInterval) {

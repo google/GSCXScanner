@@ -16,8 +16,6 @@
 
 #import "GSCXRingViewArranger.h"
 
-#import "GSCXScannerIssue.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GSCXRingViewArranger ()
@@ -36,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation GSCXRingViewArranger
 
-- (instancetype)initWithResult:(GSCXScannerResult *)result {
+- (instancetype)initWithResult:(GTXHierarchyResultCollection *)result {
   self = [super init];
   if (self) {
     _result = result;
@@ -63,8 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addAccessibilityAttributesToRingViews {
   NSUInteger index = 0;
   for (GSCXRingView *ringView in self.ringViews) {
-    NSString *accessibilityLabel = self.result.issues[index].accessibilityLabel;
-    NSUInteger count = self.result.issues[index].underlyingIssueCount;
+    NSString *accessibilityLabel =
+        self.result.elementResults[index].elementReference.accessibilityLabel;
+    NSUInteger count = self.result.elementResults[index].checkResults.count;
     NSString *pluralModifier = (count == 1) ? @"" : @"s";
     if (accessibilityLabel == nil) {
       ringView.accessibilityLabel =
@@ -81,14 +80,15 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
-- (GSCXScannerResult *)resultWithIssuesAtPoint:(CGPoint)point {
-  NSMutableArray<GSCXScannerIssue *> *issues = [NSMutableArray array];
+- (GTXHierarchyResultCollection *)resultWithIssuesAtPoint:(CGPoint)point {
+  NSMutableArray<GTXElementResultCollection *> *elementResults = [[NSMutableArray alloc] init];
   for (NSUInteger i = 0; i < [self.ringViews count]; i++) {
     if (CGRectContainsPoint(self.ringViews[i].frame, point)) {
-      [issues addObject:self.result.issues[i]];
+      [elementResults addObject:self.result.elementResults[i]];
     }
   }
-  return [[GSCXScannerResult alloc] initWithIssues:issues screenshot:self.result.screenshot];
+  return [[GTXHierarchyResultCollection alloc] initWithElementResults:elementResults
+                                                           screenshot:self.result.screenshot];
 }
 
 - (UIImage *)imageByAddingRingViewsToSuperview:(UIView *)superview
@@ -121,9 +121,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<GSCXRingView *> *)gscx_ringViewsForOriginalCoordinates:(CGRect)originalCoordinates
                                                    newCoordinates:(CGRect)newCoordinates {
   NSMutableArray<GSCXRingView *> *ringViews =
-      [NSMutableArray arrayWithCapacity:[self.result.issues count]];
-  for (GSCXScannerIssue *issue in self.result.issues) {
-    CGRect ringFrame = [self gscx_convertRect:issue.frame
+      [NSMutableArray arrayWithCapacity:self.result.elementResults.count];
+  for (GTXElementResultCollection *elementResult in self.result.elementResults) {
+    CGRect ringFrame = [self gscx_convertRect:elementResult.elementReference.accessibilityFrame
                               fromCoordinates:originalCoordinates
                                 toCoordinates:newCoordinates];
     GSCXRingView *ringView = [GSCXRingView ringViewAroundFocusRect:ringFrame];

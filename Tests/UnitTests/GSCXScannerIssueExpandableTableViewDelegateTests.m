@@ -21,6 +21,7 @@
 #import "GSCXScannerIssueExpandableTableViewCell.h"
 #import "GSCXScannerIssueTableViewRow.h"
 #import "GSCXScannerIssueTableViewSection.h"
+#import "GSCXScannerTestsUtils.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,26 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setUp {
   [super setUp];
   self.dummyTableView = [[UITableView alloc] init];
-  GSCXScannerIssue *dummyIssue =
-      [[GSCXScannerIssue alloc] initWithCheckNames:@[ @"Accessibility label", @"Touch target size" ]
-                                 checkDescriptions:@[
-                                   @"This element doesn’t have an accessibility label.",
-                                   @"This element has a small touch target."
-                                 ]
-                                    elementAddress:0
-                                      elementClass:[UIView class]
-                               frameInScreenBounds:CGRectZero
-                                accessibilityLabel:nil
-                           accessibilityIdentifier:nil
-                                elementDescription:@"View"];
-  UIImage *dummyImage = [[UIImage alloc] init];
-  GSCXScannerResult *dummyResult = [[GSCXScannerResult alloc] initWithIssues:@[ dummyIssue ]
-                                                                  screenshot:dummyImage];
-  self.dummyRow = [[GSCXScannerIssueTableViewRow alloc] initWithIssue:dummyIssue
-                                                                title:@""
-                                                             subtitle:@""
-                                                       originalResult:dummyResult
-                                                   originalIssueIndex:0];
+  self.dummyRow = [GSCXScannerTestsUtils newRow];
 }
 
 - (void)testDelegateMethodsWithEmptySections {
@@ -150,7 +132,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)gscx_assertDelegateCalculatesCorrectCountsForSections:
     (NSArray<GSCXScannerIssueTableViewSection *> *)sections {
   GSCXScannerIssueExpandableTableViewDelegateSelectionBlock dummyBlock =
-      ^(GSCXScannerResult *result, NSInteger issueIndex) {
+      ^(GTXHierarchyResultCollection *result, NSInteger issueIndex) {
       };
   GSCXScannerIssueExpandableTableViewDelegate *delegate =
       [[GSCXScannerIssueExpandableTableViewDelegate alloc] initWithSections:sections

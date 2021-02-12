@@ -32,6 +32,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NSString *const kGSCXDoNotBlockNetworkRegex = @"https://ssl.google-analytics.com/collect.*";
+
 /**
  * The percentage of the screen's height to scroll in a single scroll action.
  */

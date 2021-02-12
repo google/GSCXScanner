@@ -17,8 +17,7 @@
 #import <UIKit/UIKit.h>
 
 #import "GSCXAdjustableAccessibilityElement.h"
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -27,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param index The index of the newly selected element.
  * @param result The result displayed at the new index.
  */
-typedef void (^GSCXScannerResultCarouselBlock)(NSUInteger index, GSCXScannerResult *result);
+typedef void (^GSCXCarouselBlock)(NSUInteger index, GTXHierarchyResultCollection *result);
 
 /**
  * A scrollable list of screenshots associated with scan results. Users may select results. This
@@ -56,8 +55,8 @@ typedef void (^GSCXScannerResultCarouselBlock)(NSUInteger index, GSCXScannerResu
  * @param selectionBlock A callback invoked when the selected result changes.
  * @return An initialized @c GSCXScannerResultCarousel instance.
  */
-- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results
-                 selectionBlock:(GSCXScannerResultCarouselBlock)selectionBlock;
+- (instancetype)initWithResults:(NSArray<GTXHierarchyResultCollection *> *)results
+                 selectionBlock:(GSCXCarouselBlock)selectionBlock;
 
 /**
  * Changes the selected scan result to the result at @c index. Does not invoke @c selectionBlock.

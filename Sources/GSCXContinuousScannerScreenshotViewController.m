@@ -77,7 +77,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
 /**
  * The results of all scans.
  */
-@property(strong, nonatomic) NSArray<GSCXScannerResult *> *scannerResults;
+@property(strong, nonatomic) NSArray<GTXHierarchyResultCollection *> *scannerResults;
 
 /**
  * Delegate for configuring the sharing process.
@@ -156,7 +156,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
 
 @implementation GSCXContinuousScannerScreenshotViewController
 
-- (instancetype)initWithScannerResults:(NSArray<GSCXScannerResult *> *)scannerResults
+- (instancetype)initWithScannerResults:(NSArray<GTXHierarchyResultCollection *> *)scannerResults
                        sharingDelegate:(id<GSCXSharingDelegate>)sharingDelegate {
   NSString *nibName = @"GSCXContinuousScannerScreenshotViewController";
   NSBundle *bundle =
@@ -169,7 +169,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
     __weak __typeof__(self) weakSelf = self;
     _carousel = [[GSCXScannerResultCarousel alloc]
         initWithResults:scannerResults
-         selectionBlock:^(NSUInteger index, GSCXScannerResult *result) {
+         selectionBlock:^(NSUInteger index, GTXHierarchyResultCollection *result) {
            [weakSelf gscx_displayScannerResultAtIndex:index];
          }];
     _carousel.carouselAccessibilityElement.accessibilityIdentifier =
@@ -212,8 +212,8 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
   [self gscx_initializeAllConstraints];
 
   self.view.accessibilityElements = @[
-    self.carousel.carouselAccessibilityElement, self.gridButton, self.scrollView, self.backButton,
-    self.nextButton
+    self.scanNumberLabel, self.issueCountLabel, self.carousel.carouselAccessibilityElement,
+    self.gridButton, self.scrollView, self.backButton, self.nextButton
   ];
 }
 
@@ -442,7 +442,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
  * @param index The index of the scan result to display in the scroll view.
  */
 - (void)gscx_displayScannerResultAtIndex:(NSUInteger)index {
-  GSCXScannerResult *result = self.scannerResults[index];
+  GTXHierarchyResultCollection *result = self.scannerResults[index];
   self.currentIndex = index;
   if (self.currentAspectRatioConstraint != nil) {
     [self.currentScreenshot removeConstraint:self.currentAspectRatioConstraint];
@@ -462,7 +462,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
   self.scanNumberLabel.text =
       [GSCXContinuousScannerScreenshotViewController gscx_scanNumberTextForScanAtIndex:index];
   self.issueCountLabel.text = [GSCXContinuousScannerScreenshotViewController
-      gscx_issueCountTextForIssueCount:[result issueCount]];
+      gscx_issueCountTextForIssueCount:[result checkResultCount]];
 }
 
 /**
@@ -470,7 +470,8 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
  * currently displayed result.
  */
 - (void)gscx_addRingViewsToScreenshot {
-  CGRect originalCoordinates = self.scannerResults[self.currentIndex].originalScreenshotFrame;
+  CGSize screenshotSize = self.scannerResults[self.currentIndex].screenshot.size;
+  CGRect originalCoordinates = CGRectMake(0, 0, screenshotSize.width, screenshotSize.height);
   [self.ringViews removeRingViewsFromSuperview];
   [self.ringViews addRingViewsToSuperview:self.currentScreenshot
                           fromCoordinates:originalCoordinates];
@@ -479,6 +480,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
     UITapGestureRecognizer *gestureRecognizer =
         [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gscx_ringViewTapped:)];
     [ringView addGestureRecognizer:gestureRecognizer];
+    ringView.accessibilityTraits |= UIAccessibilityTraitButton;
   }
 }
 
@@ -536,7 +538,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
   GSCXContinuousScannerGridViewController *gridController =
       [[GSCXContinuousScannerGridViewController alloc]
           initWithResults:self.scannerResults
-           selectionBlock:^(NSUInteger index, GSCXScannerResult *_Nonnull result) {
+           selectionBlock:^(NSUInteger index, GTXHierarchyResultCollection *result) {
              __typeof__(self) strongSelf = weakSelf;
              if (strongSelf == nil) {
                return;
@@ -553,7 +555,7 @@ static const CGFloat kGSCXContinuousScannerScreenshotMinimumLabelHeight = 20.5;
  * @param result The scan result to display.
  * @param issueIndex The index of the issue in @c result to focus on.
  */
-- (void)gscx_presentGalleryViewResult:(GSCXScannerResult *)result
+- (void)gscx_presentGalleryViewResult:(GTXHierarchyResultCollection *)result
                            issueIndex:(NSUInteger)issueIndex {
   GSCXContinuousScannerGalleryViewController *galleryController =
       [[GSCXContinuousScannerGalleryViewController alloc]

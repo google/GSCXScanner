@@ -19,6 +19,7 @@
 #import "GSCXContinuousScannerGridCell.h"
 #import "GSCXContinuousScannerScreenshotViewController.h"
 #import "NSLayoutConstraint+GSCXUtilities.h"
+#import "UIView+NSLayoutConstraint.h"
 #import "UIViewController+GSCXAppearance.h"
 #import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
@@ -83,12 +84,12 @@ static const NSInteger kGSCXContinuousScannerGridCellsPerRowLandscapeScreenshotI
 /**
  * The results to display.
  */
-@property(strong, nonatomic) NSArray<GSCXScannerResult *> *results;
+@property(strong, nonatomic) NSArray<GTXHierarchyResultCollection *> *results;
 
 /**
  * Invoked when the user selects an scan result in the grid.
  */
-@property(copy, nonatomic) GSCXScannerResultCarouselBlock selectionBlock;
+@property(copy, nonatomic) GSCXCarouselBlock selectionBlock;
 
 /**
  * The number of screenshots to display per row. This number assumes no device orientation changes
@@ -101,8 +102,8 @@ static const NSInteger kGSCXContinuousScannerGridCellsPerRowLandscapeScreenshotI
 
 @implementation GSCXContinuousScannerGridViewController
 
-- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results
-                 selectionBlock:(GSCXScannerResultCarouselBlock)selectionBlock {
+- (instancetype)initWithResults:(NSArray<GTXHierarchyResultCollection *> *)results
+                 selectionBlock:(GSCXCarouselBlock)selectionBlock {
   NSString *nibName = @"GSCXContinuousScannerGridViewController";
   NSBundle *bundle = [NSBundle bundleForClass:[GSCXContinuousScannerGridCell class]];
   self = [super initWithNibName:nibName bundle:bundle];
@@ -167,8 +168,8 @@ static const NSInteger kGSCXContinuousScannerGridCellsPerRowLandscapeScreenshotI
   cell.screenshot.image = self.results[indexPath.item].screenshot;
   [self gscx_constructBadgeForCell:cell];
   cell.badge.text =
-      [NSString stringWithFormat:@"%ld", (long)self.results[indexPath.item].issueCount];
-  NSUInteger issueCount = self.results[indexPath.item].issueCount;
+      [NSString stringWithFormat:@"%ld", (long)[self.results[indexPath.item] checkResultCount]];
+  NSUInteger issueCount = [self.results[indexPath.item] checkResultCount];
   cell.badgeBackground.fillColor =
       issueCount > 0 ? [GSCXContinuousScannerGridViewController gscx_someIssuesBadgeColor]
                      : [GSCXContinuousScannerGridViewController gscx_noIssuesBadgeColor];
@@ -193,9 +194,7 @@ static const NSInteger kGSCXContinuousScannerGridCellsPerRowLandscapeScreenshotI
   // aspect ratio constraint ensures the screenshot has the correct size, regardless of orientation.
   UIImage *screenshot = self.results[0].screenshot;
   CGRect bounds = UIEdgeInsetsInsetRect(collectionView.bounds, collectionView.contentInset);
-  if (@available(iOS 11.0, *)) {
-    bounds = UIEdgeInsetsInsetRect(bounds, collectionView.safeAreaInsets);
-  }
+  bounds = UIEdgeInsetsInsetRect(bounds, collectionView.gscx_safeAreaInsets);
   CGFloat width = [self gscx_sizeOfCellWithContainerSize:bounds.size.width
                                                  spacing:kGridViewHorizontalSpacing];
   CGFloat aspectRatio = screenshot.size.width / screenshot.size.height;

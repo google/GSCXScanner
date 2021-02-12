@@ -21,23 +21,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation GSCXScannerIssueTableViewRow
 
-- (instancetype)initWithIssue:(GSCXScannerIssue *)issue
-                        title:(NSString *)title
+- (instancetype)initWithTitle:(NSString *)title
                      subtitle:(NSString *)subtitle
-               originalResult:(GSCXScannerResult *)originalResult
-           originalIssueIndex:(NSInteger)originalIssueIndex {
-  GTX_ASSERT(
-      originalIssueIndex >= 0 && (NSUInteger)originalIssueIndex < [originalResult issueCount],
-      @"originalIssueIndex is out of range.");
+               originalResult:(GTXHierarchyResultCollection *)originalResult
+         originalElementIndex:(NSInteger)originalElementIndex {
+  GTX_ASSERT(originalElementIndex >= 0 &&
+                 (NSUInteger)originalElementIndex < originalResult.elementResults.count,
+             @"originalIssueIndex is out of range.");
   self = [super init];
   if (self) {
     _rowTitle = [title copy];
     _rowSubtitle = [subtitle copy];
     _suggestionTitles = @[];
     _suggestionContents = @[];
-    _issue = issue;
     _originalResult = originalResult;
-    _originalIssueIndex = originalIssueIndex;
+    _originalElementIndex = originalElementIndex;
   }
   return self;
 }

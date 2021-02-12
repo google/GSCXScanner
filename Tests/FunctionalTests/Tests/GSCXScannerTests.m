@@ -22,7 +22,6 @@
 #import "GSCXContinuousScannerGalleryViewController.h"
 #import "GSCXRingViewArranger.h"
 #import "GSCXScanResultsPageConstants.h"
-#import "GSCXScannerResultDetailViewController.h"
 #import "GSCXScannerScreenshotViewController.h"
 #import "GSCXTestCheckNames.h"
 #import "GSCXTestReportViewController.h"

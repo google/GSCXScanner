@@ -19,6 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "GSCXScannerIssueExpandableTableViewDelegate.h"
+#import "third_party/objective_c/GSCXScanner/Tests/FunctionalTests/ContinuousScannerTests/GSCXContinuousScannerTestCase.h"
 #import "GSCXTestCheckNames.h"
 #import "GSCXTestScannerViewController.h"
 #import "GSCXTestUIAccessibilityElementViewController.h"
@@ -33,15 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GSCXContinuousScannerListViewControllerTests : XCTestCase
+@interface GSCXContinuousScannerListViewControllerTests : GSCXContinuousScannerTestCase
 @end
 
 @implementation GSCXContinuousScannerListViewControllerTests
-
-- (void)setUp {
-  [super setUp];
-  [[[XCUIApplication alloc] init] launch];
-}
 
 - (void)testListViewWithOneSectionCanBeToggled {
   NSArray<NSString *> *allCheckNames =

@@ -33,8 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init {
   self = [super init];
   if (self) {
-    _checks = [GTXChecksCollection allGTXChecks];
-    _blacklists = @[];
+    _checks = [GTXChecksCollection allGTXChecksForVersion:GTXVersionLatest];
+    _excludeLists = @[];
     _scannerDelegate = nil;
     _activitySources = nil;
     _schedulers = nil;

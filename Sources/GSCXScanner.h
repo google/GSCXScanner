@@ -19,7 +19,6 @@
 
 #import "GSCXAnalytics.h"
 #import "GSCXScannerDelegate.h"
-#import "GSCXScannerResult.h"
 
 // All GTXiLib imports are grouped here to help with OSS release script which replaces the below
 // with GTXiLib framework import.
@@ -40,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  * The most recent result of scanning the view hierarchy, or nil if no scan has
  * been performed yet. Old results are overwritten.
  */
-@property(strong, nonatomic, readonly) GSCXScannerResult *_Nullable lastScanResult;
+@property(strong, nonatomic, nullable, readonly) GTXHierarchyResultCollection *lastScanResult;
 
 /**
  * Constructs a GSCXScanner object.
@@ -48,14 +47,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)scanner;
 
 /**
- * Constructs a GSCXScanner object with the given checks and blacklists.
+ * Constructs a GSCXScanner object with the given checks and excludeLists.
  *
  * @param checks The accessibility checks to register.
- * @param blacklists The blacklists to register.
- * @return A GSCXScanner object with registered checks and blacklists.
+ * @param excludeLists The excludeLists to register.
+ * @return A GSCXScanner object with registered checks and excludeLists.
  */
 + (instancetype)scannerWithChecks:(NSArray<id<GTXChecking>> *)checks
-                       blacklists:(NSArray<id<GTXBlacklisting>> *)blacklists;
+                     excludeLists:(NSArray<id<GTXExcludeListing>> *)excludeLists;
 
 /**
  * Scans the view hierarchy with root given by the data source for accessibility
@@ -65,9 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param rootViews An array of views to check for accessibility issues. Checks the given views
  * and all subviews. Must not be empty.
- * @return A GSCXScannerResult object containing all the issues found in the scan.
+ * @return A @c GTXHierarchyResultCollection object containing all the issues found in the scan.
  */
-- (GSCXScannerResult *)scanRootViews:(NSArray<UIView *> *)rootViews;
+- (GTXHierarchyResultCollection *)scanRootViews:(NSArray<UIView *> *)rootViews;
 
 /**
  * Registers the given check to be executed on all elements this instance is used
@@ -86,19 +85,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deregisterCheck:(id<GTXChecking>)check;
 
 /**
- * Configures this instance to skip elements by a given blacklist.
+ * Configures this instance to skip elements by a given excludeList.
  *
- * @param blacklist A GTXBlacklisting object used to skip elements for accessibility checks.
+ * @param excludeList A GTXExcludeListing object used to skip elements for accessibility checks.
  */
-- (void)registerBlacklist:(id<GTXBlacklisting>)blacklist;
+- (void)registerExcludeList:(id<GTXExcludeListing>)excludeList;
 
 /**
- * Removes the blacklist from skipping all elements. If the blacklist is not registered, does
+ * Removes the excludeList from skipping all elements. If the excludeList is not registered, does
  * nothing.
  *
- * @param blacklist A @c GTXBlacklisting object that needs to be de-registered.
+ * @param excludeList A @c GTXExcludeListing object that needs to be de-registered.
  */
-- (void)deregisterBlacklist:(id<GTXBlacklisting>)blacklist;
+- (void)deregisterExcludeList:(id<GTXExcludeListing>)excludeList;
 
 @end
 

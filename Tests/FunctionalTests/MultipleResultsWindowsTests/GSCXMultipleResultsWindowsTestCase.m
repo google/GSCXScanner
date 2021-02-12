@@ -32,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setUp {
   [super setUp];
 
+  [[GREYConfiguration sharedConfiguration] setValue:@[ kGSCXDoNotBlockNetworkRegex ]
+                                       forConfigKey:kGREYConfigKeyBlockedURLRegex];
+
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _application = [[XCUIApplication alloc] init];

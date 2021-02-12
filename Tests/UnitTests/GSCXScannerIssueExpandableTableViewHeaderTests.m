@@ -18,8 +18,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GSCXScannerIssue.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GSCXScannerIssueExpandableTableViewHeader (ExposedForTesting)

@@ -17,8 +17,7 @@
 #import <Foundation/Foundation.h>
 
 #import "GSCXScannerIssueTableViewSection.h"
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -28,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GSCXContinuousScannerListTabBarUtils : NSObject
 
 /**
- * Converts an array of @c GSCXScannerResult instances to an array of
+ * Converts an array of @c GTXHierarchyResultCollection instances to an array of
  * @c GSCXScannerIssueTableViewSection instances. Each @c GSCXScannerIssueTableViewSection
  * represents a single scan on a single screen. Each row in a section represents a single UI element
  * with accessibility issues found in that scan. Each suggestion in a row represents a single
@@ -39,10 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
  * @c results.
  */
 + (NSArray<GSCXScannerIssueTableViewSection *> *)sectionsWithGroupedByScanResults:
-    (NSArray<GSCXScannerResult *> *)results;
+    (NSArray<GTXHierarchyResultCollection *> *)results;
 
 /**
- * Converts an array of @c GSCXScannerResult instances to an array of
+ * Converts an array of @c GTXHierarchyResultCollection instances to an array of
  * @c GSCXScannerIssueTableViewSection instances. Each @c GSCXScannerIssueTableViewSection
  * represents a single @c id<GTXChecking> instance representing an accessibility issue. Each row in
  * a section represents a single UI element with the corresponding accessibility issue. Each row
@@ -52,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @return An array of table view sections each representing a single accessibility check.
  */
 + (NSArray<GSCXScannerIssueTableViewSection *> *)sectionsWithGroupedByCheckResults:
-    (NSArray<GSCXScannerResult *> *)results;
+    (NSArray<GTXHierarchyResultCollection *> *)results;
 
 @end
 

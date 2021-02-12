@@ -18,9 +18,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GSCXScannerIssue.h"
+#import "GSCXScannerTestsUtils.h"
 #import "GSCXTestCheckNames.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GSCXScannerIssueTableViewRowTests : XCTestCase
@@ -36,22 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setUp {
   [super setUp];
-  GSCXScannerIssue *dummyIssue = [[GSCXScannerIssue alloc] initWithCheckNames:@[ @"Check" ]
-                                                            checkDescriptions:@[ @"Description" ]
-                                                               elementAddress:0
-                                                                 elementClass:[UIView class]
-                                                          frameInScreenBounds:CGRectZero
-                                                           accessibilityLabel:nil
-                                                      accessibilityIdentifier:nil
-                                                           elementDescription:@"Element"];
-  UIImage *image = [[UIImage alloc] init];
-  GSCXScannerResult *dummyResult = [[GSCXScannerResult alloc] initWithIssues:@[ dummyIssue ]
-                                                                  screenshot:image];
-  self.rowUnderTest = [[GSCXScannerIssueTableViewRow alloc] initWithIssue:dummyIssue
-                                                                    title:@""
-                                                                 subtitle:@""
-                                                           originalResult:dummyResult
-                                                       originalIssueIndex:0];
+  self.rowUnderTest = [GSCXScannerTestsUtils newRow];
 }
 
 - (void)testZeroSuggestionsExistWhenAddSuggestionIsNotCalled {

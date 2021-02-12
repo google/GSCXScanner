@@ -56,20 +56,12 @@ NSString *const kGSCXScannerIssueExpandableTableViewHeaderCollapseActionName = @
                compatibleWithTraitCollection:nil];
     [_expandIcon setImage:iconImage forState:UIControlStateNormal];
     _expandIcon.translatesAutoresizingMaskIntoConstraints = NO;
-    // TODO: Remove this if Switch Control behavior is fixed.
-    //
-    // On iOS 13, Switch Control cannot focus on headers, even if they are marked as accessibility
-    // elements. It can focus on the expand icon if it is a UIButton element. To access the button,
-    // the header must not be an accessibility element, otherwise it won't let its children be
-    // focused. Thus, on iOS 13 only, the header should not be an accessibility element, and its
-    // children should be instead. On iOS 12 and before, both Voice Over and Switch Control can
-    // access headers, so this is unneeded.
-    if (@available(iOS 13.0, *)) {
-      self.isAccessibilityElement = NO;
-      self.accessibilityElements = @[ self.textLabel, _expandIcon ];
-    }
   }
   return self;
+}
+
+- (BOOL)accessibilityRespondsToUserInteraction {
+  return YES;
 }
 
 - (void)updateConstraints {

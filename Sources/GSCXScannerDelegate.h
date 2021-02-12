@@ -16,8 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @class GSCXScanner;
@@ -42,7 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @param scanner The scanner object that just completed the scan.
  * @param scanResult The result of the scan. The same as [scanner lastScanResult].
  */
-- (void)scanner:(GSCXScanner *)scanner didFinishScanWithResult:(GSCXScannerResult *)scanResult;
+- (void)scanner:(GSCXScanner *)scanner
+    didFinishScanWithResult:(GTXHierarchyResultCollection *)scanResult;
 
 @end
 

@@ -18,8 +18,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GSCXScannerIssue.h"
 #import "GSCXScannerIssueTableViewRow.h"
+#import "GSCXScannerTestsUtils.h"
 #import "GSCXTestCheckNames.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -63,7 +63,7 @@ static NSString *const kGSCXScannerIssueTableViewSectionTitle = @"Scan 1";
 }
 
 - (void)testSectionWithOneRowOneSuggestion {
-  GSCXScannerIssueTableViewRow *row = [self gscxtest_dummyRow];
+  GSCXScannerIssueTableViewRow *row = [GSCXScannerTestsUtils newRow];
   [row addSuggestionWithTitle:kGSCXTestAccessibilityLabelCheckName
                      contents:kGSCXTestAccessibilityLabelCheckDescription];
   NSArray<GSCXScannerIssueTableViewRow *> *testRows = @[ row ];
@@ -76,7 +76,7 @@ static NSString *const kGSCXScannerIssueTableViewSectionTitle = @"Scan 1";
 }
 
 - (void)testSectionWithOneRowManySuggestions {
-  GSCXScannerIssueTableViewRow *row = [self gscxtest_dummyRow];
+  GSCXScannerIssueTableViewRow *row = [GSCXScannerTestsUtils newRow];
   [row addSuggestionWithTitle:kGSCXTestAccessibilityLabelCheckName
                      contents:kGSCXTestAccessibilityLabelCheckDescription];
   [row addSuggestionWithTitle:kGSCXTestContrastRatioCheckName
@@ -93,9 +93,9 @@ static NSString *const kGSCXScannerIssueTableViewSectionTitle = @"Scan 1";
 }
 
 - (void)testSectionWithManyRowsOneSuggestion {
-  GSCXScannerIssueTableViewRow *row1 = [self gscxtest_dummyRow];
-  GSCXScannerIssueTableViewRow *row2 = [self gscxtest_dummyRow];
-  GSCXScannerIssueTableViewRow *row3 = [self gscxtest_dummyRow];
+  GSCXScannerIssueTableViewRow *row1 = [GSCXScannerTestsUtils newRow];
+  GSCXScannerIssueTableViewRow *row2 = [GSCXScannerTestsUtils newRow];
+  GSCXScannerIssueTableViewRow *row3 = [GSCXScannerTestsUtils newRow];
   [row1 addSuggestionWithTitle:kGSCXTestAccessibilityLabelCheckName
                       contents:kGSCXTestAccessibilityLabelCheckDescription];
   [row2 addSuggestionWithTitle:kGSCXTestAccessibilityLabelCheckName
@@ -112,9 +112,9 @@ static NSString *const kGSCXScannerIssueTableViewSectionTitle = @"Scan 1";
 }
 
 - (void)testSectionWithManyRowsSomeOneSuggestionSomeManySuggestions {
-  GSCXScannerIssueTableViewRow *row1 = [self gscxtest_dummyRow];
-  GSCXScannerIssueTableViewRow *row2 = [self gscxtest_dummyRow];
-  GSCXScannerIssueTableViewRow *row3 = [self gscxtest_dummyRow];
+  GSCXScannerIssueTableViewRow *row1 = [GSCXScannerTestsUtils newRow];
+  GSCXScannerIssueTableViewRow *row2 = [GSCXScannerTestsUtils newRow];
+  GSCXScannerIssueTableViewRow *row3 = [GSCXScannerTestsUtils newRow];
   [row1 addSuggestionWithTitle:kGSCXTestAccessibilityLabelCheckName
                       contents:kGSCXTestAccessibilityLabelCheckDescription];
   [row1 addSuggestionWithTitle:kGSCXTestContrastRatioCheckName
@@ -134,31 +134,6 @@ static NSString *const kGSCXScannerIssueTableViewSectionTitle = @"Scan 1";
                                                          rows:testRows];
   XCTAssertEqual([section numberOfRows], testRows.count);
   XCTAssertEqual([section numberOfSuggestions], 6);
-}
-
-#pragma mark - Private
-
-/**
- * Constructs a new @c GSCXScannerIssueTableViewRow instance with default properties.
- */
-- (GSCXScannerIssueTableViewRow *)gscxtest_dummyRow {
-  GSCXScannerIssue *dummyIssue =
-      [[GSCXScannerIssue alloc] initWithCheckNames:@[ kGSCXScannerIssueDefaultCheckName ]
-                                 checkDescriptions:@[ kGSCXScannerIssueDefaultCheckDescription ]
-                                    elementAddress:0
-                                      elementClass:[UIView class]
-                               frameInScreenBounds:CGRectZero
-                                accessibilityLabel:nil
-                           accessibilityIdentifier:nil
-                                elementDescription:kGSCXScannerIssueElementDescription];
-  UIImage *dummyImage = [[UIImage alloc] init];
-  GSCXScannerResult *dummyResult = [[GSCXScannerResult alloc] initWithIssues:@[ dummyIssue ]
-                                                                  screenshot:dummyImage];
-  return [[GSCXScannerIssueTableViewRow alloc] initWithIssue:dummyIssue
-                                                       title:@""
-                                                    subtitle:@""
-                                              originalResult:dummyResult
-                                          originalIssueIndex:0];
 }
 
 @end

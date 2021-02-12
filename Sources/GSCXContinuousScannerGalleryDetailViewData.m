@@ -21,9 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GSCXContinuousScannerGalleryDetailViewData ()
 
 /**
- * The labels in @c stackView describing the accessibility issue(s) on the UI element.
+ * The labels in @c stackView describing the failing accessibility check(s) on the UI element.
  */
-@property(strong, nonatomic) NSMutableArray<UILabel *> *issueLabels;
+@property(strong, nonatomic) NSMutableArray<UILabel *> *checkLabels;
 
 @end
 
@@ -49,26 +49,26 @@ NS_ASSUME_NONNULL_BEGIN
                                                                     options:0
                                                                     metrics:nil
                                                                       views:views]];
-    _issueLabels = [NSMutableArray array];
+    _checkLabels = [NSMutableArray array];
   }
   return self;
 }
 
-- (void)addIssueWithTitle:(NSString *)title contents:(NSString *)contents {
+- (void)addCheckWithTitle:(NSString *)title contents:(NSString *)contents {
   UILabel *titleLabel = [[UILabel alloc] init];
   titleLabel.text = title;
   titleLabel.numberOfLines = 0;
   titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleTitle1];
   titleLabel.textColor = self.textColor;
   [self.stackView addArrangedSubview:titleLabel];
-  [self.issueLabels addObject:titleLabel];
+  [self.checkLabels addObject:titleLabel];
   UILabel *contentsLabel = [[UILabel alloc] init];
   contentsLabel.text = contents;
   contentsLabel.numberOfLines = 0;
   contentsLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
   contentsLabel.textColor = self.textColor;
   [self.stackView addArrangedSubview:contentsLabel];
-  [self.issueLabels addObject:contentsLabel];
+  [self.checkLabels addObject:contentsLabel];
 }
 
 - (void)didLayoutSubviews {
@@ -81,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)setTextColor:(UIColor *)textColor {
-  for (UILabel *label in self.issueLabels) {
+  for (UILabel *label in self.checkLabels) {
     label.textColor = textColor;
   }
   _textColor = textColor;

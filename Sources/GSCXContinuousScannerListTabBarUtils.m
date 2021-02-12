@@ -28,10 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation GSCXContinuousScannerListTabBarUtils
 
 + (NSArray<GSCXScannerIssueTableViewSection *> *)sectionsWithGroupedByScanResults:
-    (NSArray<GSCXScannerResult *> *)results {
+    (NSArray<GTXHierarchyResultCollection *> *)results {
   NSMutableArray<GSCXScannerIssueTableViewSection *> *sections = [[NSMutableArray alloc] init];
   NSInteger sectionIndex = 0;
-  for (GSCXScannerResult *result in results) {
+  for (GTXHierarchyResultCollection *result in results) {
     [sections addObject:[self gscx_sectionFromResult:result atIndex:sectionIndex]];
     sectionIndex++;
   }
@@ -39,18 +39,19 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (NSArray<GSCXScannerIssueTableViewSection *> *)sectionsWithGroupedByCheckResults:
-    (NSArray<GSCXScannerResult *> *)results {
+    (NSArray<GTXHierarchyResultCollection *> *)results {
   GSCXRowsByCheckNameMutableDictionary *rowsByCheckName = [[NSMutableDictionary alloc] init];
   NSUInteger scanIndex = 0;
-  for (GSCXScannerResult *result in results) {
-    NSInteger issueIndex = 0;
-    for (GSCXScannerIssue *issue in result.issues) {
-      [GSCXContinuousScannerListTabBarUtils gscx_addRowsForChecksInIssue:issue
-                                                            toDictionary:rowsByCheckName
-                                                               scanIndex:scanIndex
-                                                                inResult:result
-                                                      originalIssueIndex:issueIndex];
-      issueIndex++;
+  for (GTXHierarchyResultCollection *result in results) {
+    NSInteger elementResultIndex = 0;
+    for (GTXElementResultCollection *elementResult in result.elementResults) {
+      [GSCXContinuousScannerListTabBarUtils
+          gscx_addRowsForChecksInElementResult:elementResult
+                                  toDictionary:rowsByCheckName
+                                     scanIndex:scanIndex
+                                      inResult:result
+                          originalElementIndex:elementResultIndex];
+      elementResultIndex++;
     }
     scanIndex++;
   }
@@ -60,81 +61,87 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Private
 
 /**
- * Converts a @c GSCXScannerResult instance into a @c GSCXScannerIssueTableViewSection instance.
- * Each row in the section corresponds to an issue in @c result.
+ * Converts a @c GTXHierarchyResultCollection instance into a @c GSCXScannerIssueTableViewSection
+ * instance. Each row in the section corresponds to an element in @c result.
  *
  * @param result The result to convert into a section.
  * @param scanIndex The index of the scan @c result represents.
- * @return A @c GSCXScannerIssueTableViewSection instance containing rows representing the issues in
+ * @return A @c GSCXScannerIssueTableViewSection instance containing rows representing the elements
+ * in
  * @c result.
  */
-+ (GSCXScannerIssueTableViewSection *)gscx_sectionFromResult:(GSCXScannerResult *)result
++ (GSCXScannerIssueTableViewSection *)gscx_sectionFromResult:(GTXHierarchyResultCollection *)result
                                                      atIndex:(NSInteger)scanIndex {
   // TODO: Localize this and load it from an external resource instead of hardcoding
   // it.
   NSString *title = [NSString stringWithFormat:@"Screen %ld", (long)(scanIndex + 1)];
   NSMutableArray<GSCXScannerIssueTableViewRow *> *rows = [[NSMutableArray alloc] init];
-  NSInteger issueIndex = 0;
-  for (GSCXScannerIssue *issue in result.issues) {
-    [rows addObject:[self gscx_rowFromIssue:issue inResult:result atIndex:issueIndex]];
-    issueIndex++;
+  NSInteger elementResultIndex = 0;
+  for (GTXElementResultCollection *elementResult in result.elementResults) {
+    [rows addObject:[self gscx_rowFromElementResult:elementResult
+                                           inResult:result
+                                            atIndex:elementResultIndex]];
+    elementResultIndex++;
   }
   return [[GSCXScannerIssueTableViewSection alloc] initWithTitle:title subtitle:nil rows:rows];
 }
 
 /**
- * Converts a @c GSCXScannerIssue instance into a @c GSCXScannerIssueTableViewRow instance. Each
- * suggestion in the row corresponds to an underlying accessibility issue in @c issue.
+ * Converts a @c GTXElementResultCollection instance into a @c GSCXScannerIssueTableViewRow
+ * instance. Each suggestion in the row corresponds to an underlying accessibility issue in
+ * @c elementResult.
  *
- * @param issue The issue to convert into a row.
- * @param result The result containing @c issue.
- * @param issueIndex The index of the issue in @c result.
+ * @param elementResult The element to convert into a row.
+ * @param result The result containing @c elementResult.
+ * @param elementIndex The index of the element in @c result.
  * @return A @c GSCXScannerIssueTableViewRow instance containing suggestions representing the
- *  underlying issues in @c issue.
+ *  underlying issues in @c elementResult.
  */
-+ (GSCXScannerIssueTableViewRow *)gscx_rowFromIssue:(GSCXScannerIssue *)issue
-                                           inResult:(GSCXScannerResult *)result
-                                            atIndex:(NSInteger)issueIndex {
-  NSString *subtitle = issue.underlyingIssueCount == 1
-                           ? @"1 suggestion"
-                           : [NSString stringWithFormat:@"%lu suggestions",
-                                                        (unsigned long)issue.underlyingIssueCount];
-  GSCXScannerIssueTableViewRow *row =
-      [[GSCXScannerIssueTableViewRow alloc] initWithIssue:issue
-                                                    title:issue.elementDescription
-                                                 subtitle:subtitle
-                                           originalResult:result
-                                       originalIssueIndex:issueIndex];
-  for (NSUInteger issueIndex = 0; issueIndex < [issue underlyingIssueCount]; issueIndex++) {
-    [row addSuggestionWithTitle:issue.gtxCheckNames[issueIndex]
-                       contents:issue.gtxCheckDescriptions[issueIndex]];
++ (GSCXScannerIssueTableViewRow *)gscx_rowFromElementResult:
+                                      (GTXElementResultCollection *)elementResult
+                                                   inResult:(GTXHierarchyResultCollection *)result
+                                                    atIndex:(NSInteger)elementIndex {
+  NSUInteger checkResultCount = elementResult.checkResults.count;
+  NSString *subtitle =
+      (checkResultCount == 1
+          ? @"1 suggestion"
+          : [NSString stringWithFormat:@"%lu suggestions", (unsigned long)checkResultCount]);
+  GSCXScannerIssueTableViewRow *row = [[GSCXScannerIssueTableViewRow alloc]
+             initWithTitle:elementResult.elementReference.elementDescription
+                  subtitle:subtitle
+            originalResult:result
+      originalElementIndex:elementIndex];
+  for (GTXCheckResult *checkResult in elementResult.checkResults) {
+    [row addSuggestionWithTitle:checkResult.checkName contents:checkResult.errorDescription];
   }
   return row;
 }
 
 /**
- * Adds a row for each underlying issue in @c issue to @c rowsByCheckName.
+ * Adds a row for each underlying issue in @c elementResult to @c rowsByCheckName.
  *
- * @param issue The issue containing underlying accessibilty issues to add to @c rowsByCheckName.
+ * @param elementResult The element containing underlying accessibilty issues to add to
+ *  @c rowsByCheckName.
  * @param rowsByCheckName A dictionary mapping check names to rows representing UI elements failing
  *  the corresponding check.
- * @param scanIndex The index of the @c GSCXScannerResult instance containing @c issue.
- * @param result The result containing @c issue.
- * @param originalIssueIndex The index of the issue in @c result.
+ * @param scanIndex The index of the @c GTXHierarchyResultCollection instance containing
+ *  @c elementResult.
+ * @param result The result containing @c elementResult.
+ * @param originalElementResult The index of the element in @c result.
  */
-+ (void)gscx_addRowsForChecksInIssue:(GSCXScannerIssue *)issue
-                        toDictionary:(GSCXRowsByCheckNameMutableDictionary *)rowsByCheckName
-                           scanIndex:(NSUInteger)scanIndex
-                            inResult:(GSCXScannerResult *)result
-                  originalIssueIndex:(NSInteger)originalIssueIndex {
-  for (NSUInteger i = 0; i < issue.underlyingIssueCount; i++) {
-    NSString *checkName = issue.gtxCheckNames[i];
++ (void)gscx_addRowsForChecksInElementResult:(GTXElementResultCollection *)elementResult
+                                toDictionary:(GSCXRowsByCheckNameMutableDictionary *)rowsByCheckName
+                                   scanIndex:(NSUInteger)scanIndex
+                                    inResult:(GTXHierarchyResultCollection *)result
+                        originalElementIndex:(NSInteger)originalElementIndex {
+  for (NSUInteger i = 0; i < elementResult.checkResults.count; i++) {
+    NSString *checkName = elementResult.checkResults[i].checkName;
     GSCXScannerIssueTableViewRow *row =
-        [GSCXContinuousScannerListTabBarUtils gscx_rowFromIssue:issue
-                                               onlyCheckAtIndex:i
-                                                      scanIndex:scanIndex
-                                                       inResult:result
-                                             originalIssueIndex:originalIssueIndex];
+        [GSCXContinuousScannerListTabBarUtils gscx_rowFromElementResult:elementResult
+                                                       onlyCheckAtIndex:i
+                                                              scanIndex:scanIndex
+                                                               inResult:result
+                                                   originalElementIndex:originalElementIndex];
     if ([rowsByCheckName objectForKey:checkName] == nil) {
       [rowsByCheckName setObject:[[NSMutableArray alloc] init] forKey:checkName];
     }
@@ -143,56 +150,55 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 /**
- * Constructs a @c GSCXScannerIssueTableViewRow instance for the UI element associated with @c issue
- * containing only the check at @c checkIndex.
+ * Constructs a @c GSCXScannerIssueTableViewRow instance for the UI element associated with
+ * @c elementResult containing only the check at @c checkIndex.
  *
- * @param issue The issue associated with the UI element the returned row represents.
+ * @param elementResult The result associated with the UI element the returned row represents.
  * @param checkIndex The index of the check in @c issue to add as a suggestion to the returned row.
- * @param scanIndex The index of the @c GSCXScannerResult instance containing @c issue.
- * @param result The result containing @c issue.
- * @param originalIssueIndex The index of @c issue in @c result.
+ * @param scanIndex The index of the @c GTXHierarchyResultCollection instance containing @c
+ *  elementResult.
+ * @param result The result containing @c elementResult.
+ * @param originalElementIndex The index of @c elementResult in @c result.
  * @return A @c GSCXScannerIssueTableViewRow instance representing the UI element associated with
- *  @c issue. Contains suggestions for the accessibility issue at @c checkIndex in @c issue
- *  occurring in the scan result at @c scanIndex.
+ *  @c elementResult. Contains suggestions for the accessibility issue at @c checkIndex in
+ *  @c elementResult occurring in the scan result at @c scanIndex.
  */
-+ (GSCXScannerIssueTableViewRow *)gscx_rowFromIssue:(GSCXScannerIssue *)issue
-                                   onlyCheckAtIndex:(NSUInteger)checkIndex
-                                          scanIndex:(NSUInteger)scanIndex
-                                           inResult:(GSCXScannerResult *)result
-                                 originalIssueIndex:(NSInteger)originalIssueIndex {
-  GSCXScannerIssue *issueWithOneCheck =
-      [GSCXContinuousScannerListTabBarUtils gscx_issueFromIssue:issue onlyCheckAtIndex:checkIndex];
++ (GSCXScannerIssueTableViewRow *)gscx_rowFromElementResult:
+                                      (GTXElementResultCollection *)elementResult
+                                           onlyCheckAtIndex:(NSUInteger)checkIndex
+                                                  scanIndex:(NSUInteger)scanIndex
+                                                   inResult:(GTXHierarchyResultCollection *)result
+                                       originalElementIndex:(NSInteger)originalElementIndex {
+  GTXElementResultCollection *copiedElementResult =
+      [GSCXContinuousScannerListTabBarUtils gscx_elementResultFromResult:elementResult
+                                                        onlyCheckAtIndex:checkIndex];
   // TODO: Localize this and load it from an external resource instead of hardcoding
   // it.
   NSString *subtitle = [NSString stringWithFormat:@"Screen %lu", (unsigned long)(scanIndex + 1)];
-  GSCXScannerIssueTableViewRow *row =
-      [[GSCXScannerIssueTableViewRow alloc] initWithIssue:issueWithOneCheck
-                                                    title:issue.elementDescription
-                                                 subtitle:subtitle
-                                           originalResult:result
-                                       originalIssueIndex:checkIndex];
-  [row addSuggestionWithTitle:issue.gtxCheckNames[checkIndex]
-                     contents:issue.gtxCheckDescriptions[checkIndex]];
+  GSCXScannerIssueTableViewRow *row = [[GSCXScannerIssueTableViewRow alloc]
+             initWithTitle:copiedElementResult.elementReference.elementDescription
+                  subtitle:subtitle
+            originalResult:result
+      originalElementIndex:originalElementIndex];
+  [row addSuggestionWithTitle:elementResult.checkResults[checkIndex].checkName
+                     contents:elementResult.checkResults[checkIndex].errorDescription];
   return row;
 }
 
 /**
- * Copies a @c GSCXScannerIssue instance, removing all checks except for the check at @c checkIndex.
+ * Copies a @c GTXElementResultCollection instance, removing all checks except for the check at
+ * @c checkIndex.
  *
- * @param issue The issue to copy.
- * @param checkIndex The index of the only check to include in the copied issue.
- * @return A copy of @c issue containing only the check at @c checkIndex.
+ * @param elementResult The element result to copy.
+ * @param checkIndex The index of the only check to include in the copied element result.
+ * @return A copy of @c elementResult containing only the check at @c checkIndex.
  */
-+ (GSCXScannerIssue *)gscx_issueFromIssue:(GSCXScannerIssue *)issue
-                         onlyCheckAtIndex:(NSUInteger)checkIndex {
-  return [[GSCXScannerIssue alloc] initWithCheckNames:@[ issue.gtxCheckNames[checkIndex] ]
-                                    checkDescriptions:@[ issue.gtxCheckDescriptions[checkIndex] ]
-                                       elementAddress:issue.elementAddress
-                                         elementClass:issue.elementClass
-                                  frameInScreenBounds:issue.frame
-                                   accessibilityLabel:issue.accessibilityLabel
-                              accessibilityIdentifier:issue.accessibilityIdentifier
-                                   elementDescription:issue.elementDescription];
++ (GTXElementResultCollection *)gscx_elementResultFromResult:
+                                    (GTXElementResultCollection *)elementResult
+                                            onlyCheckAtIndex:(NSUInteger)checkIndex {
+  return [[GTXElementResultCollection alloc]
+      initWithElement:elementResult.elementReference
+         checkResults:@[ elementResult.checkResults[checkIndex] ]];
 }
 
 /**

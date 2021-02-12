@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Creates the scanner UI in a window overlaid on the main application window. Uses the default set
- * of checks, no blacklists, and no delegate. The overlay is installed on the current key window.
+ * of checks, no excludeLists, and no delegate. The overlay is installed on the current key window.
  * The caller of this method owns the returned window.
  *
  * @return A window containing the UI to manually perform scans and see scan results.

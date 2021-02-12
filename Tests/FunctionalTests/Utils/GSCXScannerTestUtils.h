@@ -20,6 +20,12 @@
 #import "GSCXTestPage.h"
 
 /**
+ * A pattern to exclude when EarlGrey blocks on network requests. If a network request is
+ * open, but the url matches this pattern, Earl Grey should not block on it.
+ */
+FOUNDATION_EXTERN NSString *const kGSCXDoNotBlockNetworkRegex;
+
+/**
  * Contains shared functionality to interact with the test app in all integration tests.
  */
 @interface GSCXScannerTestUtils : NSObject

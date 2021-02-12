@@ -1,5 +1,5 @@
 //
-// Copyright 2018 Google Inc.
+// Copyright 2020 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@
 // limitations under the License.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "GSCXScannerResult.h"
+#import <GTXiLib/GTXiLib.h>
+#import "GSCXReportContext.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GSCXScannerResultTableViewController
-    : UIViewController <UITableViewDataSource, UITableViewDelegate>
+/**
+ * Methods to serialize a @c GTXHierarchyResultCollection instance when exporting a report.
+ */
+@interface GTXHierarchyResultCollection (GSCXReport)
 
 /**
- * The result of a scan. It is the responsibility of this object's owner to set scanResult before
- * this view controller appears.
+ * Constructs an HTML representation of this instance.
+ *
+ * @param context The context storing external resources (such as image files) for the report.
+ * @return An HTML description of all the element results in this instance.
  */
-@property(strong, nonatomic) GSCXScannerResult *scanResult;
-
-/**
- * The table view displaying all individual issues found in a scan.
- */
-@property(weak, nonatomic) IBOutlet UITableView *tableView;
+- (NSString *)htmlDescription:(GSCXReportContext *)context;
 
 @end
 

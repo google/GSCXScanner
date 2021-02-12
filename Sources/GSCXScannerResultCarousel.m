@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The scan results to be displayed.
  */
-@property(strong, nonatomic, readonly) NSArray<GSCXScannerResult *> *results;
+@property(strong, nonatomic, readonly) NSArray<GTXHierarchyResultCollection *> *results;
 
 /**
  * The index of the currently selected scan. Defaults to 0.
@@ -59,14 +59,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Invoked when the user selects a new scan result.
  */
-@property(copy, nonatomic) GSCXScannerResultCarouselBlock selectionBlock;
+@property(copy, nonatomic) GSCXCarouselBlock selectionBlock;
 
 @end
 
 @implementation GSCXScannerResultCarousel
 
-- (instancetype)initWithResults:(NSArray<GSCXScannerResult *> *)results
-                 selectionBlock:(GSCXScannerResultCarouselBlock)selectionBlock {
+- (instancetype)initWithResults:(NSArray<GTXHierarchyResultCollection *> *)results
+                 selectionBlock:(GSCXCarouselBlock)selectionBlock {
   self = [super init];
   if (self != nil) {
     _results = results;
@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
               [strongSelf focusResultAtIndex:strongSelf.selectedIndex + 1 animated:YES];
             }];
     _carouselAccessibilityElement.accessibilityLabel =
-        [NSString stringWithFormat:@"%lu issues", (unsigned long)_results[0].issueCount];
+        [NSString stringWithFormat:@"%lu issues", (unsigned long)[_results[0] checkResultCount]];
     _carouselAccessibilityElement.accessibilityValue =
         [GSCXScannerResultCarousel gscx_accessibilityValueAtSelectedIndex:0];
     _carouselView.accessibilityElements = @[ _carouselAccessibilityElement ];
@@ -191,8 +191,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)gscx_setAccessibilityOfCarouselForResultAtIndex:(NSUInteger)index {
   GTX_ASSERT(index < self.results.count, @"index must be within bounds");
-  self.carouselAccessibilityElement.accessibilityLabel =
-      [NSString stringWithFormat:@"%lu issues", (unsigned long)self.results[index].issueCount];
+  self.carouselAccessibilityElement.accessibilityLabel = [NSString
+      stringWithFormat:@"%lu issues", (unsigned long)[self.results[index] checkResultCount]];
   self.carouselAccessibilityElement.accessibilityValue =
       [GSCXScannerResultCarousel gscx_accessibilityValueAtSelectedIndex:index];
 }

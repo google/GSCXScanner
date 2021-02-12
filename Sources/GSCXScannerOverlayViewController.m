@@ -20,12 +20,11 @@
 
 #import "GSCXContinuousScannerResultViewController.h"
 #import "GSCXContinuousScannerScreenshotViewController.h"
-#import "GSCXCornerConstraints.h"
 #import "GSCXMasterScheduler.h"
+#import "GSCXOverlayViewArranger.h"
 #import "GSCXReport.h"
 #import "GSCXScanResultsPageConstants.h"
 #import "GSCXScanner.h"
-#import "GSCXScannerResultTableViewController.h"
 #import "GSCXScannerScreenshotViewController.h"
 #import "GSCXScannerSettingsItem.h"
 #import "GSCXScannerSettingsItemConfiguring.h"
@@ -115,18 +114,10 @@ static NSString *const kGSCXSettingsButtonTitleContinuousScanningInactive = @"Sc
 @interface GSCXScannerOverlayViewController ()
 
 /**
- * The difference between the initial point of a gesture and the center of the settings button. This
- * value is subtracted from the current gesture's position to get the new center of the settings
- * button. This is necessary because otherwise the button's center will snap to the gesture's
- * location at the beginning of the gesture (because the user might not press directly at the
- * center).
+ * Manages the frame of the settings button. Moves the button to a different corner of the
+ * screen if it obscures application UI and handles long press to move gestures.
  */
-@property(assign, nonatomic) CGPoint settingsDragInitialOffset;
-/**
- * The constraints of the settings button. Used to move the button to a different corner of the
- * screen if it obscures application UI.
- */
-@property(strong, nonatomic) GSCXCornerConstraints *settingsConstraints;
+@property(strong, nonatomic) GSCXOverlayViewArranger *settingsButtonArranger;
 
 /**
  * YES if accessibility is enabled, NO otherwise.
@@ -163,14 +154,7 @@ static NSString *const kGSCXSettingsButtonTitleContinuousScanningInactive = @"Sc
  *
  * @param result The result of a scan.
  */
-- (void)gscx_presentScreenshotControllerForScanResult:(GSCXScannerResult *)result;
-
-/**
- * Presents a table view of all accessibility issues found in a given scan.
- *
- * @return result The result of a scan.
- */
-- (void)gscx_presentTableControllerForScanResult:(GSCXScannerResult *)result;
+- (void)gscx_presentScreenshotControllerForScanResult:(GTXHierarchyResultCollection *)result;
 
 /**
  * Presents an alert explaining that accessibility is not enabled and potential workarounds, if
@@ -244,10 +228,10 @@ static NSString *const kGSCXSettingsButtonTitleContinuousScanningInactive = @"Sc
   [self gscx_setSettingsAttributedTitleToText:kGSCXSettingsButtonTitleContinuousScanningInactive];
   [self gscx_setSettingsButtonColorForCurrentAppearance];
   self.settingsButton.translatesAutoresizingMaskIntoConstraints = NO;
-  self.settingsConstraints = [GSCXCornerConstraints constraintsWithView:self.settingsButtonBlur
-                                                              container:self];
+  self.settingsButtonArranger =
+      [[GSCXOverlayViewArranger alloc] initWithView:self.settingsButtonBlur container:self];
   self.settingsButton.accessibilityCustomActions =
-      self.settingsConstraints.rotateAccessibilityActions;
+      self.settingsButtonArranger.rotateAccessibilityActions;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -336,19 +320,7 @@ static NSString *const kGSCXSettingsButtonTitleContinuousScanningInactive = @"Sc
 }
 
 - (IBAction)gscx_dragSettingsButton:(UIGestureRecognizer *)gestureRecognizer {
-  NSParameterAssert([gestureRecognizer isKindOfClass:[UIGestureRecognizer class]]);
-  CGPoint location = [gestureRecognizer locationInView:self.view];
-  switch (gestureRecognizer.state) {
-    case UIGestureRecognizerStateBegan:
-      self.settingsDragInitialOffset = CGPointMake(location.x - self.settingsButtonBlur.center.x,
-                                                   location.y - self.settingsButtonBlur.center.y);
-      break;
-
-    default:
-      self.settingsButtonBlur.center = CGPointMake(location.x - self.settingsDragInitialOffset.x,
-                                                   location.y - self.settingsDragInitialOffset.y);
-      break;
-  }
+  [self.settingsButtonArranger handleDragForGestureRecognizer:gestureRecognizer];
 }
 
 - (void)gscx_setSettingsButtonColorForCurrentAppearance {
@@ -380,7 +352,7 @@ static NSString *const kGSCXSettingsButtonTitleContinuousScanningInactive = @"Sc
   [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)gscx_presentScreenshotControllerForScanResult:(GSCXScannerResult *)result {
+- (void)gscx_presentScreenshotControllerForScanResult:(GTXHierarchyResultCollection *)result {
   GSCXScannerScreenshotViewController *screenshotController =
       [[GSCXScannerScreenshotViewController alloc]
           initWithNibName:@"GSCXScannerScreenshotViewController"
@@ -393,30 +365,6 @@ static NSString *const kGSCXSettingsButtonTitleContinuousScanningInactive = @"Sc
   navController.modalPresentationStyle = UIModalPresentationFullScreen;
   navController.navigationBar.translucent = NO;
   [self presentViewController:navController animated:true completion:nil];
-}
-
-- (void)gscx_presentTableControllerForScanResult:(GSCXScannerResult *)result {
-  GSCXScannerResultTableViewController *tableController =
-      [[GSCXScannerResultTableViewController alloc]
-          initWithNibName:@"GSCXScannerResultTableViewController"
-                   bundle:[NSBundle bundleForClass:[GSCXScannerResultTableViewController class]]];
-  tableController.scanResult = result;
-  [self gscx_updateNavigationItemForResultsViewController:tableController];
-  UINavigationController *navController =
-      [[UINavigationController alloc] initWithRootViewController:tableController];
-  [self.resultsWindowCoordinator
-      presentViewController:navController
-                   animated:true
-                 completion:^() {
-                   UIAlertController *alert =
-                       [UIAlertController alertControllerWithTitle:kGSCXNoScreenshotAlertTitle
-                                                           message:kGSCXNoScreenshotAlertMessage
-                                                    preferredStyle:UIAlertControllerStyleAlert];
-                   [alert addAction:[UIAlertAction actionWithTitle:kGSCXNoIssuesDismissButtonText
-                                                             style:UIAlertActionStyleCancel
-                                                           handler:nil]];
-                   [tableController presentViewController:alert animated:YES completion:nil];
-                 }];
 }
 
 - (void)gscx_presentAccessibilityNotEnabledAlert {
@@ -505,9 +453,9 @@ static NSString *const kGSCXSettingsButtonTitleContinuousScanningInactive = @"Sc
 }
 
 - (void)gscx_performScan {
-  GSCXScannerResult *result =
+  GTXHierarchyResultCollection *result =
       [self.scanner scanRootViews:[self.resultsWindowCoordinator windowsToScan]];
-  if (result.issueCount > 0) {
+  if ([result checkResultCount] > 0) {
     [self gscx_presentScreenshotControllerForScanResult:result];
   } else {
     [self gscx_presentNoIssuesFoundAlert];

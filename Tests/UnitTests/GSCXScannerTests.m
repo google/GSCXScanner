@@ -28,6 +28,12 @@ static const CGRect kGSCXScannerTestsFailingElementFrame1 = {{1, 2}, {3, 4}};
 
 static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
 
+/**
+ * A non-zero frame used to size windows. It must be non zero to correctly generate an image and
+ * contain subviews.
+ */
+static const CGRect kGSCXScannerTestsWindowFrame = {{0, 0}, {44, 44}};
+
 @interface GSCXScannerTests : XCTestCase <GSCXScannerDelegate>
 
 /**
@@ -47,7 +53,7 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
  * set this property to control the functionality of the delegate.
  */
 @property(assign, nonatomic) void (^scannerDidFinishScanWithResult)
-    (GSCXScanner *, GSCXScannerResult *);
+    (GSCXScanner *, GTXHierarchyResultCollection *);
 
 /**
  * Returns a UIView whose @c isAccessible property is YES and whose tag is
@@ -72,12 +78,13 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   self.scannerWillBeginScanBlock = ^(GSCXScanner *scanner) {
     scannerWillBeginScanWasCalled = YES;
   };
-  self.scannerDidFinishScanWithResult = ^(GSCXScanner *scanner, GSCXScannerResult *result) {
-    scannerDidFinishScanWithResultWasCalled = YES;
-  };
+  self.scannerDidFinishScanWithResult =
+      ^(GSCXScanner *scanner, GTXHierarchyResultCollection *result) {
+        scannerDidFinishScanWithResultWasCalled = YES;
+      };
 
-  UIView *rootView = [[UIView alloc] initWithFrame:CGRectZero];
-  UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+  UIView *rootView = [[UIView alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
+  UIWindow *window = [[UIWindow alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
   [window addSubview:rootView];
   [scanner scanRootViews:@[ rootView ]];
 
@@ -99,16 +106,23 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
     XCTAssertFalse(scannerWillBeginScanWasCalled);
     XCTAssertFalse(scannerDidFinishScanWithResultWasCalled);
     scannerWillBeginScanWasCalled = YES;
+    // On Xcode 12, the XCTAssert macros use nil instead of self. Reassign to self so the variable
+    // is not unused.
+    self = nil;
   };
-  self.scannerDidFinishScanWithResult = ^(GSCXScanner *scanner, GSCXScannerResult *result) {
-    GSCXScannerTests *self = weakSelf;
-    XCTAssertTrue(scannerWillBeginScanWasCalled);
-    XCTAssertFalse(scannerDidFinishScanWithResultWasCalled);
-    scannerDidFinishScanWithResultWasCalled = YES;
-  };
+  self.scannerDidFinishScanWithResult =
+      ^(GSCXScanner *scanner, GTXHierarchyResultCollection *result) {
+        // XCTAssert functions are macros that use self, so strongSelf cannot be used. Shadowing
+        // self prevents the expanded macros from causing a retain cycle.
+        GSCXScannerTests *self = weakSelf;
+        XCTAssertTrue(scannerWillBeginScanWasCalled);
+        XCTAssertFalse(scannerDidFinishScanWithResultWasCalled);
+        scannerDidFinishScanWithResultWasCalled = YES;
+        self = nil;
+      };
 
-  UIView *rootView = [[UIView alloc] initWithFrame:CGRectZero];
-  UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+  UIView *rootView = [[UIView alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
+  UIWindow *window = [[UIWindow alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
   [window addSubview:rootView];
   [scanner scanRootViews:@[ rootView ]];
 
@@ -123,33 +137,36 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   [scanner registerCheck:self.dummyCheck];
 
   UIView *rootView = [[UIView alloc] initWithFrame:kGSCXScannerTestsRootViewFrame];
-  UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+  UIWindow *window = [[UIWindow alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
   [window addSubview:rootView];
-  GSCXScannerResult *result = [scanner scanRootViews:@[ rootView ]];
+  GTXHierarchyResultCollection *result = [scanner scanRootViews:@[ rootView ]];
 
   XCTAssertEqual(result, scanner.lastScanResult);
-  XCTAssertEqual(result.issueCount, 0ul);
+  XCTAssertEqual(result.elementResults.count, 0ul);
 }
 
-- (void)testScanRootViewsWithSingleAccessibilityIssueCreatesResultWithSingleIssue {
+- (void)testScanRootViewsWithSingleAccessibilityIssueCreatesResultWithSingleElement {
   GSCXScanner *scanner = [GSCXScanner scanner];
   [scanner registerCheck:self.dummyCheck];
 
   UIView *rootView = [[UIView alloc] initWithFrame:kGSCXScannerTestsRootViewFrame];
   UIView *viewWithIssue = [GSCXScannerTests gscxtest_checkFailingAccessibleView];
   [rootView addSubview:viewWithIssue];
-  UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+  UIWindow *window = [[UIWindow alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
   [window addSubview:rootView];
-  GSCXScannerResult *result = [scanner scanRootViews:@[ rootView ]];
+  GTXHierarchyResultCollection *result = [scanner scanRootViews:@[ rootView ]];
 
   CGRect expectedFrame = rootView.accessibilityFrame;
   XCTAssertEqual(result, scanner.lastScanResult);
-  XCTAssertEqual(result.issueCount, 1ul);
-  XCTAssertEqualObjects([result gtxCheckNameAtIndex:0], kGSCXTestCheckName);
-  XCTAssert(CGRectEqualToRect([result frameAtIndex:0], expectedFrame));
+  XCTAssertEqual(result.elementResults.count, 1ul);
+  XCTAssertEqual(result.elementResults[0].checkResults.count, 1ul);
+  XCTAssertEqualObjects(result.elementResults[0].checkResults[0].checkName, kGSCXTestCheckName);
+  XCTAssert(CGRectEqualToRect(result.elementResults[0].elementReference.accessibilityFrame,
+                              expectedFrame));
 }
 
-- (void)testScanRootViewsWithMultipleAccessibilityIssuesCreatesResultWithMultipleIssues {
+- (void)
+    testScanRootViewsWithMultipleAccessibilityIssuesCreatesResultWithMultipleElementsSingleChecks {
   GSCXScanner *scanner = [GSCXScanner scanner];
   [scanner registerCheck:self.dummyCheck];
 
@@ -159,18 +176,22 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   viewWithIssue2.frame = kGSCXScannerTestsFailingElementFrame2;
   [rootView addSubview:viewWithIssue1];
   [rootView addSubview:viewWithIssue2];
-  UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+  UIWindow *window = [[UIWindow alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
   [window addSubview:rootView];
-  GSCXScannerResult *result = [scanner scanRootViews:@[ rootView ]];
+  GTXHierarchyResultCollection *result = [scanner scanRootViews:@[ rootView ]];
 
   CGRect expectedFrame1 = viewWithIssue1.accessibilityFrame;
   CGRect expectedFrame2 = viewWithIssue2.accessibilityFrame;
   XCTAssertEqual(result, scanner.lastScanResult);
-  XCTAssertEqual(result.issueCount, 2ul);
-  XCTAssertEqualObjects([result gtxCheckNameAtIndex:0], kGSCXTestCheckName);
-  XCTAssert(CGRectEqualToRect([result frameAtIndex:0], expectedFrame1));
-  XCTAssertEqualObjects([result gtxCheckNameAtIndex:1], kGSCXTestCheckName);
-  XCTAssert(CGRectEqualToRect([result frameAtIndex:1], expectedFrame2));
+  XCTAssertEqual(result.elementResults.count, 2ul);
+  XCTAssertEqual(result.elementResults[0].checkResults.count, 1ul);
+  XCTAssertEqual(result.elementResults[1].checkResults.count, 1ul);
+  XCTAssertEqualObjects(result.elementResults[0].checkResults[0].checkName, kGSCXTestCheckName);
+  XCTAssert(CGRectEqualToRect(result.elementResults[0].elementReference.accessibilityFrame,
+                              expectedFrame1));
+  XCTAssertEqualObjects(result.elementResults[1].checkResults[0].checkName, kGSCXTestCheckName);
+  XCTAssert(CGRectEqualToRect(result.elementResults[0].elementReference.accessibilityFrame,
+                              expectedFrame2));
 }
 
 - (void)testScanRootViewsWithAccessibilityIssueOnRootView {
@@ -178,15 +199,17 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   [scanner registerCheck:self.dummyCheck];
 
   UIView *rootView = [GSCXScannerTests gscxtest_checkFailingAccessibleView];
-  UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+  UIWindow *window = [[UIWindow alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
   [window addSubview:rootView];
-  GSCXScannerResult *result = [scanner scanRootViews:@[ rootView ]];
+  GTXHierarchyResultCollection *result = [scanner scanRootViews:@[ rootView ]];
 
   CGRect expectedFrame = rootView.accessibilityFrame;
   XCTAssertEqual(result, scanner.lastScanResult);
-  XCTAssertEqual(result.issueCount, 1ul);
-  XCTAssertEqualObjects([result gtxCheckNameAtIndex:0], kGSCXTestCheckName);
-  XCTAssert(CGRectEqualToRect([result frameAtIndex:0], expectedFrame));
+  XCTAssertEqual(result.elementResults.count, 1ul);
+  XCTAssertEqual(result.elementResults[0].checkResults.count, 1ul);
+  XCTAssertEqualObjects(result.elementResults[0].checkResults[0].checkName, kGSCXTestCheckName);
+  XCTAssert(CGRectEqualToRect(result.elementResults[0].elementReference.accessibilityFrame,
+                              expectedFrame));
 }
 
 - (void)testDeregisteringRegisteredCheckDoesNotCheckElements {
@@ -210,50 +233,50 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   [self gscxtest_assertIssueCountOnViewWithIssue:0 withScanner:scanner];
 }
 
-- (void)testBlacklistDoesSkipElement {
+- (void)testExcludeListDoesSkipElement {
   GSCXScanner *scanner = [GSCXScanner scanner];
   [scanner registerCheck:self.dummyCheck];
-  id<GTXBlacklisting> blacklist = [GTXBlacklistBlock
-      blacklistWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
+  id<GTXExcludeListing> excludeList = [GTXExcludeListBlock
+      excludeListWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
         return YES;
       }];
-  [scanner registerBlacklist:blacklist];
+  [scanner registerExcludeList:excludeList];
   [self gscxtest_assertIssueCountOnViewWithIssue:0 withScanner:scanner];
 }
 
-- (void)testDeregisteringBlacklistDoesNotSkipElement {
+- (void)testDeregisteringExcludeListDoesNotSkipElement {
   GSCXScanner *scanner = [GSCXScanner scanner];
   [scanner registerCheck:self.dummyCheck];
-  id<GTXBlacklisting> blacklist = [GTXBlacklistBlock
-      blacklistWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
+  id<GTXExcludeListing> excludeList = [GTXExcludeListBlock
+      excludeListWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
         return YES;
       }];
-  [scanner registerBlacklist:blacklist];
-  [scanner deregisterBlacklist:blacklist];
+  [scanner registerExcludeList:excludeList];
+  [scanner deregisterExcludeList:excludeList];
   [self gscxtest_assertIssueCountOnViewWithIssue:1 withScanner:scanner];
 }
 
-- (void)testCanReregisterDeregisteredBlacklist {
+- (void)testCanReregisterDeregisteredExcludeList {
   GSCXScanner *scanner = [GSCXScanner scanner];
   [scanner registerCheck:self.dummyCheck];
-  id<GTXBlacklisting> blacklist = [GTXBlacklistBlock
-      blacklistWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
+  id<GTXExcludeListing> excludeList = [GTXExcludeListBlock
+      excludeListWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
         return YES;
       }];
-  [scanner registerBlacklist:blacklist];
-  [scanner deregisterBlacklist:blacklist];
-  [scanner registerBlacklist:blacklist];
+  [scanner registerExcludeList:excludeList];
+  [scanner deregisterExcludeList:excludeList];
+  [scanner registerExcludeList:excludeList];
   [self gscxtest_assertIssueCountOnViewWithIssue:0 withScanner:scanner];
 }
 
-- (void)testDeregisteringUnregisteredBlacklistDoesNothing {
+- (void)testDeregisteringUnregisteredExcludeListDoesNothing {
   GSCXScanner *scanner = [GSCXScanner scanner];
   [scanner registerCheck:self.dummyCheck];
-  id<GTXBlacklisting> blacklist = [GTXBlacklistBlock
-      blacklistWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
+  id<GTXExcludeListing> excludeList = [GTXExcludeListBlock
+      excludeListWithBlock:^BOOL(id _Nonnull element, NSString *_Nonnull checkName) {
         return YES;
       }];
-  [scanner deregisterBlacklist:blacklist];
+  [scanner deregisterExcludeList:excludeList];
   [self gscxtest_assertIssueCountOnViewWithIssue:1 withScanner:scanner];
 }
 
@@ -263,7 +286,8 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   self.scannerWillBeginScanBlock(scanner);
 }
 
-- (void)scanner:(GSCXScanner *)scanner didFinishScanWithResult:(GSCXScannerResult *)scanResult {
+- (void)scanner:(GSCXScanner *)scanner
+    didFinishScanWithResult:(GTXHierarchyResultCollection *)scanResult {
   self.scannerDidFinishScanWithResult(scanner, scanResult);
 }
 
@@ -288,11 +312,11 @@ static const CGRect kGSCXScannerTestsFailingElementFrame2 = {{5, 6}, {7, 8}};
   UIView *rootView = [[UIView alloc] initWithFrame:kGSCXScannerTestsRootViewFrame];
   UIView *viewWithIssue = [GSCXScannerTests gscxtest_checkFailingAccessibleView];
   [rootView addSubview:viewWithIssue];
-  UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+  UIWindow *window = [[UIWindow alloc] initWithFrame:kGSCXScannerTestsWindowFrame];
   [window addSubview:rootView];
-  GSCXScannerResult *result = [scanner scanRootViews:@[ rootView ]];
+  GTXHierarchyResultCollection *result = [scanner scanRootViews:@[ rootView ]];
 
-  XCTAssertEqual(result.issueCount, count);
+  XCTAssertEqual(result.elementResults.count, count);
 }
 
 @end

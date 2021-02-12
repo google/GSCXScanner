@@ -16,53 +16,18 @@
 
 #import "GSCXScannerTestsUtils.h"
 
+#import "third_party/objective_c/GSCXScanner/Tests/Common/GSCXCommonTestUtils.h"
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation GSCXScannerTestsUtils
 
-+ (BOOL)issues:(NSArray<GSCXScannerIssue *> *)firstArray
-    equalIssuesUnordered:(NSArray<GSCXScannerIssue *> *)secondArray {
-  NSMutableArray<GSCXScannerIssue *> *firstRemainingElements = [firstArray mutableCopy];
-  NSMutableArray<GSCXScannerIssue *> *secondRemainingElements = [secondArray mutableCopy];
-  while ([firstRemainingElements count] > 0) {
-    BOOL didFindElement = NO;
-    for (NSUInteger i = 0; i < [secondRemainingElements count]; i++) {
-      if ([GSCXScannerTestsUtils gscxtest_issue:[firstRemainingElements lastObject]
-                                 isEqualToIssue:secondRemainingElements[i]]) {
-        [firstRemainingElements removeLastObject];
-        [secondRemainingElements removeObjectAtIndex:i];
-        didFindElement = YES;
-        break;
-      }
-    }
-    if (!didFindElement) {
-      return NO;
-    }
-  }
-  return YES;
-}
-
-#pragma mark - Private
-
-/**
- * Determines if two issues are equal based on @c hasEqualElementAsIssue: and the GTX check names
- * and descriptions.
- *
- * @param firstIssue An issue to compare.
- * @param secondIssue An issue to compare.
- * @return @c YES if the issues are considered equal, @c NO otherwise.
- */
-+ (BOOL)gscxtest_issue:(GSCXScannerIssue *)firstIssue
-        isEqualToIssue:(GSCXScannerIssue *)secondIssue {
-  if (![firstIssue hasEqualElementAsIssue:secondIssue]) {
-    return NO;
-  }
-  NSSet<NSString *> *firstNames = [NSSet setWithArray:firstIssue.gtxCheckNames];
-  NSSet<NSString *> *firstDescriptions = [NSSet setWithArray:firstIssue.gtxCheckDescriptions];
-  NSSet<NSString *> *secondNames = [NSSet setWithArray:secondIssue.gtxCheckNames];
-  NSSet<NSString *> *secondDescriptions = [NSSet setWithArray:secondIssue.gtxCheckDescriptions];
-  return
-      [firstNames isEqualToSet:secondNames] && [firstDescriptions isEqualToSet:secondDescriptions];
++ (GSCXScannerIssueTableViewRow *)newRow {
+  GTXHierarchyResultCollection *dummyResult = [GSCXCommonTestUtils newHierarchyResultCollection];
+  return [[GSCXScannerIssueTableViewRow alloc] initWithTitle:@"Title"
+                                                    subtitle:@"Subtitle"
+                                              originalResult:dummyResult
+                                        originalElementIndex:0];
 }
 
 @end

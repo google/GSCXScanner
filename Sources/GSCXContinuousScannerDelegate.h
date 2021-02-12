@@ -16,8 +16,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GSCXScannerResult.h"
-
+#import <GTXiLib/GTXiLib.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @class GSCXContinuousScanner;
@@ -48,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param result The result of the scan.
  */
 - (void)continuousScanner:(GSCXContinuousScanner *)scanner
-    didPerformScanWithResult:(GSCXScannerResult *)result;
+    didPerformScanWithResult:(GTXHierarchyResultCollection *)result;
 
 @end
 

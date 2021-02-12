@@ -105,7 +105,7 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
  * Prevents @c scanner from scanning the table view or its descendants. This prevents the scanner
  * from scanning the table view during an animation, which produces false positives.
  */
-@property(strong, nonatomic, nullable) id<GTXBlacklisting> tableViewHierarchyBlacklist;
+@property(strong, nonatomic, nullable) id<GTXExcludeListing> tableViewHierarchyExcludeList;
 
 /**
  * Animates any view hierarchy changes that occur in @c animations using the default duration and
@@ -180,7 +180,7 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
 }
 
 - (void)animateInWithCompletion:(nullable void (^)(BOOL))completion {
-  [self gscx_registerBlacklistForTableViewHierarchy];
+  [self gscx_registerExcludeListForTableViewHierarchy];
   __weak __typeof__(self) weakSelf = self;
   // clang-format off
   // Disabling autoformatting because the autoformatter places self and gscx_animate: on separate
@@ -196,7 +196,7 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
       weakSelf.tableView.alpha = 1.0;
     }
         completion:^(BOOL finished) {
-      [weakSelf gscx_deregisterBlacklistForTableViewHierarchy];
+      [weakSelf gscx_deregisterExcludeListForTableViewHierarchy];
       if (completion) {
         completion(finished);
       }
@@ -206,7 +206,7 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
 }
 
 - (void)animateOutWithCompletion:(nullable void (^)(BOOL))completion {
-  [self gscx_registerBlacklistForTableViewHierarchy];
+  [self gscx_registerExcludeListForTableViewHierarchy];
   __weak __typeof__(self) weakSelf = self;
   // clang-format off
   [self gscx_animate:^(void) {
@@ -219,7 +219,7 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
       [NSLayoutConstraint activateConstraints:strongSelf.initialConstraints];
     }
         completion:^(BOOL finished) {
-      [weakSelf gscx_deregisterBlacklistForTableViewHierarchy];
+      [weakSelf gscx_deregisterExcludeListForTableViewHierarchy];
       if (completion) {
         completion(finished);
       }
@@ -371,16 +371,16 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
   }
 }
 
-- (void)gscx_registerBlacklistForTableViewHierarchy {
+- (void)gscx_registerExcludeListForTableViewHierarchy {
   UITableView *tableView = self.tableView;
-  self.tableViewHierarchyBlacklist =
-      [GTXBlacklistBlock blacklistWithBlock:^BOOL(id element, NSString *checkName) {
+  self.tableViewHierarchyExcludeList =
+      [GTXExcludeListBlock excludeListWithBlock:^BOOL(id element, NSString *checkName) {
         if ([element respondsToSelector:@selector(accessibilityContainer)]) {
           // UIAccessibilityElement instances do not have a superview method, but UITableView uses
           // subclasses of UIAccessibilityElement to represent some things which the scanner flags
           // incorrectly. In those cases, the UITableView is the accessibility container, so
-          // checking for that blacklists only the elements in the settings table view. Other table
-          // views are unaffected.
+          // checking for that excludeLists only the elements in the settings table view. Other
+          // table views are unaffected.
           if ([element accessibilityContainer] == tableView) {
             return YES;
           }
@@ -399,12 +399,12 @@ static NSString *const kGSCXScannerSettingsTableViewCellReuseIdentifier = @"sett
         }
         return NO;
       }];
-  [self.scanner registerBlacklist:self.tableViewHierarchyBlacklist];
+  [self.scanner registerExcludeList:self.tableViewHierarchyExcludeList];
 }
 
-- (void)gscx_deregisterBlacklistForTableViewHierarchy {
-  [self.scanner deregisterBlacklist:self.tableViewHierarchyBlacklist];
-  self.tableViewHierarchyBlacklist = nil;
+- (void)gscx_deregisterExcludeListForTableViewHierarchy {
+  [self.scanner deregisterExcludeList:self.tableViewHierarchyExcludeList];
+  self.tableViewHierarchyExcludeList = nil;
 }
 
 @end
