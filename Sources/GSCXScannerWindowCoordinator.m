@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #import "UIView+GSCXAppearance.h"
+#import "UIWindow+GSCXScannerAdditions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -178,7 +179,7 @@ const CGFloat kGSCXScannerWindowLevelOffset = 2.0f;
 
 - (UIWindow *)gscx_presentResultsWindow {
   _previousKeyWindow = [self gscx_findKeyWindow];
-  UIWindow *resultsWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  UIWindow *resultsWindow = [UIWindow gscx_fullScreenWindow];
   UIViewController *rootViewController = [[UIViewController alloc] init];
   // Some view controllers (such as alerts) do not cover the entire screen. In that case, the
   // underlying window must remain visible.

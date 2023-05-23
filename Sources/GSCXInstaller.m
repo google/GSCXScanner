@@ -29,6 +29,7 @@
 #import "GSCXScannerWindowCoordinator.h"
 #import "GSCXTouchActivitySource.h"
 #import "UIView+GSCXAppearance.h"
+#import "UIWindow+GSCXScannerAdditions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -60,7 +61,7 @@ static const NSTimeInterval kGSCXContinuousScannerInterval = 2.0;
 + (GSCXScannerOverlayWindow *)installScannerWithOptions:(GSCXInstallerOptions *)options {
   BOOL setupSuccessful = [GTXTestEnvironment setupEnvironmentWithError:nil];
   CGRect frame = [[UIScreen mainScreen] bounds];
-  GSCXScannerOverlayWindow *overlayWindow = [[GSCXScannerOverlayWindow alloc] initWithFrame:frame];
+  GSCXScannerOverlayWindow *overlayWindow = [GSCXScannerOverlayWindow gscx_fullScreenWindow];
   GSCXScannerOverlayViewController *viewController = [[GSCXScannerOverlayViewController alloc]
                 initWithNibName:@"GSCXScannerOverlayViewController"
                          bundle:[NSBundle bundleForClass:[GSCXScannerOverlayViewController class]]

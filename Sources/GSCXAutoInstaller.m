@@ -50,16 +50,28 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (void)gscx_startListening {
+  NSString *notificationName = UIApplicationDidFinishLaunchingNotification;
+  if (@available(iOS 13.0, *)) {
+    // on iOS 13 and on, all apps use UIScene. Even if the developer does not
+    // manually handle scenes using UISceneDelegate, the operating system still
+    // constructs a scene and sends the did activate notification.
+    notificationName = UISceneDidActivateNotification;
+  }
   [[NSNotificationCenter defaultCenter]
       addObserver:[GSCXAutoInstallerAppListener gscx_defaultListener]
          selector:@selector(applicationDidFinishLaunching:)
-             name:UIApplicationDidFinishLaunchingNotification
+             name:notificationName
            object:nil];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
-  GTX_ASSERT(_overlayWindow == nil, @"iOS Scanner was already installed.");
-  // TODO: Also check if scanner was installed using other APIs in GSCXInstaller.
+  if (_overlayWindow != nil) {
+    // In UIScene applications, it is valid for this method to be called multiple times.
+    // Log but do not crash with an assertion.
+    [[GTXLogger defaultLogger] logWithLevel:GTXLogLevelDeveloper
+                                     format:@"iOS Scanner was already installed."];
+    return;
+  }
   _overlayWindow = [GSCXInstaller installScanner];
 }
 
